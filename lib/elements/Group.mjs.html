@@ -1,0 +1,323 @@
+<html>
+  <head>
+    <base href="../.."/>
+    <title>css3d - Group.mjs</title>
+
+    <link rel="stylesheet" href="public/github-markdown.min-05fea8df8ec68cb6c27337f6db65733e.css">
+    <link rel="stylesheet" href="public/highlight-c281e701b2830b095c67417cd9a7b210.css">
+    <link rel="stylesheet" href="public/style-aea3468ccb7ee0c3c4c2b5d339fc989e.css">
+    <link rel="stylesheet" href="public/all-cc69a8b8824029ae06797ee01a3cc5c8.css">
+
+    <script src="public/plugins/core/example/ExampleViewer.js"></script>
+              
+              <script src="-/index.mjs" type="module"></script>
+            
+  </head>
+  <body class="markdown-body flex-column">
+    <div class="header flex">
+      <a class="header-brand" href="./index.html">css3d</a>
+      
+<ul class="menu flex align-center justify-center">
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="elements/Sphere.html"
+        
+        
+          role="button"
+          
+          aria-expanded="false"
+        
+      >
+        Elements
+      </a>
+      
+    </li>
+    
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="examples/textures.html"
+        
+        
+          role="button"
+          
+          aria-expanded="false"
+        
+      >
+        Examples
+      </a>
+      
+    </li>
+    
+  
+</ul>
+      <nav class="links">
+        
+          
+            
+          
+        
+      </nav>
+    </div>
+      
+      
+
+<main class="flex-grow flex h-100">
+  <div class="sidebar sidebar-left border-right mr-2 flex-noshrink">
+  
+<ul class="menu">
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="elements/Sphere.html"
+        
+        
+          role="button"
+          
+          aria-expanded="false"
+        
+      >
+        Elements
+      </a>
+      
+        
+<ul class="menu">
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="elements/Sphere.html"
+        
+        
+      >
+        Sphere
+      </a>
+      
+    </li>
+    
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="elements/Polyhedron.html"
+        
+        
+      >
+        Polyhedron
+      </a>
+      
+    </li>
+    
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="elements/Cylinder.html"
+        
+        
+      >
+        Cylinder
+      </a>
+      
+    </li>
+    
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="elements/Box.html"
+        
+        
+      >
+        Box
+      </a>
+      
+    </li>
+    
+  
+</ul>
+      
+    </li>
+    
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="examples/textures.html"
+        
+        
+          role="button"
+          
+          aria-expanded="false"
+        
+      >
+        Examples
+      </a>
+      
+        
+<ul class="menu">
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="examples/textures.html"
+        
+        
+      >
+        Textures
+      </a>
+      
+    </li>
+    
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="examples/planets.html"
+        
+        
+      >
+        Planets
+      </a>
+      
+    </li>
+    
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="examples/crane.html"
+        
+        
+      >
+        Crane
+      </a>
+      
+    </li>
+    
+  
+</ul>
+      
+    </li>
+    
+  
+</ul>
+</div>
+  <div class="flex-grow">
+    <div class="container py-4">
+      <h1>Source: Group.mjs</h1>
+      <p>
+        lib/elements/Group.mjs
+      </p>
+      
+      <pre><code class="hljs"><span class="hljs-keyword">import</span> { C3Object } from <span class="hljs-string">&#x27;../core/3DObject.mjs&#x27;</span>;
+
+<span class="hljs-keyword">class</span> <span class="hljs-title class_">C3Group</span> <span class="hljs-title">extends</span> <span class="hljs-title">C3Object</span> {
+  #slot;
+  <span class="hljs-comment">// #mutationObserver;</span>
+
+  static <span class="hljs-keyword">get</span> observedAttributes() {
+    <span class="hljs-keyword">return</span> [...C3Object.observedAttributes];
+  }
+
+  <span class="hljs-keyword">constructor</span>() {
+    <span class="hljs-keyword">super</span>();
+
+    <span class="hljs-keyword">this</span>.handleSlotChange = <span class="hljs-keyword">this</span>.handleSlotChange.bind(<span class="hljs-keyword">this</span>);
+    
+    <span class="hljs-keyword">const</span> slot = document.createElement(<span class="hljs-string">&#x27;slot&#x27;</span>);
+    slot.style.display = <span class="hljs-string">&#x27;block&#x27;</span>;
+    slot.style.transformStyle = <span class="hljs-string">&#x27;preserve-3d&#x27;</span>;
+    <span class="hljs-keyword">this</span>.shadowRoot.appendChild(slot);
+
+    slot.addEventListener(<span class="hljs-string">&#x27;slotchange&#x27;</span>, <span class="hljs-keyword">this</span>.handleSlotChange);
+
+    <span class="hljs-comment">// this.#mutationObserver = new MutationObserver(mutations =&gt; {</span>
+    <span class="hljs-comment">//   console.log(&#x27;MUTATION: &#x27;, mutations);</span>
+    <span class="hljs-comment">//   for (let mutation of mutations) {</span>
+    <span class="hljs-comment">//     if (mutation.type === &#x27;childList&#x27;) {</span>
+    <span class="hljs-comment">//       console.log(&#x27;A child node has been added or removed.&#x27;);</span>
+
+    <span class="hljs-comment">//       mutation.addedNodes.forEach(node =&gt; {</span>
+    <span class="hljs-comment">//         if (node instanceof C3Object) {</span>
+    <span class="hljs-comment">//           node.addEventListener(&#x27;change&#x27;, this.handleChildrenChange);</span>
+    <span class="hljs-comment">//         }</span>
+    <span class="hljs-comment">//       });</span>
+
+    <span class="hljs-comment">//       mutation.removedNodes.forEach(node =&gt; {</span>
+    <span class="hljs-comment">//         if (node instanceof C3Object) {</span>
+    <span class="hljs-comment">//           node.removeEventListener(&#x27;change&#x27;, this.handleChildrenChange);</span>
+    <span class="hljs-comment">//         }</span>
+    <span class="hljs-comment">//       });</span>
+    <span class="hljs-comment">//     }</span>
+    <span class="hljs-comment">//   }</span>
+    <span class="hljs-comment">// });</span>
+
+    <span class="hljs-keyword">this</span>.#slot = slot;
+    
+    <span class="hljs-comment">// this.#mutationObserver.observe(this.#slot, { childList: true });</span>
+  }
+
+  disconnectedCallback() {
+    <span class="hljs-comment">// this.#mutationObserver.unobserve(this.#slot);</span>
+    <span class="hljs-comment">// this.#mutationObserver.disconnect();</span>
+    <span class="hljs-keyword">this</span>.#slot.removeEventListener(<span class="hljs-string">&#x27;slotchange&#x27;</span>, <span class="hljs-keyword">this</span>.handleSlotChange);
+  }
+
+  <span class="hljs-comment">// handleChildrenChange() {</span>
+  <span class="hljs-comment">//   console.log(&#x27;*********** children change...&#x27;);</span>
+  <span class="hljs-comment">//   this.render();</span>
+  <span class="hljs-comment">// }</span>
+
+  handleSlotChange() {
+    <span class="hljs-comment">// this.#slot.assignedNodes().forEach(node =&gt; {</span>
+    <span class="hljs-comment">//   if (node instanceof C3Object) {</span>
+    <span class="hljs-comment">//     node.removeEventListener(&#x27;change&#x27;, this.handleChildrenChange);</span>
+    <span class="hljs-comment">//     node.addEventListener(&#x27;change&#x27;, this.handleChildrenChange);</span>
+    <span class="hljs-comment">//   }</span>
+    <span class="hljs-comment">// });</span>
+    console.log(<span class="hljs-string">&#x27;****** slot change...&#x27;</span>);
+    <span class="hljs-keyword">this</span>.render();
+  }
+}
+
+customElements.define(<span class="hljs-string">&#x27;c3-group&#x27;</span>, C3Group);
+
+export { C3Group }; </code></pre>
+    </div>
+  </div>
+</main>
+
+    <div class="footer">
+      <div class="center">
+        Powered by <a target="_blank" href="https://benignware.com">Benignware</a>
+      </div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,1781 @@
+<html>
+  <head>
+    <base href="../.."/>
+    <title>css3d - ThreeOrbitControls.mjs</title>
+
+    <link rel="stylesheet" href="public/github-markdown.min-05fea8df8ec68cb6c27337f6db65733e.css">
+    <link rel="stylesheet" href="public/highlight-c281e701b2830b095c67417cd9a7b210.css">
+    <link rel="stylesheet" href="public/style-aea3468ccb7ee0c3c4c2b5d339fc989e.css">
+    <link rel="stylesheet" href="public/all-cc69a8b8824029ae06797ee01a3cc5c8.css">
+
+    <script src="public/plugins/core/example/ExampleViewer.js"></script>
+              
+              <script src="-/index.mjs" type="module"></script>
+            
+  </head>
+  <body class="markdown-body flex-column">
+    <div class="header flex">
+      <a class="header-brand" href="./index.html">css3d</a>
+      
+<ul class="menu flex align-center justify-center">
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="elements/Sphere.html"
+        
+        
+          role="button"
+          
+          aria-expanded="false"
+        
+      >
+        Elements
+      </a>
+      
+    </li>
+    
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="examples/textures.html"
+        
+        
+          role="button"
+          
+          aria-expanded="false"
+        
+      >
+        Examples
+      </a>
+      
+    </li>
+    
+  
+</ul>
+      <nav class="links">
+        
+          
+            
+          
+        
+      </nav>
+    </div>
+      
+      
+
+<main class="flex-grow flex h-100">
+  <div class="sidebar sidebar-left border-right mr-2 flex-noshrink">
+  
+<ul class="menu">
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="elements/Sphere.html"
+        
+        
+          role="button"
+          
+          aria-expanded="false"
+        
+      >
+        Elements
+      </a>
+      
+        
+<ul class="menu">
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="elements/Sphere.html"
+        
+        
+      >
+        Sphere
+      </a>
+      
+    </li>
+    
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="elements/Polyhedron.html"
+        
+        
+      >
+        Polyhedron
+      </a>
+      
+    </li>
+    
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="elements/Cylinder.html"
+        
+        
+      >
+        Cylinder
+      </a>
+      
+    </li>
+    
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="elements/Box.html"
+        
+        
+      >
+        Box
+      </a>
+      
+    </li>
+    
+  
+</ul>
+      
+    </li>
+    
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="examples/textures.html"
+        
+        
+          role="button"
+          
+          aria-expanded="false"
+        
+      >
+        Examples
+      </a>
+      
+        
+<ul class="menu">
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="examples/textures.html"
+        
+        
+      >
+        Textures
+      </a>
+      
+    </li>
+    
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="examples/planets.html"
+        
+        
+      >
+        Planets
+      </a>
+      
+    </li>
+    
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="examples/crane.html"
+        
+        
+      >
+        Crane
+      </a>
+      
+    </li>
+    
+  
+</ul>
+      
+    </li>
+    
+  
+</ul>
+</div>
+  <div class="flex-grow">
+    <div class="container py-4">
+      <h1>Source: ThreeOrbitControls.mjs</h1>
+      <p>
+        lib/controls/ThreeOrbitControls.mjs
+      </p>
+      
+      <pre><code class="hljs">import {
+<span class="hljs-code">	EventDispatcher,
+	MOUSE,
+	Quaternion,
+	Spherical,
+	TOUCH,
+	Vector2,
+	Vector3,
+	Plane,
+	Ray,
+	MathUtils
+} from &#x27;three&#x27;;
+</span>
+// OrbitControls performs orbiting, dollying (zooming), and panning.
+// Unlike TrackballControls, it maintains the &quot;up&quot; direction object.up (+Y by default).
+//
+//    Orbit - left mouse / touch: one-finger move
+//    Zoom - middle mouse, or mousewheel / touch: two-finger spread or squish
+//    Pan - right mouse, or left mouse + ctrl/meta/shiftKey, or arrow keys / touch: two-finger move
+
+const <span class="hljs-emphasis">_changeEvent = { type: &#x27;change&#x27; };
+const _</span>startEvent = { type: &#x27;start&#x27; };
+const <span class="hljs-emphasis">_endEvent = { type: &#x27;end&#x27; };
+const _</span>ray = new Ray();
+const <span class="hljs-emphasis">_plane = new Plane();
+const TILT_</span>LIMIT = Math.cos( 70 * MathUtils.DEG2RAD );
+
+class OrbitControls extends EventDispatcher {
+
+<span class="hljs-code">	constructor( object, domElement ) {
+</span>
+<span class="hljs-code">		super();
+</span>
+<span class="hljs-code">		this.object = object;
+		this.domElement = domElement;
+		this.domElement.style.touchAction = &#x27;none&#x27;; // disable touch scroll
+</span>
+<span class="hljs-code">		// Set to false to disable this control
+		this.enabled = true;
+</span>
+<span class="hljs-code">		// &quot;target&quot; sets the location of focus, where the object orbits around
+		this.target = new Vector3();
+</span>
+<span class="hljs-code">		// Sets the 3D cursor (similar to Blender), from which the maxTargetRadius takes effect
+		this.cursor = new Vector3();
+</span>
+<span class="hljs-code">		// How far you can dolly in and out ( PerspectiveCamera only )
+		this.minDistance = 0;
+		this.maxDistance = Infinity;
+</span>
+<span class="hljs-code">		// How far you can zoom in and out ( OrthographicCamera only )
+		this.minZoom = 0;
+		this.maxZoom = Infinity;
+</span>
+<span class="hljs-code">		// Limit camera target within a spherical area around the cursor
+		this.minTargetRadius = 0;
+		this.maxTargetRadius = Infinity;
+</span>
+<span class="hljs-code">		// How far you can orbit vertically, upper and lower limits.
+		// Range is 0 to Math.PI radians.
+		this.minPolarAngle = 0; // radians
+		this.maxPolarAngle = Math.PI; // radians
+</span>
+<span class="hljs-code">		// How far you can orbit horizontally, upper and lower limits.
+		// If set, the interval [ min, max ] must be a sub-interval of [ - 2 PI, 2 PI ], with ( max - min &lt; 2 PI )
+		this.minAzimuthAngle = - Infinity; // radians
+		this.maxAzimuthAngle = Infinity; // radians
+</span>
+<span class="hljs-code">		// Set to true to enable damping (inertia)
+		// If damping is enabled, you must call controls.update() in your animation loop
+		this.enableDamping = false;
+		this.dampingFactor = 0.05;
+</span>
+<span class="hljs-code">		// This option actually enables dollying in and out; left as &quot;zoom&quot; for backwards compatibility.
+		// Set to false to disable zooming
+		this.enableZoom = true;
+		this.zoomSpeed = 1.0;
+</span>
+<span class="hljs-code">		// Set to false to disable rotating
+		this.enableRotate = true;
+		this.rotateSpeed = 1.0;
+</span>
+<span class="hljs-code">		// Set to false to disable panning
+		this.enablePan = true;
+		this.panSpeed = 1.0;
+		this.screenSpacePanning = true; // if false, pan orthogonal to world-space direction camera.up
+		this.keyPanSpeed = 7.0;	// pixels moved per arrow key push
+		this.zoomToCursor = false;
+</span>
+<span class="hljs-code">		// Set to true to automatically rotate around the target
+		// If auto-rotate is enabled, you must call controls.update() in your animation loop
+		this.autoRotate = false;
+		this.autoRotateSpeed = 2.0; // 30 seconds per orbit when fps is 60
+</span>
+<span class="hljs-code">		// The four arrow keys
+		this.keys = { LEFT: &#x27;ArrowLeft&#x27;, UP: &#x27;ArrowUp&#x27;, RIGHT: &#x27;ArrowRight&#x27;, BOTTOM: &#x27;ArrowDown&#x27; };
+</span>
+<span class="hljs-code">		// Mouse buttons
+		this.mouseButtons = { LEFT: MOUSE.ROTATE, MIDDLE: MOUSE.DOLLY, RIGHT: MOUSE.PAN };
+</span>
+<span class="hljs-code">		// Touch fingers
+		this.touches = { ONE: TOUCH.ROTATE, TWO: TOUCH.DOLLY_PAN };
+</span>
+<span class="hljs-code">		// for reset
+		this.target0 = this.target.clone();
+		this.position0 = this.object.position.clone();
+		this.zoom0 = this.object.zoom;
+</span>
+<span class="hljs-code">		// the target DOM element for key events
+		this._domElementKeyEvents = null;
+</span>
+<span class="hljs-code">		//
+		// public methods
+		//
+</span>
+<span class="hljs-code">		this.getPolarAngle = function () {
+</span>
+<span class="hljs-code">			return spherical.phi;
+</span>
+<span class="hljs-code">		};
+</span>
+<span class="hljs-code">		this.getAzimuthalAngle = function () {
+</span>
+<span class="hljs-code">			return spherical.theta;
+</span>
+<span class="hljs-code">		};
+</span>
+<span class="hljs-code">		this.getDistance = function () {
+</span>
+<span class="hljs-code">			return this.object.position.distanceTo( this.target );
+</span>
+<span class="hljs-code">		};
+</span>
+<span class="hljs-code">		this.listenToKeyEvents = function ( domElement ) {
+</span>
+<span class="hljs-code">			domElement.addEventListener( &#x27;keydown&#x27;, onKeyDown );
+			this._domElementKeyEvents = domElement;
+</span>
+<span class="hljs-code">		};
+</span>
+<span class="hljs-code">		this.stopListenToKeyEvents = function () {
+</span>
+<span class="hljs-code">			this._domElementKeyEvents.removeEventListener( &#x27;keydown&#x27;, onKeyDown );
+			this._domElementKeyEvents = null;
+</span>
+<span class="hljs-code">		};
+</span>
+<span class="hljs-code">		this.saveState = function () {
+</span>
+<span class="hljs-code">			scope.target0.copy( scope.target );
+			scope.position0.copy( scope.object.position );
+			scope.zoom0 = scope.object.zoom;
+</span>
+<span class="hljs-code">		};
+</span>
+<span class="hljs-code">		this.reset = function () {
+</span>
+<span class="hljs-code">			scope.target.copy( scope.target0 );
+			scope.object.position.copy( scope.position0 );
+			scope.object.zoom = scope.zoom0;
+</span>
+<span class="hljs-code">			scope.object.updateProjectionMatrix();
+			scope.dispatchEvent( _changeEvent );
+</span>
+<span class="hljs-code">			scope.update();
+</span>
+<span class="hljs-code">			state = STATE.NONE;
+</span>
+<span class="hljs-code">		};
+</span>
+<span class="hljs-code">		// this method is exposed, but perhaps it would be better if we can make it private...
+		this.update = function () {
+</span>
+<span class="hljs-code">			const offset = new Vector3();
+</span>
+<span class="hljs-code">			// so camera.up is the orbit axis
+			const quat = new Quaternion().setFromUnitVectors( object.up, new Vector3( 0, 1, 0 ) );
+			const quatInverse = quat.clone().invert();
+</span>
+<span class="hljs-code">			const lastPosition = new Vector3();
+			const lastQuaternion = new Quaternion();
+			const lastTargetPosition = new Vector3();
+</span>
+<span class="hljs-code">			const twoPI = 2 * Math.PI;
+</span>
+<span class="hljs-code">			return function update( deltaTime = null ) {
+</span>
+<span class="hljs-code">				const position = scope.object.position;
+</span>
+<span class="hljs-code">				offset.copy( position ).sub( scope.target );
+</span>
+<span class="hljs-code">				// rotate offset to &quot;y-axis-is-up&quot; space
+				offset.applyQuaternion( quat );
+</span>
+<span class="hljs-code">				// angle from z-axis around y-axis
+				spherical.setFromVector3( offset );
+</span>
+<span class="hljs-code">				if ( scope.autoRotate &amp;&amp; state === STATE.NONE ) {
+</span>
+<span class="hljs-code">					rotateLeft( getAutoRotationAngle( deltaTime ) );
+</span>
+<span class="hljs-code">				}
+</span>
+<span class="hljs-code">				if ( scope.enableDamping ) {
+</span>
+<span class="hljs-code">					spherical.theta += sphericalDelta.theta * scope.dampingFactor;
+					spherical.phi += sphericalDelta.phi * scope.dampingFactor;
+</span>
+<span class="hljs-code">				} else {
+</span>
+<span class="hljs-code">					spherical.theta += sphericalDelta.theta;
+					spherical.phi += sphericalDelta.phi;
+</span>
+<span class="hljs-code">				}
+</span>
+<span class="hljs-code">				// restrict theta to be between desired limits
+</span>
+<span class="hljs-code">				let min = scope.minAzimuthAngle;
+				let max = scope.maxAzimuthAngle;
+</span>
+<span class="hljs-code">				if ( isFinite( min ) &amp;&amp; isFinite( max ) ) {
+</span>
+<span class="hljs-code">					if ( min &lt; - Math.PI ) min += twoPI; else if ( min &gt; Math.PI ) min -= twoPI;
+</span>
+<span class="hljs-code">					if ( max &lt; - Math.PI ) max += twoPI; else if ( max &gt; Math.PI ) max -= twoPI;
+</span>
+<span class="hljs-code">					if ( min &lt;= max ) {
+</span>
+<span class="hljs-code">						spherical.theta = Math.max( min, Math.min( max, spherical.theta ) );
+</span>
+<span class="hljs-code">					} else {
+</span>
+<span class="hljs-code">						spherical.theta = ( spherical.theta &gt; ( min + max ) / 2 ) ?
+							Math.max( min, spherical.theta ) :
+							Math.min( max, spherical.theta );
+</span>
+<span class="hljs-code">					}
+</span>
+<span class="hljs-code">				}
+</span>
+<span class="hljs-code">				// restrict phi to be between desired limits
+				spherical.phi = Math.max( scope.minPolarAngle, Math.min( scope.maxPolarAngle, spherical.phi ) );
+</span>
+<span class="hljs-code">				spherical.makeSafe();
+</span>
+
+<span class="hljs-code">				// move target to panned location
+</span>
+<span class="hljs-code">				if ( scope.enableDamping === true ) {
+</span>
+<span class="hljs-code">					scope.target.addScaledVector( panOffset, scope.dampingFactor );
+</span>
+<span class="hljs-code">				} else {
+</span>
+<span class="hljs-code">					scope.target.add( panOffset );
+</span>
+<span class="hljs-code">				}
+</span>
+<span class="hljs-code">				// Limit the target distance from the cursor to create a sphere around the center of interest
+				scope.target.sub( scope.cursor );
+				scope.target.clampLength( scope.minTargetRadius, scope.maxTargetRadius );
+				scope.target.add( scope.cursor );
+</span>
+<span class="hljs-code">				let zoomChanged = false;
+				// adjust the camera position based on zoom only if we&#x27;re not zooming to the cursor or if it&#x27;s an ortho camera
+				// we adjust zoom later in these cases
+				if ( scope.zoomToCursor &amp;&amp; performCursorZoom || scope.object.isOrthographicCamera ) {
+</span>
+<span class="hljs-code">					spherical.radius = clampDistance( spherical.radius );
+</span>
+<span class="hljs-code">				} else {
+</span>
+<span class="hljs-code">					const prevRadius = spherical.radius;
+					spherical.radius = clampDistance( spherical.radius * scale );
+					zoomChanged = prevRadius != spherical.radius;
+</span>
+<span class="hljs-code">				}
+</span>
+<span class="hljs-code">				offset.setFromSpherical( spherical );
+</span>
+<span class="hljs-code">				// rotate offset back to &quot;camera-up-vector-is-up&quot; space
+				offset.applyQuaternion( quatInverse );
+</span>
+<span class="hljs-code">				position.copy( scope.target ).add( offset );
+</span>
+<span class="hljs-code">				scope.object.lookAt( scope.target );
+</span>
+<span class="hljs-code">				if ( scope.enableDamping === true ) {
+</span>
+<span class="hljs-code">					sphericalDelta.theta *= ( 1 - scope.dampingFactor );
+					sphericalDelta.phi *= ( 1 - scope.dampingFactor );
+</span>
+<span class="hljs-code">					panOffset.multiplyScalar( 1 - scope.dampingFactor );
+</span>
+<span class="hljs-code">				} else {
+</span>
+<span class="hljs-code">					sphericalDelta.set( 0, 0, 0 );
+</span>
+<span class="hljs-code">					panOffset.set( 0, 0, 0 );
+</span>
+<span class="hljs-code">				}
+</span>
+<span class="hljs-code">				// adjust camera position
+				if ( scope.zoomToCursor &amp;&amp; performCursorZoom ) {
+</span>
+<span class="hljs-code">					let newRadius = null;
+					if ( scope.object.isPerspectiveCamera ) {
+</span>
+<span class="hljs-code">						// move the camera down the pointer ray
+						// this method avoids floating point error
+						const prevRadius = offset.length();
+						newRadius = clampDistance( prevRadius * scale );
+</span>
+<span class="hljs-code">						const radiusDelta = prevRadius - newRadius;
+						scope.object.position.addScaledVector( dollyDirection, radiusDelta );
+						scope.object.updateMatrixWorld();
+</span>
+<span class="hljs-code">						zoomChanged = !! radiusDelta;
+</span>
+<span class="hljs-code">					} else if ( scope.object.isOrthographicCamera ) {
+</span>
+<span class="hljs-code">						// adjust the ortho camera position based on zoom changes
+						const mouseBefore = new Vector3( mouse.x, mouse.y, 0 );
+						mouseBefore.unproject( scope.object );
+</span>
+<span class="hljs-code">						const prevZoom = scope.object.zoom;
+						scope.object.zoom = Math.max( scope.minZoom, Math.min( scope.maxZoom, scope.object.zoom / scale ) );
+						scope.object.updateProjectionMatrix();
+</span>
+<span class="hljs-code">						zoomChanged = prevZoom !== scope.object.zoom;
+</span>
+<span class="hljs-code">						const mouseAfter = new Vector3( mouse.x, mouse.y, 0 );
+						mouseAfter.unproject( scope.object );
+</span>
+<span class="hljs-code">						scope.object.position.sub( mouseAfter ).add( mouseBefore );
+						scope.object.updateMatrixWorld();
+</span>
+<span class="hljs-code">						newRadius = offset.length();
+</span>
+<span class="hljs-code">					} else {
+</span>
+<span class="hljs-code">						console.warn( &#x27;WARNING: OrbitControls.js encountered an unknown camera type - zoom to cursor disabled.&#x27; );
+						scope.zoomToCursor = false;
+</span>
+<span class="hljs-code">					}
+</span>
+<span class="hljs-code">					// handle the placement of the target
+					if ( newRadius !== null ) {
+</span>
+<span class="hljs-code">						if ( this.screenSpacePanning ) {
+</span>
+<span class="hljs-code">							// position the orbit target in front of the new camera position
+							scope.target.set( 0, 0, - 1 )
+								.transformDirection( scope.object.matrix )
+								.multiplyScalar( newRadius )
+								.add( scope.object.position );
+</span>
+<span class="hljs-code">						} else {
+</span>
+<span class="hljs-code">							// get the ray and translation plane to compute target
+							_ray.origin.copy( scope.object.position );
+							_ray.direction.set( 0, 0, - 1 ).transformDirection( scope.object.matrix );
+</span>
+<span class="hljs-code">							// if the camera is 20 degrees above the horizon then don&#x27;t adjust the focus target to avoid
+							// extremely large values
+							if ( Math.abs( scope.object.up.dot( _ray.direction ) ) &lt; TILT_LIMIT ) {
+</span>
+<span class="hljs-code">								object.lookAt( scope.target );
+</span>
+<span class="hljs-code">							} else {
+</span>
+<span class="hljs-code">								_plane.setFromNormalAndCoplanarPoint( scope.object.up, scope.target );
+								_ray.intersectPlane( _plane, scope.target );
+</span>
+<span class="hljs-code">							}
+</span>
+<span class="hljs-code">						}
+</span>
+<span class="hljs-code">					}
+</span>
+<span class="hljs-code">				} else if ( scope.object.isOrthographicCamera ) {
+</span>
+<span class="hljs-code">					const prevZoom = scope.object.zoom;
+					scope.object.zoom = Math.max( scope.minZoom, Math.min( scope.maxZoom, scope.object.zoom / scale ) );
+</span>
+<span class="hljs-code">					if ( prevZoom !== scope.object.zoom ) {
+</span>
+<span class="hljs-code">						scope.object.updateProjectionMatrix();
+						zoomChanged = true;
+</span>
+<span class="hljs-code">					}
+</span>
+<span class="hljs-code">				}
+</span>
+<span class="hljs-code">				scale = 1;
+				performCursorZoom = false;
+</span>
+<span class="hljs-code">				// update condition is:
+				// min(camera displacement, camera rotation in radians)^2 &gt; EPS
+				// using small-angle approximation cos(x/2) = 1 - x^2 / 8
+</span>
+<span class="hljs-code">				if ( zoomChanged ||
+					lastPosition.distanceToSquared( scope.object.position ) &gt; EPS ||
+					8 * ( 1 - lastQuaternion.dot( scope.object.quaternion ) ) &gt; EPS ||
+					lastTargetPosition.distanceToSquared( scope.target ) &gt; EPS ) {
+</span>
+<span class="hljs-code">					scope.dispatchEvent( _changeEvent );
+</span>
+<span class="hljs-code">					lastPosition.copy( scope.object.position );
+					lastQuaternion.copy( scope.object.quaternion );
+					lastTargetPosition.copy( scope.target );
+</span>
+<span class="hljs-code">					return true;
+</span>
+<span class="hljs-code">				}
+</span>
+<span class="hljs-code">				return false;
+</span>
+<span class="hljs-code">			};
+</span>
+<span class="hljs-code">		}();
+</span>
+<span class="hljs-code">		this.dispose = function () {
+</span>
+<span class="hljs-code">			scope.domElement.removeEventListener( &#x27;contextmenu&#x27;, onContextMenu );
+</span>
+<span class="hljs-code">			scope.domElement.removeEventListener( &#x27;pointerdown&#x27;, onPointerDown );
+			scope.domElement.removeEventListener( &#x27;pointercancel&#x27;, onPointerUp );
+			scope.domElement.removeEventListener( &#x27;wheel&#x27;, onMouseWheel );
+</span>
+<span class="hljs-code">			scope.domElement.removeEventListener( &#x27;pointermove&#x27;, onPointerMove );
+			scope.domElement.removeEventListener( &#x27;pointerup&#x27;, onPointerUp );
+</span>
+<span class="hljs-code">			const document = scope.domElement.getRootNode(); // offscreen canvas compatibility
+</span>
+<span class="hljs-code">			document.removeEventListener( &#x27;keydown&#x27;, interceptControlDown, { capture: true } );
+</span>
+<span class="hljs-code">			if ( scope._domElementKeyEvents !== null ) {
+</span>
+<span class="hljs-code">				scope._domElementKeyEvents.removeEventListener( &#x27;keydown&#x27;, onKeyDown );
+				scope._domElementKeyEvents = null;
+</span>
+<span class="hljs-code">			}
+</span>
+<span class="hljs-code">			//scope.dispatchEvent( { type: &#x27;dispose&#x27; } ); // should this be added here?
+</span>
+<span class="hljs-code">		};
+</span>
+<span class="hljs-code">		//
+		// internals
+		//
+</span>
+<span class="hljs-code">		const scope = this;
+</span>
+<span class="hljs-code">		const STATE = {
+			NONE: - 1,
+			ROTATE: 0,
+			DOLLY: 1,
+			PAN: 2,
+			TOUCH_ROTATE: 3,
+			TOUCH_PAN: 4,
+			TOUCH_DOLLY_PAN: 5,
+			TOUCH_DOLLY_ROTATE: 6
+		};
+</span>
+<span class="hljs-code">		let state = STATE.NONE;
+</span>
+<span class="hljs-code">		const EPS = 0.000001;
+</span>
+<span class="hljs-code">		// current position in spherical coordinates
+		const spherical = new Spherical();
+		const sphericalDelta = new Spherical();
+</span>
+<span class="hljs-code">		let scale = 1;
+		const panOffset = new Vector3();
+</span>
+<span class="hljs-code">		const rotateStart = new Vector2();
+		const rotateEnd = new Vector2();
+		const rotateDelta = new Vector2();
+</span>
+<span class="hljs-code">		const panStart = new Vector2();
+		const panEnd = new Vector2();
+		const panDelta = new Vector2();
+</span>
+<span class="hljs-code">		const dollyStart = new Vector2();
+		const dollyEnd = new Vector2();
+		const dollyDelta = new Vector2();
+</span>
+<span class="hljs-code">		const dollyDirection = new Vector3();
+		const mouse = new Vector2();
+		let performCursorZoom = false;
+</span>
+<span class="hljs-code">		const pointers = [];
+		const pointerPositions = {};
+</span>
+<span class="hljs-code">		let controlActive = false;
+</span>
+<span class="hljs-code">		function getAutoRotationAngle( deltaTime ) {
+</span>
+<span class="hljs-code">			if ( deltaTime !== null ) {
+</span>
+<span class="hljs-code">				return ( 2 * Math.PI / 60 * scope.autoRotateSpeed ) * deltaTime;
+</span>
+<span class="hljs-code">			} else {
+</span>
+<span class="hljs-code">				return 2 * Math.PI / 60 / 60 * scope.autoRotateSpeed;
+</span>
+<span class="hljs-code">			}
+</span>
+<span class="hljs-code">		}
+</span>
+<span class="hljs-code">		function getZoomScale( delta ) {
+</span>
+<span class="hljs-code">			const normalizedDelta = Math.abs( delta * 0.01 );
+			return Math.pow( 0.95, scope.zoomSpeed * normalizedDelta );
+</span>
+<span class="hljs-code">		}
+</span>
+<span class="hljs-code">		function rotateLeft( angle ) {
+</span>
+<span class="hljs-code">			sphericalDelta.theta -= angle;
+</span>
+<span class="hljs-code">		}
+</span>
+<span class="hljs-code">		function rotateUp( angle ) {
+</span>
+<span class="hljs-code">			sphericalDelta.phi -= angle;
+</span>
+<span class="hljs-code">		}
+</span>
+<span class="hljs-code">		const panLeft = function () {
+</span>
+<span class="hljs-code">			const v = new Vector3();
+</span>
+<span class="hljs-code">			return function panLeft( distance, objectMatrix ) {
+</span>
+<span class="hljs-code">				v.setFromMatrixColumn( objectMatrix, 0 ); // get X column of objectMatrix
+				v.multiplyScalar( - distance );
+</span>
+<span class="hljs-code">				panOffset.add( v );
+</span>
+<span class="hljs-code">			};
+</span>
+<span class="hljs-code">		}();
+</span>
+<span class="hljs-code">		const panUp = function () {
+</span>
+<span class="hljs-code">			const v = new Vector3();
+</span>
+<span class="hljs-code">			return function panUp( distance, objectMatrix ) {
+</span>
+<span class="hljs-code">				if ( scope.screenSpacePanning === true ) {
+</span>
+<span class="hljs-code">					v.setFromMatrixColumn( objectMatrix, 1 );
+</span>
+<span class="hljs-code">				} else {
+</span>
+<span class="hljs-code">					v.setFromMatrixColumn( objectMatrix, 0 );
+					v.crossVectors( scope.object.up, v );
+</span>
+<span class="hljs-code">				}
+</span>
+<span class="hljs-code">				v.multiplyScalar( distance );
+</span>
+<span class="hljs-code">				panOffset.add( v );
+</span>
+<span class="hljs-code">			};
+</span>
+<span class="hljs-code">		}();
+</span>
+<span class="hljs-code">		// deltaX and deltaY are in pixels; right and down are positive
+		const pan = function () {
+</span>
+<span class="hljs-code">			const offset = new Vector3();
+</span>
+<span class="hljs-code">			return function pan( deltaX, deltaY ) {
+</span>
+<span class="hljs-code">				const element = scope.domElement;
+</span>
+<span class="hljs-code">				if ( scope.object.isPerspectiveCamera ) {
+</span>
+<span class="hljs-code">					// perspective
+					const position = scope.object.position;
+					offset.copy( position ).sub( scope.target );
+					let targetDistance = offset.length();
+</span>
+<span class="hljs-code">					// half of the fov is center to top of screen
+					targetDistance *= Math.tan( ( scope.object.fov / 2 ) * Math.PI / 180.0 );
+</span>
+<span class="hljs-code">					// we use only clientHeight here so aspect ratio does not distort speed
+					panLeft( 2 * deltaX * targetDistance / element.clientHeight, scope.object.matrix );
+					panUp( 2 * deltaY * targetDistance / element.clientHeight, scope.object.matrix );
+</span>
+<span class="hljs-code">				} else if ( scope.object.isOrthographicCamera ) {
+</span>
+<span class="hljs-code">					// orthographic
+					panLeft( deltaX * ( scope.object.right - scope.object.left ) / scope.object.zoom / element.clientWidth, scope.object.matrix );
+					panUp( deltaY * ( scope.object.top - scope.object.bottom ) / scope.object.zoom / element.clientHeight, scope.object.matrix );
+</span>
+<span class="hljs-code">				} else {
+</span>
+<span class="hljs-code">					// camera neither orthographic nor perspective
+					console.warn( &#x27;WARNING: OrbitControls.js encountered an unknown camera type - pan disabled.&#x27; );
+					scope.enablePan = false;
+</span>
+<span class="hljs-code">				}
+</span>
+<span class="hljs-code">			};
+</span>
+<span class="hljs-code">		}();
+</span>
+<span class="hljs-code">		function dollyOut( dollyScale ) {
+</span>
+<span class="hljs-code">			if ( scope.object.isPerspectiveCamera || scope.object.isOrthographicCamera ) {
+</span>
+<span class="hljs-code">				scale /= dollyScale;
+</span>
+<span class="hljs-code">			} else {
+</span>
+<span class="hljs-code">				console.warn( &#x27;WARNING: OrbitControls.js encountered an unknown camera type - dolly/zoom disabled.&#x27; );
+				scope.enableZoom = false;
+</span>
+<span class="hljs-code">			}
+</span>
+<span class="hljs-code">		}
+</span>
+<span class="hljs-code">		function dollyIn( dollyScale ) {
+</span>
+<span class="hljs-code">			if ( scope.object.isPerspectiveCamera || scope.object.isOrthographicCamera ) {
+</span>
+<span class="hljs-code">				scale *= dollyScale;
+</span>
+<span class="hljs-code">			} else {
+</span>
+<span class="hljs-code">				console.warn( &#x27;WARNING: OrbitControls.js encountered an unknown camera type - dolly/zoom disabled.&#x27; );
+				scope.enableZoom = false;
+</span>
+<span class="hljs-code">			}
+</span>
+<span class="hljs-code">		}
+</span>
+<span class="hljs-code">		function updateZoomParameters( x, y ) {
+</span>
+<span class="hljs-code">			if ( ! scope.zoomToCursor ) {
+</span>
+<span class="hljs-code">				return;
+</span>
+<span class="hljs-code">			}
+</span>
+<span class="hljs-code">			performCursorZoom = true;
+</span>
+<span class="hljs-code">			const rect = scope.domElement.getBoundingClientRect();
+			const dx = x - rect.left;
+			const dy = y - rect.top;
+			const w = rect.width;
+			const h = rect.height;
+</span>
+<span class="hljs-code">			mouse.x = ( dx / w ) * 2 - 1;
+			mouse.y = - ( dy / h ) * 2 + 1;
+</span>
+<span class="hljs-code">			dollyDirection.set( mouse.x, mouse.y, 1 ).unproject( scope.object ).sub( scope.object.position ).normalize();
+</span>
+<span class="hljs-code">		}
+</span>
+<span class="hljs-code">		function clampDistance( dist ) {
+</span>
+<span class="hljs-code">			return Math.max( scope.minDistance, Math.min( scope.maxDistance, dist ) );
+</span>
+<span class="hljs-code">		}
+</span>
+<span class="hljs-code">		//
+		// event callbacks - update the object state
+		//
+</span>
+<span class="hljs-code">		function handleMouseDownRotate( event ) {
+</span>
+<span class="hljs-code">			rotateStart.set( event.clientX, event.clientY );
+</span>
+<span class="hljs-code">		}
+</span>
+<span class="hljs-code">		function handleMouseDownDolly( event ) {
+</span>
+<span class="hljs-code">			updateZoomParameters( event.clientX, event.clientX );
+			dollyStart.set( event.clientX, event.clientY );
+</span>
+<span class="hljs-code">		}
+</span>
+<span class="hljs-code">		function handleMouseDownPan( event ) {
+</span>
+<span class="hljs-code">			panStart.set( event.clientX, event.clientY );
+</span>
+<span class="hljs-code">		}
+</span>
+<span class="hljs-code">		function handleMouseMoveRotate( event ) {
+</span>
+<span class="hljs-code">			rotateEnd.set( event.clientX, event.clientY );
+</span>
+<span class="hljs-code">			rotateDelta.subVectors( rotateEnd, rotateStart ).multiplyScalar( scope.rotateSpeed );
+</span>
+<span class="hljs-code">			const element = scope.domElement;
+</span>
+<span class="hljs-code">			rotateLeft( 2 * Math.PI * rotateDelta.x / element.clientHeight ); // yes, height
+</span>
+<span class="hljs-code">			rotateUp( 2 * Math.PI * rotateDelta.y / element.clientHeight );
+</span>
+<span class="hljs-code">			rotateStart.copy( rotateEnd );
+</span>
+<span class="hljs-code">			scope.update();
+</span>
+<span class="hljs-code">		}
+</span>
+<span class="hljs-code">		function handleMouseMoveDolly( event ) {
+</span>
+<span class="hljs-code">			dollyEnd.set( event.clientX, event.clientY );
+</span>
+<span class="hljs-code">			dollyDelta.subVectors( dollyEnd, dollyStart );
+</span>
+<span class="hljs-code">			if ( dollyDelta.y &gt; 0 ) {
+</span>
+<span class="hljs-code">				dollyOut( getZoomScale( dollyDelta.y ) );
+</span>
+<span class="hljs-code">			} else if ( dollyDelta.y &lt; 0 ) {
+</span>
+<span class="hljs-code">				dollyIn( getZoomScale( dollyDelta.y ) );
+</span>
+<span class="hljs-code">			}
+</span>
+<span class="hljs-code">			dollyStart.copy( dollyEnd );
+</span>
+<span class="hljs-code">			scope.update();
+</span>
+<span class="hljs-code">		}
+</span>
+<span class="hljs-code">		function handleMouseMovePan( event ) {
+</span>
+<span class="hljs-code">			panEnd.set( event.clientX, event.clientY );
+</span>
+<span class="hljs-code">			panDelta.subVectors( panEnd, panStart ).multiplyScalar( scope.panSpeed );
+</span>
+<span class="hljs-code">			pan( panDelta.x, panDelta.y );
+</span>
+<span class="hljs-code">			panStart.copy( panEnd );
+</span>
+<span class="hljs-code">			scope.update();
+</span>
+<span class="hljs-code">		}
+</span>
+<span class="hljs-code">		function handleMouseWheel( event ) {
+</span>
+<span class="hljs-code">			updateZoomParameters( event.clientX, event.clientY );
+</span>
+<span class="hljs-code">			if ( event.deltaY &lt; 0 ) {
+</span>
+<span class="hljs-code">				dollyIn( getZoomScale( event.deltaY ) );
+</span>
+<span class="hljs-code">			} else if ( event.deltaY &gt; 0 ) {
+</span>
+<span class="hljs-code">				dollyOut( getZoomScale( event.deltaY ) );
+</span>
+<span class="hljs-code">			}
+</span>
+<span class="hljs-code">			scope.update();
+</span>
+<span class="hljs-code">		}
+</span>
+<span class="hljs-code">		function handleKeyDown( event ) {
+</span>
+<span class="hljs-code">			let needsUpdate = false;
+</span>
+<span class="hljs-code">			switch ( event.code ) {
+</span>
+<span class="hljs-code">				case scope.keys.UP:
+</span>
+<span class="hljs-code">					if ( event.ctrlKey || event.metaKey || event.shiftKey ) {
+</span>
+<span class="hljs-code">						rotateUp( 2 * Math.PI * scope.rotateSpeed / scope.domElement.clientHeight );
+</span>
+<span class="hljs-code">					} else {
+</span>
+<span class="hljs-code">						pan( 0, scope.keyPanSpeed );
+</span>
+<span class="hljs-code">					}
+</span>
+<span class="hljs-code">					needsUpdate = true;
+					break;
+</span>
+<span class="hljs-code">				case scope.keys.BOTTOM:
+</span>
+<span class="hljs-code">					if ( event.ctrlKey || event.metaKey || event.shiftKey ) {
+</span>
+<span class="hljs-code">						rotateUp( - 2 * Math.PI * scope.rotateSpeed / scope.domElement.clientHeight );
+</span>
+<span class="hljs-code">					} else {
+</span>
+<span class="hljs-code">						pan( 0, - scope.keyPanSpeed );
+</span>
+<span class="hljs-code">					}
+</span>
+<span class="hljs-code">					needsUpdate = true;
+					break;
+</span>
+<span class="hljs-code">				case scope.keys.LEFT:
+</span>
+<span class="hljs-code">					if ( event.ctrlKey || event.metaKey || event.shiftKey ) {
+</span>
+<span class="hljs-code">						rotateLeft( 2 * Math.PI * scope.rotateSpeed / scope.domElement.clientHeight );
+</span>
+<span class="hljs-code">					} else {
+</span>
+<span class="hljs-code">						pan( scope.keyPanSpeed, 0 );
+</span>
+<span class="hljs-code">					}
+</span>
+<span class="hljs-code">					needsUpdate = true;
+					break;
+</span>
+<span class="hljs-code">				case scope.keys.RIGHT:
+</span>
+<span class="hljs-code">					if ( event.ctrlKey || event.metaKey || event.shiftKey ) {
+</span>
+<span class="hljs-code">						rotateLeft( - 2 * Math.PI * scope.rotateSpeed / scope.domElement.clientHeight );
+</span>
+<span class="hljs-code">					} else {
+</span>
+<span class="hljs-code">						pan( - scope.keyPanSpeed, 0 );
+</span>
+<span class="hljs-code">					}
+</span>
+<span class="hljs-code">					needsUpdate = true;
+					break;
+</span>
+<span class="hljs-code">			}
+</span>
+<span class="hljs-code">			if ( needsUpdate ) {
+</span>
+<span class="hljs-code">				// prevent the browser from scrolling on cursor keys
+				event.preventDefault();
+</span>
+<span class="hljs-code">				scope.update();
+</span>
+<span class="hljs-code">			}
+</span>
+
+<span class="hljs-code">		}
+</span>
+<span class="hljs-code">		function handleTouchStartRotate( event ) {
+</span>
+<span class="hljs-code">			if ( pointers.length === 1 ) {
+</span>
+<span class="hljs-code">				rotateStart.set( event.pageX, event.pageY );
+</span>
+<span class="hljs-code">			} else {
+</span>
+<span class="hljs-code">				const position = getSecondPointerPosition( event );
+</span>
+<span class="hljs-code">				const x = 0.5 * ( event.pageX + position.x );
+				const y = 0.5 * ( event.pageY + position.y );
+</span>
+<span class="hljs-code">				rotateStart.set( x, y );
+</span>
+<span class="hljs-code">			}
+</span>
+<span class="hljs-code">		}
+</span>
+<span class="hljs-code">		function handleTouchStartPan( event ) {
+</span>
+<span class="hljs-code">			if ( pointers.length === 1 ) {
+</span>
+<span class="hljs-code">				panStart.set( event.pageX, event.pageY );
+</span>
+<span class="hljs-code">			} else {
+</span>
+<span class="hljs-code">				const position = getSecondPointerPosition( event );
+</span>
+<span class="hljs-code">				const x = 0.5 * ( event.pageX + position.x );
+				const y = 0.5 * ( event.pageY + position.y );
+</span>
+<span class="hljs-code">				panStart.set( x, y );
+</span>
+<span class="hljs-code">			}
+</span>
+<span class="hljs-code">		}
+</span>
+<span class="hljs-code">		function handleTouchStartDolly( event ) {
+</span>
+<span class="hljs-code">			const position = getSecondPointerPosition( event );
+</span>
+<span class="hljs-code">			const dx = event.pageX - position.x;
+			const dy = event.pageY - position.y;
+</span>
+<span class="hljs-code">			const distance = Math.sqrt( dx * dx + dy * dy );
+</span>
+<span class="hljs-code">			dollyStart.set( 0, distance );
+</span>
+<span class="hljs-code">		}
+</span>
+<span class="hljs-code">		function handleTouchStartDollyPan( event ) {
+</span>
+<span class="hljs-code">			if ( scope.enableZoom ) handleTouchStartDolly( event );
+</span>
+<span class="hljs-code">			if ( scope.enablePan ) handleTouchStartPan( event );
+</span>
+<span class="hljs-code">		}
+</span>
+<span class="hljs-code">		function handleTouchStartDollyRotate( event ) {
+</span>
+<span class="hljs-code">			if ( scope.enableZoom ) handleTouchStartDolly( event );
+</span>
+<span class="hljs-code">			if ( scope.enableRotate ) handleTouchStartRotate( event );
+</span>
+<span class="hljs-code">		}
+</span>
+<span class="hljs-code">		function handleTouchMoveRotate( event ) {
+</span>
+<span class="hljs-code">			if ( pointers.length == 1 ) {
+</span>
+<span class="hljs-code">				rotateEnd.set( event.pageX, event.pageY );
+</span>
+<span class="hljs-code">			} else {
+</span>
+<span class="hljs-code">				const position = getSecondPointerPosition( event );
+</span>
+<span class="hljs-code">				const x = 0.5 * ( event.pageX + position.x );
+				const y = 0.5 * ( event.pageY + position.y );
+</span>
+<span class="hljs-code">				rotateEnd.set( x, y );
+</span>
+<span class="hljs-code">			}
+</span>
+<span class="hljs-code">			rotateDelta.subVectors( rotateEnd, rotateStart ).multiplyScalar( scope.rotateSpeed );
+</span>
+<span class="hljs-code">			const element = scope.domElement;
+</span>
+<span class="hljs-code">			rotateLeft( 2 * Math.PI * rotateDelta.x / element.clientHeight ); // yes, height
+</span>
+<span class="hljs-code">			rotateUp( 2 * Math.PI * rotateDelta.y / element.clientHeight );
+</span>
+<span class="hljs-code">			rotateStart.copy( rotateEnd );
+</span>
+<span class="hljs-code">		}
+</span>
+<span class="hljs-code">		function handleTouchMovePan( event ) {
+</span>
+<span class="hljs-code">			if ( pointers.length === 1 ) {
+</span>
+<span class="hljs-code">				panEnd.set( event.pageX, event.pageY );
+</span>
+<span class="hljs-code">			} else {
+</span>
+<span class="hljs-code">				const position = getSecondPointerPosition( event );
+</span>
+<span class="hljs-code">				const x = 0.5 * ( event.pageX + position.x );
+				const y = 0.5 * ( event.pageY + position.y );
+</span>
+<span class="hljs-code">				panEnd.set( x, y );
+</span>
+<span class="hljs-code">			}
+</span>
+<span class="hljs-code">			panDelta.subVectors( panEnd, panStart ).multiplyScalar( scope.panSpeed );
+</span>
+<span class="hljs-code">			pan( panDelta.x, panDelta.y );
+</span>
+<span class="hljs-code">			panStart.copy( panEnd );
+</span>
+<span class="hljs-code">		}
+</span>
+<span class="hljs-code">		function handleTouchMoveDolly( event ) {
+</span>
+<span class="hljs-code">			const position = getSecondPointerPosition( event );
+</span>
+<span class="hljs-code">			const dx = event.pageX - position.x;
+			const dy = event.pageY - position.y;
+</span>
+<span class="hljs-code">			const distance = Math.sqrt( dx * dx + dy * dy );
+</span>
+<span class="hljs-code">			dollyEnd.set( 0, distance );
+</span>
+<span class="hljs-code">			dollyDelta.set( 0, Math.pow( dollyEnd.y / dollyStart.y, scope.zoomSpeed ) );
+</span>
+<span class="hljs-code">			dollyOut( dollyDelta.y );
+</span>
+<span class="hljs-code">			dollyStart.copy( dollyEnd );
+</span>
+<span class="hljs-code">			const centerX = ( event.pageX + position.x ) * 0.5;
+			const centerY = ( event.pageY + position.y ) * 0.5;
+</span>
+<span class="hljs-code">			updateZoomParameters( centerX, centerY );
+</span>
+<span class="hljs-code">		}
+</span>
+<span class="hljs-code">		function handleTouchMoveDollyPan( event ) {
+</span>
+<span class="hljs-code">			if ( scope.enableZoom ) handleTouchMoveDolly( event );
+</span>
+<span class="hljs-code">			if ( scope.enablePan ) handleTouchMovePan( event );
+</span>
+<span class="hljs-code">		}
+</span>
+<span class="hljs-code">		function handleTouchMoveDollyRotate( event ) {
+</span>
+<span class="hljs-code">			if ( scope.enableZoom ) handleTouchMoveDolly( event );
+</span>
+<span class="hljs-code">			if ( scope.enableRotate ) handleTouchMoveRotate( event );
+</span>
+<span class="hljs-code">		}
+</span>
+<span class="hljs-code">		//
+		// event handlers - FSM: listen for events and reset state
+		//
+</span>
+<span class="hljs-code">		function onPointerDown( event ) {
+</span>
+<span class="hljs-code">			if ( scope.enabled === false ) return;
+</span>
+<span class="hljs-code">			if ( pointers.length === 0 ) {
+</span>
+<span class="hljs-code">				scope.domElement.setPointerCapture( event.pointerId );
+</span>
+<span class="hljs-code">				scope.domElement.addEventListener( &#x27;pointermove&#x27;, onPointerMove );
+				scope.domElement.addEventListener( &#x27;pointerup&#x27;, onPointerUp );
+</span>
+<span class="hljs-code">			}
+</span>
+<span class="hljs-code">			//
+</span>
+<span class="hljs-code">			if ( isTrackingPointer( event ) ) return;
+</span>
+<span class="hljs-code">			//
+</span>
+<span class="hljs-code">			addPointer( event );
+</span>
+<span class="hljs-code">			if ( event.pointerType === &#x27;touch&#x27; ) {
+</span>
+<span class="hljs-code">				onTouchStart( event );
+</span>
+<span class="hljs-code">			} else {
+</span>
+<span class="hljs-code">				onMouseDown( event );
+</span>
+<span class="hljs-code">			}
+</span>
+<span class="hljs-code">		}
+</span>
+<span class="hljs-code">		function onPointerMove( event ) {
+</span>
+<span class="hljs-code">			if ( scope.enabled === false ) return;
+</span>
+<span class="hljs-code">			if ( event.pointerType === &#x27;touch&#x27; ) {
+</span>
+<span class="hljs-code">				onTouchMove( event );
+</span>
+<span class="hljs-code">			} else {
+</span>
+<span class="hljs-code">				onMouseMove( event );
+</span>
+<span class="hljs-code">			}
+</span>
+<span class="hljs-code">		}
+</span>
+<span class="hljs-code">		function onPointerUp( event ) {
+</span>
+<span class="hljs-code">			removePointer( event );
+</span>
+<span class="hljs-code">			switch ( pointers.length ) {
+</span>
+<span class="hljs-code">				case 0:
+</span>
+<span class="hljs-code">					scope.domElement.releasePointerCapture( event.pointerId );
+</span>
+<span class="hljs-code">					scope.domElement.removeEventListener( &#x27;pointermove&#x27;, onPointerMove );
+					scope.domElement.removeEventListener( &#x27;pointerup&#x27;, onPointerUp );
+</span>
+<span class="hljs-code">					scope.dispatchEvent( _endEvent );
+</span>
+<span class="hljs-code">					state = STATE.NONE;
+</span>
+<span class="hljs-code">					break;
+</span>
+<span class="hljs-code">				case 1:
+</span>
+<span class="hljs-code">					const pointerId = pointers[ 0 ];
+					const position = pointerPositions[ pointerId ];
+</span>
+<span class="hljs-code">					// minimal placeholder event - allows state correction on pointer-up
+					onTouchStart( { pointerId: pointerId, pageX: position.x, pageY: position.y } );
+</span>
+<span class="hljs-code">					break;
+</span>
+<span class="hljs-code">			}
+</span>
+<span class="hljs-code">		}
+</span>
+<span class="hljs-code">		function onMouseDown( event ) {
+</span>
+<span class="hljs-code">			let mouseAction;
+</span>
+<span class="hljs-code">			switch ( event.button ) {
+</span>
+<span class="hljs-code">				case 0:
+</span>
+<span class="hljs-code">					mouseAction = scope.mouseButtons.LEFT;
+					break;
+</span>
+<span class="hljs-code">				case 1:
+</span>
+<span class="hljs-code">					mouseAction = scope.mouseButtons.MIDDLE;
+					break;
+</span>
+<span class="hljs-code">				case 2:
+</span>
+<span class="hljs-code">					mouseAction = scope.mouseButtons.RIGHT;
+					break;
+</span>
+<span class="hljs-code">				default:
+</span>
+<span class="hljs-code">					mouseAction = - 1;
+</span>
+<span class="hljs-code">			}
+</span>
+<span class="hljs-code">			switch ( mouseAction ) {
+</span>
+<span class="hljs-code">				case MOUSE.DOLLY:
+</span>
+<span class="hljs-code">					if ( scope.enableZoom === false ) return;
+</span>
+<span class="hljs-code">					handleMouseDownDolly( event );
+</span>
+<span class="hljs-code">					state = STATE.DOLLY;
+</span>
+<span class="hljs-code">					break;
+</span>
+<span class="hljs-code">				case MOUSE.ROTATE:
+</span>
+<span class="hljs-code">					if ( event.ctrlKey || event.metaKey || event.shiftKey ) {
+</span>
+<span class="hljs-code">						if ( scope.enablePan === false ) return;
+</span>
+<span class="hljs-code">						handleMouseDownPan( event );
+</span>
+<span class="hljs-code">						state = STATE.PAN;
+</span>
+<span class="hljs-code">					} else {
+</span>
+<span class="hljs-code">						if ( scope.enableRotate === false ) return;
+</span>
+<span class="hljs-code">						handleMouseDownRotate( event );
+</span>
+<span class="hljs-code">						state = STATE.ROTATE;
+</span>
+<span class="hljs-code">					}
+</span>
+<span class="hljs-code">					break;
+</span>
+<span class="hljs-code">				case MOUSE.PAN:
+</span>
+<span class="hljs-code">					if ( event.ctrlKey || event.metaKey || event.shiftKey ) {
+</span>
+<span class="hljs-code">						if ( scope.enableRotate === false ) return;
+</span>
+<span class="hljs-code">						handleMouseDownRotate( event );
+</span>
+<span class="hljs-code">						state = STATE.ROTATE;
+</span>
+<span class="hljs-code">					} else {
+</span>
+<span class="hljs-code">						if ( scope.enablePan === false ) return;
+</span>
+<span class="hljs-code">						handleMouseDownPan( event );
+</span>
+<span class="hljs-code">						state = STATE.PAN;
+</span>
+<span class="hljs-code">					}
+</span>
+<span class="hljs-code">					break;
+</span>
+<span class="hljs-code">				default:
+</span>
+<span class="hljs-code">					state = STATE.NONE;
+</span>
+<span class="hljs-code">			}
+</span>
+<span class="hljs-code">			if ( state !== STATE.NONE ) {
+</span>
+<span class="hljs-code">				scope.dispatchEvent( _startEvent );
+</span>
+<span class="hljs-code">			}
+</span>
+<span class="hljs-code">		}
+</span>
+<span class="hljs-code">		function onMouseMove( event ) {
+</span>
+<span class="hljs-code">			switch ( state ) {
+</span>
+<span class="hljs-code">				case STATE.ROTATE:
+</span>
+<span class="hljs-code">					if ( scope.enableRotate === false ) return;
+</span>
+<span class="hljs-code">					handleMouseMoveRotate( event );
+</span>
+<span class="hljs-code">					break;
+</span>
+<span class="hljs-code">				case STATE.DOLLY:
+</span>
+<span class="hljs-code">					if ( scope.enableZoom === false ) return;
+</span>
+<span class="hljs-code">					handleMouseMoveDolly( event );
+</span>
+<span class="hljs-code">					break;
+</span>
+<span class="hljs-code">				case STATE.PAN:
+</span>
+<span class="hljs-code">					if ( scope.enablePan === false ) return;
+</span>
+<span class="hljs-code">					handleMouseMovePan( event );
+</span>
+<span class="hljs-code">					break;
+</span>
+<span class="hljs-code">			}
+</span>
+<span class="hljs-code">		}
+</span>
+<span class="hljs-code">		function onMouseWheel( event ) {
+</span>
+<span class="hljs-code">			if ( scope.enabled === false || scope.enableZoom === false || state !== STATE.NONE ) return;
+</span>
+<span class="hljs-code">			event.preventDefault();
+</span>
+<span class="hljs-code">			scope.dispatchEvent( _startEvent );
+</span>
+<span class="hljs-code">			handleMouseWheel( customWheelEvent( event ) );
+</span>
+<span class="hljs-code">			scope.dispatchEvent( _endEvent );
+</span>
+<span class="hljs-code">		}
+</span>
+<span class="hljs-code">		function customWheelEvent( event ) {
+</span>
+<span class="hljs-code">			const mode = event.deltaMode;
+</span>
+<span class="hljs-code">			// minimal wheel event altered to meet delta-zoom demand
+			const newEvent = {
+				clientX: event.clientX,
+				clientY: event.clientY,
+				deltaY: event.deltaY,
+			};
+</span>
+<span class="hljs-code">			switch ( mode ) {
+</span>
+<span class="hljs-code">				case 1: // LINE_MODE
+					newEvent.deltaY *= 16;
+					break;
+</span>
+<span class="hljs-code">				case 2: // PAGE_MODE
+					newEvent.deltaY *= 100;
+					break;
+</span>
+<span class="hljs-code">			}
+</span>
+<span class="hljs-code">			// detect if event was triggered by pinching
+			if ( event.ctrlKey &amp;&amp; ! controlActive ) {
+</span>
+<span class="hljs-code">				newEvent.deltaY *= 10;
+</span>
+<span class="hljs-code">			}
+</span>
+<span class="hljs-code">			return newEvent;
+</span>
+<span class="hljs-code">		}
+</span>
+<span class="hljs-code">		function interceptControlDown( event ) {
+</span>
+<span class="hljs-code">			if ( event.key === &#x27;Control&#x27; ) {
+</span>
+<span class="hljs-code">				controlActive = true;
+</span>
+
+<span class="hljs-code">				const document = scope.domElement.getRootNode(); // offscreen canvas compatibility
+</span>
+<span class="hljs-code">				document.addEventListener( &#x27;keyup&#x27;, interceptControlUp, { passive: true, capture: true } );
+</span>
+<span class="hljs-code">			}
+</span>
+<span class="hljs-code">		}
+</span>
+<span class="hljs-code">		function interceptControlUp( event ) {
+</span>
+<span class="hljs-code">			if ( event.key === &#x27;Control&#x27; ) {
+</span>
+<span class="hljs-code">				controlActive = false;
+</span>
+
+<span class="hljs-code">				const document = scope.domElement.getRootNode(); // offscreen canvas compatibility
+</span>
+<span class="hljs-code">				document.removeEventListener( &#x27;keyup&#x27;, interceptControlUp, { passive: true, capture: true } );
+</span>
+<span class="hljs-code">			}
+</span>
+<span class="hljs-code">		}
+</span>
+<span class="hljs-code">		function onKeyDown( event ) {
+</span>
+<span class="hljs-code">			if ( scope.enabled === false || scope.enablePan === false ) return;
+</span>
+<span class="hljs-code">			handleKeyDown( event );
+</span>
+<span class="hljs-code">		}
+</span>
+<span class="hljs-code">		function onTouchStart( event ) {
+</span>
+<span class="hljs-code">			trackPointer( event );
+</span>
+<span class="hljs-code">			switch ( pointers.length ) {
+</span>
+<span class="hljs-code">				case 1:
+</span>
+<span class="hljs-code">					switch ( scope.touches.ONE ) {
+</span>
+<span class="hljs-code">						case TOUCH.ROTATE:
+</span>
+<span class="hljs-code">							if ( scope.enableRotate === false ) return;
+</span>
+<span class="hljs-code">							handleTouchStartRotate( event );
+</span>
+<span class="hljs-code">							state = STATE.TOUCH_ROTATE;
+</span>
+<span class="hljs-code">							break;
+</span>
+<span class="hljs-code">						case TOUCH.PAN:
+</span>
+<span class="hljs-code">							if ( scope.enablePan === false ) return;
+</span>
+<span class="hljs-code">							handleTouchStartPan( event );
+</span>
+<span class="hljs-code">							state = STATE.TOUCH_PAN;
+</span>
+<span class="hljs-code">							break;
+</span>
+<span class="hljs-code">						default:
+</span>
+<span class="hljs-code">							state = STATE.NONE;
+</span>
+<span class="hljs-code">					}
+</span>
+<span class="hljs-code">					break;
+</span>
+<span class="hljs-code">				case 2:
+</span>
+<span class="hljs-code">					switch ( scope.touches.TWO ) {
+</span>
+<span class="hljs-code">						case TOUCH.DOLLY_PAN:
+</span>
+<span class="hljs-code">							if ( scope.enableZoom === false &amp;&amp; scope.enablePan === false ) return;
+</span>
+<span class="hljs-code">							handleTouchStartDollyPan( event );
+</span>
+<span class="hljs-code">							state = STATE.TOUCH_DOLLY_PAN;
+</span>
+<span class="hljs-code">							break;
+</span>
+<span class="hljs-code">						case TOUCH.DOLLY_ROTATE:
+</span>
+<span class="hljs-code">							if ( scope.enableZoom === false &amp;&amp; scope.enableRotate === false ) return;
+</span>
+<span class="hljs-code">							handleTouchStartDollyRotate( event );
+</span>
+<span class="hljs-code">							state = STATE.TOUCH_DOLLY_ROTATE;
+</span>
+<span class="hljs-code">							break;
+</span>
+<span class="hljs-code">						default:
+</span>
+<span class="hljs-code">							state = STATE.NONE;
+</span>
+<span class="hljs-code">					}
+</span>
+<span class="hljs-code">					break;
+</span>
+<span class="hljs-code">				default:
+</span>
+<span class="hljs-code">					state = STATE.NONE;
+</span>
+<span class="hljs-code">			}
+</span>
+<span class="hljs-code">			if ( state !== STATE.NONE ) {
+</span>
+<span class="hljs-code">				scope.dispatchEvent( _startEvent );
+</span>
+<span class="hljs-code">			}
+</span>
+<span class="hljs-code">		}
+</span>
+<span class="hljs-code">		function onTouchMove( event ) {
+</span>
+<span class="hljs-code">			trackPointer( event );
+</span>
+<span class="hljs-code">			switch ( state ) {
+</span>
+<span class="hljs-code">				case STATE.TOUCH_ROTATE:
+</span>
+<span class="hljs-code">					if ( scope.enableRotate === false ) return;
+</span>
+<span class="hljs-code">					handleTouchMoveRotate( event );
+</span>
+<span class="hljs-code">					scope.update();
+</span>
+<span class="hljs-code">					break;
+</span>
+<span class="hljs-code">				case STATE.TOUCH_PAN:
+</span>
+<span class="hljs-code">					if ( scope.enablePan === false ) return;
+</span>
+<span class="hljs-code">					handleTouchMovePan( event );
+</span>
+<span class="hljs-code">					scope.update();
+</span>
+<span class="hljs-code">					break;
+</span>
+<span class="hljs-code">				case STATE.TOUCH_DOLLY_PAN:
+</span>
+<span class="hljs-code">					if ( scope.enableZoom === false &amp;&amp; scope.enablePan === false ) return;
+</span>
+<span class="hljs-code">					handleTouchMoveDollyPan( event );
+</span>
+<span class="hljs-code">					scope.update();
+</span>
+<span class="hljs-code">					break;
+</span>
+<span class="hljs-code">				case STATE.TOUCH_DOLLY_ROTATE:
+</span>
+<span class="hljs-code">					if ( scope.enableZoom === false &amp;&amp; scope.enableRotate === false ) return;
+</span>
+<span class="hljs-code">					handleTouchMoveDollyRotate( event );
+</span>
+<span class="hljs-code">					scope.update();
+</span>
+<span class="hljs-code">					break;
+</span>
+<span class="hljs-code">				default:
+</span>
+<span class="hljs-code">					state = STATE.NONE;
+</span>
+<span class="hljs-code">			}
+</span>
+<span class="hljs-code">		}
+</span>
+<span class="hljs-code">		function onContextMenu( event ) {
+</span>
+<span class="hljs-code">			if ( scope.enabled === false ) return;
+</span>
+<span class="hljs-code">			event.preventDefault();
+</span>
+<span class="hljs-code">		}
+</span>
+<span class="hljs-code">		function addPointer( event ) {
+</span>
+<span class="hljs-code">			pointers.push( event.pointerId );
+</span>
+<span class="hljs-code">		}
+</span>
+<span class="hljs-code">		function removePointer( event ) {
+</span>
+<span class="hljs-code">			delete pointerPositions[ event.pointerId ];
+</span>
+<span class="hljs-code">			for ( let i = 0; i &lt; pointers.length; i ++ ) {
+</span>
+<span class="hljs-code">				if ( pointers[ i ] == event.pointerId ) {
+</span>
+<span class="hljs-code">					pointers.splice( i, 1 );
+					return;
+</span>
+<span class="hljs-code">				}
+</span>
+<span class="hljs-code">			}
+</span>
+<span class="hljs-code">		}
+</span>
+<span class="hljs-code">		function isTrackingPointer( event ) {
+</span>
+<span class="hljs-code">			for ( let i = 0; i &lt; pointers.length; i ++ ) {
+</span>
+<span class="hljs-code">				if ( pointers[ i ] == event.pointerId ) return true;
+</span>
+<span class="hljs-code">			}
+</span>
+<span class="hljs-code">			return false;
+</span>
+<span class="hljs-code">		}
+</span>
+<span class="hljs-code">		function trackPointer( event ) {
+</span>
+<span class="hljs-code">			let position = pointerPositions[ event.pointerId ];
+</span>
+<span class="hljs-code">			if ( position === undefined ) {
+</span>
+<span class="hljs-code">				position = new Vector2();
+				pointerPositions[ event.pointerId ] = position;
+</span>
+<span class="hljs-code">			}
+</span>
+<span class="hljs-code">			position.set( event.pageX, event.pageY );
+</span>
+<span class="hljs-code">		}
+</span>
+<span class="hljs-code">		function getSecondPointerPosition( event ) {
+</span>
+<span class="hljs-code">			const pointerId = ( event.pointerId === pointers[ 0 ] ) ? pointers[ 1 ] : pointers[ 0 ];
+</span>
+<span class="hljs-code">			return pointerPositions[ pointerId ];
+</span>
+<span class="hljs-code">		}
+</span>
+<span class="hljs-code">		//
+</span>
+<span class="hljs-code">		scope.domElement.addEventListener( &#x27;contextmenu&#x27;, onContextMenu );
+</span>
+<span class="hljs-code">		scope.domElement.addEventListener( &#x27;pointerdown&#x27;, onPointerDown );
+		scope.domElement.addEventListener( &#x27;pointercancel&#x27;, onPointerUp );
+		scope.domElement.addEventListener( &#x27;wheel&#x27;, onMouseWheel, { passive: false } );
+</span>
+<span class="hljs-code">		const document = scope.domElement.getRootNode(); // offscreen canvas compatibility
+</span>
+<span class="hljs-code">		document.addEventListener( &#x27;keydown&#x27;, interceptControlDown, { passive: true, capture: true } );
+</span>
+<span class="hljs-code">		// force an update at start
+</span>
+<span class="hljs-code">		this.update();
+</span>
+<span class="hljs-code">	}
+</span>
+}
+
+export { OrbitControls };</code></pre>
+    </div>
+  </div>
+</main>
+
+    <div class="footer">
+      <div class="center">
+        Powered by <a target="_blank" href="https://benignware.com">Benignware</a>
+      </div>
+    </div>
+  </body>
+</html>

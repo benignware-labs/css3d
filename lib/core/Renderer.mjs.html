@@ -1,0 +1,336 @@
+<html>
+  <head>
+    <base href="../.."/>
+    <title>css3d - Renderer.mjs</title>
+
+    <link rel="stylesheet" href="public/github-markdown.min-05fea8df8ec68cb6c27337f6db65733e.css">
+    <link rel="stylesheet" href="public/highlight-c281e701b2830b095c67417cd9a7b210.css">
+    <link rel="stylesheet" href="public/style-aea3468ccb7ee0c3c4c2b5d339fc989e.css">
+    <link rel="stylesheet" href="public/all-cc69a8b8824029ae06797ee01a3cc5c8.css">
+
+    <script src="public/plugins/core/example/ExampleViewer.js"></script>
+              
+              <script src="-/index.mjs" type="module"></script>
+            
+  </head>
+  <body class="markdown-body flex-column">
+    <div class="header flex">
+      <a class="header-brand" href="./index.html">css3d</a>
+      
+<ul class="menu flex align-center justify-center">
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="elements/Sphere.html"
+        
+        
+          role="button"
+          
+          aria-expanded="false"
+        
+      >
+        Elements
+      </a>
+      
+    </li>
+    
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="examples/textures.html"
+        
+        
+          role="button"
+          
+          aria-expanded="false"
+        
+      >
+        Examples
+      </a>
+      
+    </li>
+    
+  
+</ul>
+      <nav class="links">
+        
+          
+            
+          
+        
+      </nav>
+    </div>
+      
+      
+
+<main class="flex-grow flex h-100">
+  <div class="sidebar sidebar-left border-right mr-2 flex-noshrink">
+  
+<ul class="menu">
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="elements/Sphere.html"
+        
+        
+          role="button"
+          
+          aria-expanded="false"
+        
+      >
+        Elements
+      </a>
+      
+        
+<ul class="menu">
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="elements/Sphere.html"
+        
+        
+      >
+        Sphere
+      </a>
+      
+    </li>
+    
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="elements/Polyhedron.html"
+        
+        
+      >
+        Polyhedron
+      </a>
+      
+    </li>
+    
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="elements/Cylinder.html"
+        
+        
+      >
+        Cylinder
+      </a>
+      
+    </li>
+    
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="elements/Box.html"
+        
+        
+      >
+        Box
+      </a>
+      
+    </li>
+    
+  
+</ul>
+      
+    </li>
+    
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="examples/textures.html"
+        
+        
+          role="button"
+          
+          aria-expanded="false"
+        
+      >
+        Examples
+      </a>
+      
+        
+<ul class="menu">
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="examples/textures.html"
+        
+        
+      >
+        Textures
+      </a>
+      
+    </li>
+    
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="examples/planets.html"
+        
+        
+      >
+        Planets
+      </a>
+      
+    </li>
+    
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="examples/crane.html"
+        
+        
+      >
+        Crane
+      </a>
+      
+    </li>
+    
+  
+</ul>
+      
+    </li>
+    
+  
+</ul>
+</div>
+  <div class="flex-grow">
+    <div class="container py-4">
+      <h1>Source: Renderer.mjs</h1>
+      <p>
+        lib/core/Renderer.mjs
+      </p>
+      
+      <pre><code class="hljs"><span class="hljs-keyword">const</span> epsilon = value =&gt; Math.abs( value ) &lt; <span class="hljs-number">1e-10</span> ? <span class="hljs-number">0</span> : value;
+
+export <span class="hljs-keyword">class</span> <span class="hljs-title class_">CSS3DRenderer</span> {
+  <span class="hljs-keyword">constructor</span>(camera, viewElement = <span class="hljs-literal">null</span>, cameraElement = <span class="hljs-literal">null</span>) {
+    <span class="hljs-keyword">this</span>.camera = camera;
+    <span class="hljs-keyword">this</span>.width = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">this</span>.height = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">this</span>.widthHalf = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">this</span>.heightHalf = <span class="hljs-number">0</span>;
+
+    <span class="hljs-keyword">this</span>.viewElement = viewElement || document.createElement( <span class="hljs-string">&#x27;div&#x27;</span> );
+
+    <span class="hljs-keyword">this</span>.cameraElement = cameraElement || document.createElement( <span class="hljs-string">&#x27;div&#x27;</span> );
+		<span class="hljs-keyword">this</span>.cameraElement.style.transformStyle = <span class="hljs-string">&#x27;preserve-3d&#x27;</span>;
+		<span class="hljs-keyword">this</span>.viewElement.appendChild( <span class="hljs-keyword">this</span>.cameraElement );
+  }
+
+  getCameraCSSMatrix( matrix ) {
+    <span class="hljs-keyword">const</span> elements = matrix.elements;
+
+    <span class="hljs-keyword">return</span> <span class="hljs-string">&#x27;matrix3d(&#x27;</span> +
+      epsilon( elements[ <span class="hljs-number">0</span> ] ) + <span class="hljs-string">&#x27;,&#x27;</span> +
+      epsilon( - elements[ <span class="hljs-number">1</span> ] ) + <span class="hljs-string">&#x27;,&#x27;</span> +
+      epsilon( elements[ <span class="hljs-number">2</span> ] ) + <span class="hljs-string">&#x27;,&#x27;</span> +
+      epsilon( elements[ <span class="hljs-number">3</span> ] ) + <span class="hljs-string">&#x27;,&#x27;</span> +
+      epsilon( elements[ <span class="hljs-number">4</span> ] ) + <span class="hljs-string">&#x27;,&#x27;</span> +
+      epsilon( - elements[ <span class="hljs-number">5</span> ] ) + <span class="hljs-string">&#x27;,&#x27;</span> +
+      epsilon( elements[ <span class="hljs-number">6</span> ] ) + <span class="hljs-string">&#x27;,&#x27;</span> +
+      epsilon( elements[ <span class="hljs-number">7</span> ] ) + <span class="hljs-string">&#x27;,&#x27;</span> +
+      epsilon( elements[ <span class="hljs-number">8</span> ] ) + <span class="hljs-string">&#x27;,&#x27;</span> +
+      epsilon( - elements[ <span class="hljs-number">9</span> ] ) + <span class="hljs-string">&#x27;,&#x27;</span> +
+      epsilon( elements[ <span class="hljs-number">10</span> ] ) + <span class="hljs-string">&#x27;,&#x27;</span> +
+      epsilon( elements[ <span class="hljs-number">11</span> ] ) + <span class="hljs-string">&#x27;,&#x27;</span> +
+      epsilon( elements[ <span class="hljs-number">12</span> ] ) + <span class="hljs-string">&#x27;,&#x27;</span> +
+      epsilon( - elements[ <span class="hljs-number">13</span> ] ) + <span class="hljs-string">&#x27;,&#x27;</span> +
+      epsilon( elements[ <span class="hljs-number">14</span> ] ) + <span class="hljs-string">&#x27;,&#x27;</span> +
+      epsilon( elements[ <span class="hljs-number">15</span> ] ) +
+    <span class="hljs-string">&#x27;)&#x27;</span>;
+  }
+
+  setSize(width, height) {
+    <span class="hljs-keyword">this</span>.width = width;
+    <span class="hljs-keyword">this</span>.height = height;
+    <span class="hljs-keyword">this</span>.widthHalf = width / <span class="hljs-number">2</span>;
+    <span class="hljs-keyword">this</span>.heightHalf = height / <span class="hljs-number">2</span>;
+
+    <span class="hljs-keyword">this</span>.viewElement.style.width = width + <span class="hljs-string">&#x27;px&#x27;</span>;
+    <span class="hljs-keyword">this</span>.viewElement.style.height = height + <span class="hljs-string">&#x27;px&#x27;</span>;
+
+    <span class="hljs-keyword">this</span>.cameraElement.style.width = width + <span class="hljs-string">&#x27;px&#x27;</span>;
+    <span class="hljs-keyword">this</span>.cameraElement.style.height = height + <span class="hljs-string">&#x27;px&#x27;</span>;
+  }
+
+  render () {
+    console.log(<span class="hljs-string">&#x27;render&#x27;</span>);
+    <span class="hljs-keyword">const</span> camera = <span class="hljs-keyword">this</span>.camera;
+    <span class="hljs-keyword">const</span> cameraElement = <span class="hljs-keyword">this</span>.cameraElement;
+    <span class="hljs-keyword">const</span> viewElement = <span class="hljs-keyword">this</span>.viewElement;
+    <span class="hljs-keyword">const</span> _widthHalf = <span class="hljs-keyword">this</span>.widthHalf;
+    <span class="hljs-keyword">const</span> _heightHalf = <span class="hljs-keyword">this</span>.heightHalf;
+
+    <span class="hljs-keyword">const</span> fov = camera.projectionMatrix.elements[ <span class="hljs-number">5</span> ] * _heightHalf;
+
+    camera.updateMatrixWorld();
+
+    let tx, ty;
+
+    <span class="hljs-keyword">if</span> ( camera.isOrthographicCamera ) {
+      tx = - ( camera.right + camera.left ) / <span class="hljs-number">2</span>;
+      ty = ( camera.top + camera.bottom ) / <span class="hljs-number">2</span>;
+    }
+
+    <span class="hljs-keyword">const</span> p = fov * <span class="hljs-number">40</span>;
+
+    <span class="hljs-keyword">const</span> scaleByViewOffset = camera.view &amp;&amp; camera.view.enabled ? camera.view.height / camera.view.fullHeight : <span class="hljs-number">1</span>;
+    <span class="hljs-keyword">const</span> cameraCSSMatrix = camera.isOrthographicCamera ?
+      `scale( ${ scaleByViewOffset } )` + <span class="hljs-string">&#x27;scale(&#x27;</span> + fov + <span class="hljs-string">&#x27;)&#x27;</span> + <span class="hljs-string">&#x27;translate(&#x27;</span> + epsilon( tx ) + <span class="hljs-string">&#x27;px,&#x27;</span> + epsilon( ty ) + <span class="hljs-string">&#x27;px)&#x27;</span> + <span class="hljs-keyword">this</span>.getCameraCSSMatrix( camera.matrixWorldInverse ) :
+      `scale( ${ scaleByViewOffset } )` + <span class="hljs-string">&#x27;translateZ(&#x27;</span> + fov + <span class="hljs-string">&#x27;px)&#x27;</span> + <span class="hljs-keyword">this</span>.getCameraCSSMatrix( camera.matrixWorldInverse );
+    <span class="hljs-keyword">const</span> perspective = camera.isPerspectiveCamera ? <span class="hljs-string">&#x27;perspective(&#x27;</span> + p + <span class="hljs-string">&#x27;px) &#x27;</span> : <span class="hljs-string">&#x27;&#x27;</span>;
+
+    <span class="hljs-keyword">const</span> style = perspective + cameraCSSMatrix +
+      <span class="hljs-string">&#x27;translate(&#x27;</span> + _widthHalf + <span class="hljs-string">&#x27;px,&#x27;</span> + _heightHalf + <span class="hljs-string">&#x27;px)&#x27;</span>;
+
+    cameraElement.style.transform = style;
+  };
+}
+</code></pre>
+    </div>
+  </div>
+</main>
+
+    <div class="footer">
+      <div class="center">
+        Powered by <a target="_blank" href="https://benignware.com">Benignware</a>
+      </div>
+    </div>
+  </body>
+</html>

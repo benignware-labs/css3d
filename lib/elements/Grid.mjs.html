@@ -1,0 +1,301 @@
+<html>
+  <head>
+    <base href="../.."/>
+    <title>css3d - Grid.mjs</title>
+
+    <link rel="stylesheet" href="public/github-markdown.min-05fea8df8ec68cb6c27337f6db65733e.css">
+    <link rel="stylesheet" href="public/highlight-c281e701b2830b095c67417cd9a7b210.css">
+    <link rel="stylesheet" href="public/style-aea3468ccb7ee0c3c4c2b5d339fc989e.css">
+    <link rel="stylesheet" href="public/all-cc69a8b8824029ae06797ee01a3cc5c8.css">
+
+    <script src="public/plugins/core/example/ExampleViewer.js"></script>
+              
+              <script src="-/index.mjs" type="module"></script>
+            
+  </head>
+  <body class="markdown-body flex-column">
+    <div class="header flex">
+      <a class="header-brand" href="./index.html">css3d</a>
+      
+<ul class="menu flex align-center justify-center">
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="elements/Sphere.html"
+        
+        
+          role="button"
+          
+          aria-expanded="false"
+        
+      >
+        Elements
+      </a>
+      
+    </li>
+    
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="examples/textures.html"
+        
+        
+          role="button"
+          
+          aria-expanded="false"
+        
+      >
+        Examples
+      </a>
+      
+    </li>
+    
+  
+</ul>
+      <nav class="links">
+        
+          
+            
+          
+        
+      </nav>
+    </div>
+      
+      
+
+<main class="flex-grow flex h-100">
+  <div class="sidebar sidebar-left border-right mr-2 flex-noshrink">
+  
+<ul class="menu">
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="elements/Sphere.html"
+        
+        
+          role="button"
+          
+          aria-expanded="false"
+        
+      >
+        Elements
+      </a>
+      
+        
+<ul class="menu">
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="elements/Sphere.html"
+        
+        
+      >
+        Sphere
+      </a>
+      
+    </li>
+    
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="elements/Polyhedron.html"
+        
+        
+      >
+        Polyhedron
+      </a>
+      
+    </li>
+    
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="elements/Cylinder.html"
+        
+        
+      >
+        Cylinder
+      </a>
+      
+    </li>
+    
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="elements/Box.html"
+        
+        
+      >
+        Box
+      </a>
+      
+    </li>
+    
+  
+</ul>
+      
+    </li>
+    
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="examples/textures.html"
+        
+        
+          role="button"
+          
+          aria-expanded="false"
+        
+      >
+        Examples
+      </a>
+      
+        
+<ul class="menu">
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="examples/textures.html"
+        
+        
+      >
+        Textures
+      </a>
+      
+    </li>
+    
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="examples/planets.html"
+        
+        
+      >
+        Planets
+      </a>
+      
+    </li>
+    
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="examples/crane.html"
+        
+        
+      >
+        Crane
+      </a>
+      
+    </li>
+    
+  
+</ul>
+      
+    </li>
+    
+  
+</ul>
+</div>
+  <div class="flex-grow">
+    <div class="container py-4">
+      <h1>Source: Grid.mjs</h1>
+      <p>
+        lib/elements/Grid.mjs
+      </p>
+      
+      <pre><code class="hljs"><span class="hljs-keyword">import</span> { C3Object } from <span class="hljs-string">&quot;../core/3DObject.mjs&quot;</span>;
+
+export <span class="hljs-keyword">class</span> <span class="hljs-title class_">C3Grid</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_ inherited__">C3Object</span> {
+  #style;
+
+  <span class="hljs-title function_">constructor</span>() {
+    <span class="hljs-title function_">super</span>();
+
+    <span class="hljs-variable">this</span>.#style = document.<span class="hljs-property">createElement</span>(<span class="hljs-string">&#x27;style&#x27;</span>);
+    <span class="hljs-variable">this</span>.<span class="hljs-property">shadowRoot</span>.<span class="hljs-property">appendChild</span>(<span class="hljs-variable">this</span>.#style);
+  }
+
+  <span class="hljs-title function_">connectedCallback</span>() {
+    <span class="hljs-variable">this</span>.<span class="hljs-property">render</span>();
+  }
+
+  <span class="hljs-title function_">render</span>() {
+    <span class="hljs-variable">super</span>.<span class="hljs-property">render</span>();
+    <span class="hljs-keyword">const</span> f = <span class="hljs-number">1</span>;
+    <span class="hljs-keyword">const</span> <span class="hljs-built_in">size</span> = <span class="hljs-title function_">parseFloat</span>(<span class="hljs-variable">this</span>.<span class="hljs-property">getAttribute</span>(<span class="hljs-string">&#x27;size&#x27;</span>) || <span class="hljs-string">&#x27;200px&#x27;</span>);
+    <span class="hljs-keyword">const</span> divisions = <span class="hljs-title function_">parseInt</span>(<span class="hljs-variable">this</span>.<span class="hljs-property">getAttribute</span>(<span class="hljs-string">&#x27;divisions&#x27;</span>) || <span class="hljs-string">&#x27;10&#x27;</span>);
+    <span class="hljs-keyword">const</span> <span class="hljs-built_in">width</span> = <span class="hljs-built_in">size</span> * f;
+    <span class="hljs-keyword">const</span> <span class="hljs-built_in">height</span> = <span class="hljs-built_in">size</span> * f;
+
+    <span class="hljs-variable">this</span>.<span class="hljs-property">shadowRoot</span>.<span class="hljs-property">host</span>.<span class="hljs-property">style</span>.<span class="hljs-property">setProperty</span>(<span class="hljs-string">&#x27;--color&#x27;</span>, <span class="hljs-string">&#x27;rgba(2555, 255, 255, 0.5)&#x27;</span>);
+
+   <span class="hljs-variable">this</span>.#style.<span class="hljs-property">textContent</span> = `
+      :host {
+        --<span class="hljs-built_in">size</span>: ${<span class="hljs-built_in">size</span>}px;
+        --divisions: ${divisions};
+      }
+      
+      :host::after {
+        --<span class="hljs-built_in">stroke</span>: <span class="hljs-number">2.5</span>px;
+        --tile: <span class="hljs-title function_">calc</span>(<span class="hljs-title function_">var</span>(--<span class="hljs-built_in">size</span>) / <span class="hljs-title function_">var</span>(--divisions));
+        content: <span class="hljs-string">&#x27;&#x27;</span>;
+        position: absolute;
+        top: <span class="hljs-number">0</span>;
+        left: <span class="hljs-number">0</span>;
+        <span class="hljs-built_in">width</span>: <span class="hljs-title function_">calc</span>(<span class="hljs-title function_">var</span>(--<span class="hljs-built_in">size</span>) + <span class="hljs-title function_">var</span>(--<span class="hljs-built_in">stroke</span>));
+        <span class="hljs-built_in">height</span>: <span class="hljs-title function_">calc</span>(<span class="hljs-title function_">var</span>(--<span class="hljs-built_in">size</span>) + <span class="hljs-title function_">var</span>(--<span class="hljs-built_in">stroke</span>));
+        <span class="hljs-built_in">background</span>: repeating-linear-<span class="hljs-title function_">gradient</span>(<span class="hljs-number">90</span>deg, <span class="hljs-title function_">var</span>(--<span class="hljs-type">color</span>), <span class="hljs-title function_">var</span>(--<span class="hljs-type">color</span>) <span class="hljs-number">1</span>px, transparent <span class="hljs-number">1</span>px, transparent <span class="hljs-title function_">var</span>(--tile)) 
+            , repeating-linear-<span class="hljs-title function_">gradient</span>(<span class="hljs-number">180</span>deg, <span class="hljs-title function_">var</span>(--<span class="hljs-type">color</span>), <span class="hljs-title function_">var</span>(--<span class="hljs-type">color</span>) <span class="hljs-number">1</span>px, transparent <span class="hljs-number">1</span>px, transparent <span class="hljs-title function_">var</span>(--tile));
+        transform: <span class="hljs-built_in">rotateX</span>(<span class="hljs-number">90</span>deg)  <span class="hljs-built_in">translate</span>(<span class="hljs-number">-50</span>%, <span class="hljs-number">-50</span>%);
+        transform-style: preserve<span class="hljs-number">-3</span>d;
+        transform-origin: <span class="hljs-number">0</span> <span class="hljs-number">0</span>;
+      }
+    `;
+  }
+}
+
+customElements.<span class="hljs-property">define</span>(<span class="hljs-string">&#x27;c3-grid&#x27;</span>, C3Grid);</code></pre>
+    </div>
+  </div>
+</main>
+
+    <div class="footer">
+      <div class="center">
+        Powered by <a target="_blank" href="https://benignware.com">Benignware</a>
+      </div>
+    </div>
+  </body>
+</html>

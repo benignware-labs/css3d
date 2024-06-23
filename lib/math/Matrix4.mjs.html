@@ -1,0 +1,1124 @@
+<html>
+  <head>
+    <base href="../.."/>
+    <title>css3d - Matrix4.mjs</title>
+
+    <link rel="stylesheet" href="public/github-markdown.min-05fea8df8ec68cb6c27337f6db65733e.css">
+    <link rel="stylesheet" href="public/highlight-c281e701b2830b095c67417cd9a7b210.css">
+    <link rel="stylesheet" href="public/style-aea3468ccb7ee0c3c4c2b5d339fc989e.css">
+    <link rel="stylesheet" href="public/all-cc69a8b8824029ae06797ee01a3cc5c8.css">
+
+    <script src="public/plugins/core/example/ExampleViewer.js"></script>
+              
+              <script src="-/index.mjs" type="module"></script>
+            
+  </head>
+  <body class="markdown-body flex-column">
+    <div class="header flex">
+      <a class="header-brand" href="./index.html">css3d</a>
+      
+<ul class="menu flex align-center justify-center">
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="elements/Sphere.html"
+        
+        
+          role="button"
+          
+          aria-expanded="false"
+        
+      >
+        Elements
+      </a>
+      
+    </li>
+    
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="examples/textures.html"
+        
+        
+          role="button"
+          
+          aria-expanded="false"
+        
+      >
+        Examples
+      </a>
+      
+    </li>
+    
+  
+</ul>
+      <nav class="links">
+        
+          
+            
+          
+        
+      </nav>
+    </div>
+      
+      
+
+<main class="flex-grow flex h-100">
+  <div class="sidebar sidebar-left border-right mr-2 flex-noshrink">
+  
+<ul class="menu">
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="elements/Sphere.html"
+        
+        
+          role="button"
+          
+          aria-expanded="false"
+        
+      >
+        Elements
+      </a>
+      
+        
+<ul class="menu">
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="elements/Sphere.html"
+        
+        
+      >
+        Sphere
+      </a>
+      
+    </li>
+    
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="elements/Polyhedron.html"
+        
+        
+      >
+        Polyhedron
+      </a>
+      
+    </li>
+    
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="elements/Cylinder.html"
+        
+        
+      >
+        Cylinder
+      </a>
+      
+    </li>
+    
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="elements/Box.html"
+        
+        
+      >
+        Box
+      </a>
+      
+    </li>
+    
+  
+</ul>
+      
+    </li>
+    
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="examples/textures.html"
+        
+        
+          role="button"
+          
+          aria-expanded="false"
+        
+      >
+        Examples
+      </a>
+      
+        
+<ul class="menu">
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="examples/textures.html"
+        
+        
+      >
+        Textures
+      </a>
+      
+    </li>
+    
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="examples/planets.html"
+        
+        
+      >
+        Planets
+      </a>
+      
+    </li>
+    
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="examples/crane.html"
+        
+        
+      >
+        Crane
+      </a>
+      
+    </li>
+    
+  
+</ul>
+      
+    </li>
+    
+  
+</ul>
+</div>
+  <div class="flex-grow">
+    <div class="container py-4">
+      <h1>Source: Matrix4.mjs</h1>
+      <p>
+        lib/math/Matrix4.mjs
+      </p>
+      
+      <pre><code class="hljs">import { Vector3 } from &#x27;./Vector3.mjs&#x27;;
+
+const WebGLCoordinateSystem = 2000;
+const WebGPUCoordinateSystem = 2001;
+
+class Matrix4 {
+	constructor( n11, n12, n13, n14, n21, n22, n23, n24, n31, n32, n33, n34, n41, n42, n43, n44 ) {
+		Matrix4.prototype.isMatrix4 = true;
+
+		this.elements = [
+			1, 0, 0, 0,
+			0, 1, 0, 0,
+			0, 0, 1, 0,
+			0, 0, 0, 1
+		];
+
+		if ( n11 !== undefined ) {
+			this.set( n11, n12, n13, n14, n21, n22, n23, n24, n31, n32, n33, n34, n41, n42, n43, n44 );
+		}
+
+	}
+
+	set( n11, n12, n13, n14, n21, n22, n23, n24, n31, n32, n33, n34, n41, n42, n43, n44 ) {
+		const te = this.elements;
+  
+		te[<span class="hljs-number"> 0 </span>] = n11; te[<span class="hljs-number"> 4 </span>] = n12; te[<span class="hljs-number"> 8 </span>] = n13; te[<span class="hljs-number"> 12 </span>] = n14;
+		te[<span class="hljs-number"> 1 </span>] = n21; te[<span class="hljs-number"> 5 </span>] = n22; te[<span class="hljs-number"> 9 </span>] = n23; te[<span class="hljs-number"> 13 </span>] = n24;
+		te[<span class="hljs-number"> 2 </span>] = n31; te[<span class="hljs-number"> 6 </span>] = n32; te[<span class="hljs-number"> 10 </span>] = n33; te[<span class="hljs-number"> 14 </span>] = n34;
+		te[<span class="hljs-number"> 3 </span>] = n41; te[<span class="hljs-number"> 7 </span>] = n42; te[<span class="hljs-number"> 11 </span>] = n43; te[<span class="hljs-number"> 15 </span>] = n44;
+
+		return this;
+	}
+
+	identity() {
+		this.set(
+
+			1, 0, 0, 0,
+			0, 1, 0, 0,
+			0, 0, 1, 0,
+			0, 0, 0, 1
+
+		);
+
+		return this;
+	}
+
+	clone() {
+		return new Matrix4().fromArray( this.elements );
+	}
+
+	copy( m ) {
+		const te = this.elements;
+		const me = m.elements;
+
+		te[<span class="hljs-number"> 0 </span>] = me[<span class="hljs-number"> 0 </span>]; te[<span class="hljs-number"> 1 </span>] = me[<span class="hljs-number"> 1 </span>]; te[<span class="hljs-number"> 2 </span>] = me[<span class="hljs-number"> 2 </span>]; te[<span class="hljs-number"> 3 </span>] = me[<span class="hljs-number"> 3 </span>];
+		te[<span class="hljs-number"> 4 </span>] = me[<span class="hljs-number"> 4 </span>]; te[<span class="hljs-number"> 5 </span>] = me[<span class="hljs-number"> 5 </span>]; te[<span class="hljs-number"> 6 </span>] = me[<span class="hljs-number"> 6 </span>]; te[<span class="hljs-number"> 7 </span>] = me[<span class="hljs-number"> 7 </span>];
+		te[<span class="hljs-number"> 8 </span>] = me[<span class="hljs-number"> 8 </span>]; te[<span class="hljs-number"> 9 </span>] = me[<span class="hljs-number"> 9 </span>]; te[<span class="hljs-number"> 10 </span>] = me[<span class="hljs-number"> 10 </span>]; te[<span class="hljs-number"> 11 </span>] = me[<span class="hljs-number"> 11 </span>];
+		te[<span class="hljs-number"> 12 </span>] = me[<span class="hljs-number"> 12 </span>]; te[<span class="hljs-number"> 13 </span>] = me[<span class="hljs-number"> 13 </span>]; te[<span class="hljs-number"> 14 </span>] = me[<span class="hljs-number"> 14 </span>]; te[<span class="hljs-number"> 15 </span>] = me[<span class="hljs-number"> 15 </span>];
+
+		return this;
+	}
+
+	copyPosition( m ) {
+		const te = this.elements, me = m.elements;
+
+		te[<span class="hljs-number"> 12 </span>] = me[<span class="hljs-number"> 12 </span>];
+		te[<span class="hljs-number"> 13 </span>] = me[<span class="hljs-number"> 13 </span>];
+		te[<span class="hljs-number"> 14 </span>] = me[<span class="hljs-number"> 14 </span>];
+
+		return this;
+	}
+
+	setFromMatrix3( m ) {
+		const me = m.elements;
+
+		this.set(
+
+			me[<span class="hljs-number"> 0 </span>], me[<span class="hljs-number"> 3 </span>], me[<span class="hljs-number"> 6 </span>], 0,
+			me[<span class="hljs-number"> 1 </span>], me[<span class="hljs-number"> 4 </span>], me[<span class="hljs-number"> 7 </span>], 0,
+			me[<span class="hljs-number"> 2 </span>], me[<span class="hljs-number"> 5 </span>], me[<span class="hljs-number"> 8 </span>], 0,
+			0, 0, 0, 1
+
+		);
+
+		return this;
+	}
+
+	extractBasis( xAxis, yAxis, zAxis ) {
+		xAxis.setFromMatrixColumn( this,<span class="hljs-number"> 0 </span>);
+		yAxis.setFromMatrixColumn( this,<span class="hljs-number"> 1 </span>);
+		zAxis.setFromMatrixColumn( this,<span class="hljs-number"> 2 </span>);
+
+		return this;
+	}
+
+	makeBasis( xAxis, yAxis, zAxis ) {
+		this.set(
+			xAxis.x, yAxis.x, zAxis.x, 0,
+			xAxis.y, yAxis.y, zAxis.y, 0,
+			xAxis.z, yAxis.z, zAxis.z, 0,
+			0, 0, 0, 1
+		);
+
+		return this;
+	}
+
+	extractRotation( m ) {
+		// this method does not support reflection matrices
+
+		const te = this.elements;
+		const me = m.elements;
+
+		const scaleX =<span class="hljs-number"> 1 </span>/ _v1.setFromMatrixColumn( m,<span class="hljs-number"> 0 </span>).length();
+		const scaleY =<span class="hljs-number"> 1 </span>/ _v1.setFromMatrixColumn( m,<span class="hljs-number"> 1 </span>).length();
+		const scaleZ =<span class="hljs-number"> 1 </span>/ _v1.setFromMatrixColumn( m,<span class="hljs-number"> 2 </span>).length();
+
+		te[<span class="hljs-number"> 0 </span>] = me[<span class="hljs-number"> 0 </span>] * scaleX;
+		te[<span class="hljs-number"> 1 </span>] = me[<span class="hljs-number"> 1 </span>] * scaleX;
+		te[<span class="hljs-number"> 2 </span>] = me[<span class="hljs-number"> 2 </span>] * scaleX;
+		te[<span class="hljs-number"> 3 </span>] = 0;
+
+		te[<span class="hljs-number"> 4 </span>] = me[<span class="hljs-number"> 4 </span>] * scaleY;
+		te[<span class="hljs-number"> 5 </span>] = me[<span class="hljs-number"> 5 </span>] * scaleY;
+		te[<span class="hljs-number"> 6 </span>] = me[<span class="hljs-number"> 6 </span>] * scaleY;
+		te[<span class="hljs-number"> 7 </span>] = 0;
+
+		te[<span class="hljs-number"> 8 </span>] = me[<span class="hljs-number"> 8 </span>] * scaleZ;
+		te[<span class="hljs-number"> 9 </span>] = me[<span class="hljs-number"> 9 </span>] * scaleZ;
+		te[<span class="hljs-number"> 10 </span>] = me[<span class="hljs-number"> 10 </span>] * scaleZ;
+		te[<span class="hljs-number"> 11 </span>] = 0;
+
+		te[<span class="hljs-number"> 12 </span>] = 0;
+		te[<span class="hljs-number"> 13 </span>] = 0;
+		te[<span class="hljs-number"> 14 </span>] = 0;
+		te[<span class="hljs-number"> 15 </span>] = 1;
+
+		return this;
+	}
+
+	makeRotationFromEuler( euler ) {
+		const te = this.elements;
+
+		const x = euler.x, y = euler.y, z = euler.z;
+		const a = Math.cos( x ), b = Math.sin( x );
+		const c = Math.cos( y ), d = Math.sin( y );
+		const e = Math.cos( z ), f = Math.sin( z );
+
+		if ( euler.order === &#x27;XYZ&#x27; ) {
+
+			const ae = a * e, af = a * f, be = b * e, bf = b * f;
+
+			te[<span class="hljs-number"> 0 </span>] = c * e;
+			te[<span class="hljs-number"> 4 </span>] = - c * f;
+			te[<span class="hljs-number"> 8 </span>] = d;
+
+			te[<span class="hljs-number"> 1 </span>] = af + be * d;
+			te[<span class="hljs-number"> 5 </span>] = ae - bf * d;
+			te[<span class="hljs-number"> 9 </span>] = - b * c;
+
+			te[<span class="hljs-number"> 2 </span>] = bf - ae * d;
+			te[<span class="hljs-number"> 6 </span>] = be + af * d;
+			te[<span class="hljs-number"> 10 </span>] = a * c;
+
+		} else if ( euler.order === &#x27;YXZ&#x27; ) {
+
+			const ce = c * e, cf = c * f, de = d * e, df = d * f;
+
+			te[<span class="hljs-number"> 0 </span>] = ce + df * b;
+			te[<span class="hljs-number"> 4 </span>] = de * b - cf;
+			te[<span class="hljs-number"> 8 </span>] = a * d;
+
+			te[<span class="hljs-number"> 1 </span>] = a * f;
+			te[<span class="hljs-number"> 5 </span>] = a * e;
+			te[<span class="hljs-number"> 9 </span>] = - b;
+
+			te[<span class="hljs-number"> 2 </span>] = cf * b - de;
+			te[<span class="hljs-number"> 6 </span>] = df + ce * b;
+			te[<span class="hljs-number"> 10 </span>] = a * c;
+
+		} else if ( euler.order === &#x27;ZXY&#x27; ) {
+
+			const ce = c * e, cf = c * f, de = d * e, df = d * f;
+
+			te[<span class="hljs-number"> 0 </span>] = ce - df * b;
+			te[<span class="hljs-number"> 4 </span>] = - a * f;
+			te[<span class="hljs-number"> 8 </span>] = de + cf * b;
+
+			te[<span class="hljs-number"> 1 </span>] = cf + de * b;
+			te[<span class="hljs-number"> 5 </span>] = a * e;
+			te[<span class="hljs-number"> 9 </span>] = df - ce * b;
+
+			te[<span class="hljs-number"> 2 </span>] = - a * d;
+			te[<span class="hljs-number"> 6 </span>] = b;
+			te[<span class="hljs-number"> 10 </span>] = a * c;
+
+		} else if ( euler.order === &#x27;ZYX&#x27; ) {
+
+			const ae = a * e, af = a * f, be = b * e, bf = b * f;
+
+			te[<span class="hljs-number"> 0 </span>] = c * e;
+			te[<span class="hljs-number"> 4 </span>] = be * d - af;
+			te[<span class="hljs-number"> 8 </span>] = ae * d + bf;
+
+			te[<span class="hljs-number"> 1 </span>] = c * f;
+			te[<span class="hljs-number"> 5 </span>] = bf * d + ae;
+			te[<span class="hljs-number"> 9 </span>] = af * d - be;
+
+			te[<span class="hljs-number"> 2 </span>] = - d;
+			te[<span class="hljs-number"> 6 </span>] = b * c;
+			te[<span class="hljs-number"> 10 </span>] = a * c;
+
+		} else if ( euler.order === &#x27;YZX&#x27; ) {
+
+			const ac = a * c, ad = a * d, bc = b * c, bd = b * d;
+
+			te[<span class="hljs-number"> 0 </span>] = c * e;
+			te[<span class="hljs-number"> 4 </span>] = bd - ac * f;
+			te[<span class="hljs-number"> 8 </span>] = bc * f + ad;
+
+			te[<span class="hljs-number"> 1 </span>] = f;
+			te[<span class="hljs-number"> 5 </span>] = a * e;
+			te[<span class="hljs-number"> 9 </span>] = - b * e;
+
+			te[<span class="hljs-number"> 2 </span>] = - d * e;
+			te[<span class="hljs-number"> 6 </span>] = ad * f + bc;
+			te[<span class="hljs-number"> 10 </span>] = ac - bd * f;
+
+		} else if ( euler.order === &#x27;XZY&#x27; ) {
+
+			const ac = a * c, ad = a * d, bc = b * c, bd = b * d;
+
+			te[<span class="hljs-number"> 0 </span>] = c * e;
+			te[<span class="hljs-number"> 4 </span>] = - f;
+			te[<span class="hljs-number"> 8 </span>] = d * e;
+
+			te[<span class="hljs-number"> 1 </span>] = ac * f + bd;
+			te[<span class="hljs-number"> 5 </span>] = a * e;
+			te[<span class="hljs-number"> 9 </span>] = ad * f - bc;
+
+			te[<span class="hljs-number"> 2 </span>] = bc * f - ad;
+			te[<span class="hljs-number"> 6 </span>] = b * e;
+			te[<span class="hljs-number"> 10 </span>] = bd * f + ac;
+		}
+
+		// bottom row
+		te[<span class="hljs-number"> 3 </span>] = 0;
+		te[<span class="hljs-number"> 7 </span>] = 0;
+		te[<span class="hljs-number"> 11 </span>] = 0;
+
+		// last column
+		te[<span class="hljs-number"> 12 </span>] = 0;
+		te[<span class="hljs-number"> 13 </span>] = 0;
+		te[<span class="hljs-number"> 14 </span>] = 0;
+		te[<span class="hljs-number"> 15 </span>] = 1;
+
+		return this;
+	}
+
+	makeRotationFromQuaternion( q ) {
+		return this.compose( _zero, q, _one );
+	}
+
+	lookAt( eye, target, up ) {
+		const te = this.elements;
+
+		_z.subVectors( eye, target );
+
+		if ( _z.lengthSq() ===<span class="hljs-number"> 0 </span>) {
+			// eye and target are in the same position
+
+			_z.z = 1;
+		}
+
+		_z.normalize();
+		_x.crossVectors( up, _z );
+
+		if ( _x.lengthSq() ===<span class="hljs-number"> 0 </span>) {
+			// up and z are parallel
+
+			if ( Math.abs( up.z ) ===<span class="hljs-number"> 1 </span>) {
+
+				_z.x += 0.0001;
+
+			} else {
+
+				_z.z += 0.0001;
+
+			}
+
+			_z.normalize();
+			_x.crossVectors( up, _z );
+
+		}
+
+		_x.normalize();
+		_y.crossVectors( _z, _x );
+
+		te[<span class="hljs-number"> 0 </span>] = _x.x; te[<span class="hljs-number"> 4 </span>] = _y.x; te[<span class="hljs-number"> 8 </span>] = _z.x;
+		te[<span class="hljs-number"> 1 </span>] = _x.y; te[<span class="hljs-number"> 5 </span>] = _y.y; te[<span class="hljs-number"> 9 </span>] = _z.y;
+		te[<span class="hljs-number"> 2 </span>] = _x.z; te[<span class="hljs-number"> 6 </span>] = _y.z; te[<span class="hljs-number"> 10 </span>] = _z.z;
+
+		return this;
+
+	}
+
+	multiply( m ) {
+		return this.multiplyMatrices( this, m );
+
+	}
+
+	premultiply( m ) {
+		return this.multiplyMatrices( m, this );
+	}
+
+	multiplyMatrices( a, b ) {
+		const ae = a.elements;
+		const be = b.elements;
+		const te = this.elements;
+
+		const a11 = ae[<span class="hljs-number"> 0 </span>], a12 = ae[<span class="hljs-number"> 4 </span>], a13 = ae[<span class="hljs-number"> 8 </span>], a14 = ae[<span class="hljs-number"> 12 </span>];
+		const a21 = ae[<span class="hljs-number"> 1 </span>], a22 = ae[<span class="hljs-number"> 5 </span>], a23 = ae[<span class="hljs-number"> 9 </span>], a24 = ae[<span class="hljs-number"> 13 </span>];
+		const a31 = ae[<span class="hljs-number"> 2 </span>], a32 = ae[<span class="hljs-number"> 6 </span>], a33 = ae[<span class="hljs-number"> 10 </span>], a34 = ae[<span class="hljs-number"> 14 </span>];
+		const a41 = ae[<span class="hljs-number"> 3 </span>], a42 = ae[<span class="hljs-number"> 7 </span>], a43 = ae[<span class="hljs-number"> 11 </span>], a44 = ae[<span class="hljs-number"> 15 </span>];
+
+		const b11 = be[<span class="hljs-number"> 0 </span>], b12 = be[<span class="hljs-number"> 4 </span>], b13 = be[<span class="hljs-number"> 8 </span>], b14 = be[<span class="hljs-number"> 12 </span>];
+		const b21 = be[<span class="hljs-number"> 1 </span>], b22 = be[<span class="hljs-number"> 5 </span>], b23 = be[<span class="hljs-number"> 9 </span>], b24 = be[<span class="hljs-number"> 13 </span>];
+		const b31 = be[<span class="hljs-number"> 2 </span>], b32 = be[<span class="hljs-number"> 6 </span>], b33 = be[<span class="hljs-number"> 10 </span>], b34 = be[<span class="hljs-number"> 14 </span>];
+		const b41 = be[<span class="hljs-number"> 3 </span>], b42 = be[<span class="hljs-number"> 7 </span>], b43 = be[<span class="hljs-number"> 11 </span>], b44 = be[<span class="hljs-number"> 15 </span>];
+
+		te[<span class="hljs-number"> 0 </span>] = a11 * b11 + a12 * b21 + a13 * b31 + a14 * b41;
+		te[<span class="hljs-number"> 4 </span>] = a11 * b12 + a12 * b22 + a13 * b32 + a14 * b42;
+		te[<span class="hljs-number"> 8 </span>] = a11 * b13 + a12 * b23 + a13 * b33 + a14 * b43;
+		te[<span class="hljs-number"> 12 </span>] = a11 * b14 + a12 * b24 + a13 * b34 + a14 * b44;
+
+		te[<span class="hljs-number"> 1 </span>] = a21 * b11 + a22 * b21 + a23 * b31 + a24 * b41;
+		te[<span class="hljs-number"> 5 </span>] = a21 * b12 + a22 * b22 + a23 * b32 + a24 * b42;
+		te[<span class="hljs-number"> 9 </span>] = a21 * b13 + a22 * b23 + a23 * b33 + a24 * b43;
+		te[<span class="hljs-number"> 13 </span>] = a21 * b14 + a22 * b24 + a23 * b34 + a24 * b44;
+
+		te[<span class="hljs-number"> 2 </span>] = a31 * b11 + a32 * b21 + a33 * b31 + a34 * b41;
+		te[<span class="hljs-number"> 6 </span>] = a31 * b12 + a32 * b22 + a33 * b32 + a34 * b42;
+		te[<span class="hljs-number"> 10 </span>] = a31 * b13 + a32 * b23 + a33 * b33 + a34 * b43;
+		te[<span class="hljs-number"> 14 </span>] = a31 * b14 + a32 * b24 + a33 * b34 + a34 * b44;
+
+		te[<span class="hljs-number"> 3 </span>] = a41 * b11 + a42 * b21 + a43 * b31 + a44 * b41;
+		te[<span class="hljs-number"> 7 </span>] = a41 * b12 + a42 * b22 + a43 * b32 + a44 * b42;
+		te[<span class="hljs-number"> 11 </span>] = a41 * b13 + a42 * b23 + a43 * b33 + a44 * b43;
+		te[<span class="hljs-number"> 15 </span>] = a41 * b14 + a42 * b24 + a43 * b34 + a44 * b44;
+
+		return this;
+	}
+
+	multiplyScalar( s ) {
+		const te = this.elements;
+
+		te[<span class="hljs-number"> 0 </span>] *= s; te[<span class="hljs-number"> 4 </span>] *= s; te[<span class="hljs-number"> 8 </span>] *= s; te[<span class="hljs-number"> 12 </span>] *= s;
+		te[<span class="hljs-number"> 1 </span>] *= s; te[<span class="hljs-number"> 5 </span>] *= s; te[<span class="hljs-number"> 9 </span>] *= s; te[<span class="hljs-number"> 13 </span>] *= s;
+		te[<span class="hljs-number"> 2 </span>] *= s; te[<span class="hljs-number"> 6 </span>] *= s; te[<span class="hljs-number"> 10 </span>] *= s; te[<span class="hljs-number"> 14 </span>] *= s;
+		te[<span class="hljs-number"> 3 </span>] *= s; te[<span class="hljs-number"> 7 </span>] *= s; te[<span class="hljs-number"> 11 </span>] *= s; te[<span class="hljs-number"> 15 </span>] *= s;
+
+		return this;
+	}
+
+	determinant() {
+		const te = this.elements;
+
+		const n11 = te[<span class="hljs-number"> 0 </span>], n12 = te[<span class="hljs-number"> 4 </span>], n13 = te[<span class="hljs-number"> 8 </span>], n14 = te[<span class="hljs-number"> 12 </span>];
+		const n21 = te[<span class="hljs-number"> 1 </span>], n22 = te[<span class="hljs-number"> 5 </span>], n23 = te[<span class="hljs-number"> 9 </span>], n24 = te[<span class="hljs-number"> 13 </span>];
+		const n31 = te[<span class="hljs-number"> 2 </span>], n32 = te[<span class="hljs-number"> 6 </span>], n33 = te[<span class="hljs-number"> 10 </span>], n34 = te[<span class="hljs-number"> 14 </span>];
+		const n41 = te[<span class="hljs-number"> 3 </span>], n42 = te[<span class="hljs-number"> 7 </span>], n43 = te[<span class="hljs-number"> 11 </span>], n44 = te[<span class="hljs-number"> 15 </span>];
+
+		//TODO: make this more efficient
+		//( based on http://www.euclideanspace.com/maths/algebra/matrix/functions/inverse/fourD/index.htm )
+
+		return (
+			n41 * (
+				+ n14 * n23 * n32
+				 - n13 * n24 * n32
+				 - n14 * n22 * n33
+				 + n12 * n24 * n33
+				 + n13 * n22 * n34
+				 - n12 * n23 * n34
+			) +
+			n42 * (
+				+ n11 * n23 * n34
+				 - n11 * n24 * n33
+				 + n14 * n21 * n33
+				 - n13 * n21 * n34
+				 + n13 * n24 * n31
+				 - n14 * n23 * n31
+			) +
+			n43 * (
+				+ n11 * n24 * n32
+				 - n11 * n22 * n34
+				 - n14 * n21 * n32
+				 + n12 * n21 * n34
+				 + n14 * n22 * n31
+				 - n12 * n24 * n31
+			) +
+			n44 * (
+				- n13 * n22 * n31
+				 - n11 * n23 * n32
+				 + n11 * n22 * n33
+				 + n13 * n21 * n32
+				 - n12 * n21 * n33
+				 + n12 * n23 * n31
+			)
+
+		);
+	}
+
+	transpose() {
+
+		const te = this.elements;
+		let tmp;
+
+		tmp = te[<span class="hljs-number"> 1 </span>]; te[<span class="hljs-number"> 1 </span>] = te[<span class="hljs-number"> 4 </span>]; te[<span class="hljs-number"> 4 </span>] = tmp;
+		tmp = te[<span class="hljs-number"> 2 </span>]; te[<span class="hljs-number"> 2 </span>] = te[<span class="hljs-number"> 8 </span>]; te[<span class="hljs-number"> 8 </span>] = tmp;
+		tmp = te[<span class="hljs-number"> 6 </span>]; te[<span class="hljs-number"> 6 </span>] = te[<span class="hljs-number"> 9 </span>]; te[<span class="hljs-number"> 9 </span>] = tmp;
+
+		tmp = te[<span class="hljs-number"> 3 </span>]; te[<span class="hljs-number"> 3 </span>] = te[<span class="hljs-number"> 12 </span>]; te[<span class="hljs-number"> 12 </span>] = tmp;
+		tmp = te[<span class="hljs-number"> 7 </span>]; te[<span class="hljs-number"> 7 </span>] = te[<span class="hljs-number"> 13 </span>]; te[<span class="hljs-number"> 13 </span>] = tmp;
+		tmp = te[<span class="hljs-number"> 11 </span>]; te[<span class="hljs-number"> 11 </span>] = te[<span class="hljs-number"> 14 </span>]; te[<span class="hljs-number"> 14 </span>] = tmp;
+
+		return this;
+
+	}
+
+	setPosition( x, y, z ) {
+
+		const te = this.elements;
+
+		if ( x.isVector3 ) {
+
+			te[<span class="hljs-number"> 12 </span>] = x.x;
+			te[<span class="hljs-number"> 13 </span>] = x.y;
+			te[<span class="hljs-number"> 14 </span>] = x.z;
+
+		} else {
+
+			te[<span class="hljs-number"> 12 </span>] = x;
+			te[<span class="hljs-number"> 13 </span>] = y;
+			te[<span class="hljs-number"> 14 </span>] = z;
+
+		}
+
+		return this;
+
+	}
+
+	invert() {
+
+		// based on http://www.euclideanspace.com/maths/algebra/matrix/functions/inverse/fourD/index.htm
+		const te = this.elements,
+
+			n11 = te[<span class="hljs-number"> 0 </span>], n21 = te[<span class="hljs-number"> 1 </span>], n31 = te[<span class="hljs-number"> 2 </span>], n41 = te[<span class="hljs-number"> 3 </span>],
+			n12 = te[<span class="hljs-number"> 4 </span>], n22 = te[<span class="hljs-number"> 5 </span>], n32 = te[<span class="hljs-number"> 6 </span>], n42 = te[<span class="hljs-number"> 7 </span>],
+			n13 = te[<span class="hljs-number"> 8 </span>], n23 = te[<span class="hljs-number"> 9 </span>], n33 = te[<span class="hljs-number"> 10 </span>], n43 = te[<span class="hljs-number"> 11 </span>],
+			n14 = te[<span class="hljs-number"> 12 </span>], n24 = te[<span class="hljs-number"> 13 </span>], n34 = te[<span class="hljs-number"> 14 </span>], n44 = te[<span class="hljs-number"> 15 </span>],
+
+			t11 = n23 * n34 * n42 - n24 * n33 * n42 + n24 * n32 * n43 - n22 * n34 * n43 - n23 * n32 * n44 + n22 * n33 * n44,
+			t12 = n14 * n33 * n42 - n13 * n34 * n42 - n14 * n32 * n43 + n12 * n34 * n43 + n13 * n32 * n44 - n12 * n33 * n44,
+			t13 = n13 * n24 * n42 - n14 * n23 * n42 + n14 * n22 * n43 - n12 * n24 * n43 - n13 * n22 * n44 + n12 * n23 * n44,
+			t14 = n14 * n23 * n32 - n13 * n24 * n32 - n14 * n22 * n33 + n12 * n24 * n33 + n13 * n22 * n34 - n12 * n23 * n34;
+
+		const det = n11 * t11 + n21 * t12 + n31 * t13 + n41 * t14;
+
+		if ( det ===<span class="hljs-number"> 0 </span>) return this.set( 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,<span class="hljs-number"> 0 </span>);
+
+		const detInv =<span class="hljs-number"> 1 </span>/ det;
+
+		te[<span class="hljs-number"> 0 </span>] = t11 * detInv;
+		te[<span class="hljs-number"> 1 </span>] = ( n24 * n33 * n41 - n23 * n34 * n41 - n24 * n31 * n43 + n21 * n34 * n43 + n23 * n31 * n44 - n21 * n33 * n44 ) * detInv;
+		te[<span class="hljs-number"> 2 </span>] = ( n22 * n34 * n41 - n24 * n32 * n41 + n24 * n31 * n42 - n21 * n34 * n42 - n22 * n31 * n44 + n21 * n32 * n44 ) * detInv;
+		te[<span class="hljs-number"> 3 </span>] = ( n23 * n32 * n41 - n22 * n33 * n41 - n23 * n31 * n42 + n21 * n33 * n42 + n22 * n31 * n43 - n21 * n32 * n43 ) * detInv;
+
+		te[<span class="hljs-number"> 4 </span>] = t12 * detInv;
+		te[<span class="hljs-number"> 5 </span>] = ( n13 * n34 * n41 - n14 * n33 * n41 + n14 * n31 * n43 - n11 * n34 * n43 - n13 * n31 * n44 + n11 * n33 * n44 ) * detInv;
+		te[<span class="hljs-number"> 6 </span>] = ( n14 * n32 * n41 - n12 * n34 * n41 - n14 * n31 * n42 + n11 * n34 * n42 + n12 * n31 * n44 - n11 * n32 * n44 ) * detInv;
+		te[<span class="hljs-number"> 7 </span>] = ( n12 * n33 * n41 - n13 * n32 * n41 + n13 * n31 * n42 - n11 * n33 * n42 - n12 * n31 * n43 + n11 * n32 * n43 ) * detInv;
+
+		te[<span class="hljs-number"> 8 </span>] = t13 * detInv;
+		te[<span class="hljs-number"> 9 </span>] = ( n14 * n23 * n41 - n13 * n24 * n41 - n14 * n21 * n43 + n11 * n24 * n43 + n13 * n21 * n44 - n11 * n23 * n44 ) * detInv;
+		te[<span class="hljs-number"> 10 </span>] = ( n12 * n24 * n41 - n14 * n22 * n41 + n14 * n21 * n42 - n11 * n24 * n42 - n12 * n21 * n44 + n11 * n22 * n44 ) * detInv;
+		te[<span class="hljs-number"> 11 </span>] = ( n13 * n22 * n41 - n12 * n23 * n41 - n13 * n21 * n42 + n11 * n23 * n42 + n12 * n21 * n43 - n11 * n22 * n43 ) * detInv;
+
+		te[<span class="hljs-number"> 12 </span>] = t14 * detInv;
+		te[<span class="hljs-number"> 13 </span>] = ( n13 * n24 * n31 - n14 * n23 * n31 + n14 * n21 * n33 - n11 * n24 * n33 - n13 * n21 * n34 + n11 * n23 * n34 ) * detInv;
+		te[<span class="hljs-number"> 14 </span>] = ( n14 * n22 * n31 - n12 * n24 * n31 - n14 * n21 * n32 + n11 * n24 * n32 + n12 * n21 * n34 - n11 * n22 * n34 ) * detInv;
+		te[<span class="hljs-number"> 15 </span>] = ( n12 * n23 * n31 - n13 * n22 * n31 + n13 * n21 * n32 - n11 * n23 * n32 - n12 * n21 * n33 + n11 * n22 * n33 ) * detInv;
+
+		return this;
+
+	}
+
+	scale( v ) {
+
+		const te = this.elements;
+		const x = v.x, y = v.y, z = v.z;
+
+		te[<span class="hljs-number"> 0 </span>] *= x; te[<span class="hljs-number"> 4 </span>] *= y; te[<span class="hljs-number"> 8 </span>] *= z;
+		te[<span class="hljs-number"> 1 </span>] *= x; te[<span class="hljs-number"> 5 </span>] *= y; te[<span class="hljs-number"> 9 </span>] *= z;
+		te[<span class="hljs-number"> 2 </span>] *= x; te[<span class="hljs-number"> 6 </span>] *= y; te[<span class="hljs-number"> 10 </span>] *= z;
+		te[<span class="hljs-number"> 3 </span>] *= x; te[<span class="hljs-number"> 7 </span>] *= y; te[<span class="hljs-number"> 11 </span>] *= z;
+
+		return this;
+
+	}
+
+	getMaxScaleOnAxis() {
+
+		const te = this.elements;
+
+		const scaleXSq = te[<span class="hljs-number"> 0 </span>] * te[<span class="hljs-number"> 0 </span>] + te[<span class="hljs-number"> 1 </span>] * te[<span class="hljs-number"> 1 </span>] + te[<span class="hljs-number"> 2 </span>] * te[<span class="hljs-number"> 2 </span>];
+		const scaleYSq = te[<span class="hljs-number"> 4 </span>] * te[<span class="hljs-number"> 4 </span>] + te[<span class="hljs-number"> 5 </span>] * te[<span class="hljs-number"> 5 </span>] + te[<span class="hljs-number"> 6 </span>] * te[<span class="hljs-number"> 6 </span>];
+		const scaleZSq = te[<span class="hljs-number"> 8 </span>] * te[<span class="hljs-number"> 8 </span>] + te[<span class="hljs-number"> 9 </span>] * te[<span class="hljs-number"> 9 </span>] + te[<span class="hljs-number"> 10 </span>] * te[<span class="hljs-number"> 10 </span>];
+
+		return Math.sqrt( Math.max( scaleXSq, scaleYSq, scaleZSq ) );
+
+	}
+
+	makeTranslation( x, y, z ) {
+
+		if ( x.isVector3 ) {
+
+			this.set(
+
+				1, 0, 0, x.x,
+				0, 1, 0, x.y,
+				0, 0, 1, x.z,
+				0, 0, 0, 1
+
+			);
+
+		} else {
+
+			this.set(
+
+				1, 0, 0, x,
+				0, 1, 0, y,
+				0, 0, 1, z,
+				0, 0, 0, 1
+
+			);
+
+		}
+
+		return this;
+
+	}
+
+	makeRotationX( theta ) {
+
+		const c = Math.cos( theta ), s = Math.sin( theta );
+
+		this.set(
+
+			1, 0, 0, 0,
+			0, c, - s, 0,
+			0, s, c, 0,
+			0, 0, 0, 1
+
+		);
+
+		return this;
+
+	}
+
+	makeRotationY( theta ) {
+
+		const c = Math.cos( theta ), s = Math.sin( theta );
+
+		this.set(
+
+			 c, 0, s, 0,
+			 0, 1, 0, 0,
+			- s, 0, c, 0,
+			 0, 0, 0, 1
+
+		);
+
+		return this;
+
+	}
+
+	makeRotationZ( theta ) {
+
+		const c = Math.cos( theta ), s = Math.sin( theta );
+
+		this.set(
+
+			c, - s, 0, 0,
+			s, c, 0, 0,
+			0, 0, 1, 0,
+			0, 0, 0, 1
+
+		);
+
+		return this;
+
+	}
+
+	makeRotationAxis( axis, angle ) {
+
+		// Based on http://www.gamedev.net/reference/articles/article1199.asp
+
+		const c = Math.cos( angle );
+		const s = Math.sin( angle );
+		const t =<span class="hljs-number"> 1 </span>- c;
+		const x = axis.x, y = axis.y, z = axis.z;
+		const tx = t * x, ty = t * y;
+
+		this.set(
+
+			tx * x + c, tx * y - s * z, tx * z + s * y, 0,
+			tx * y + s * z, ty * y + c, ty * z - s * x, 0,
+			tx * z - s * y, ty * z + s * x, t * z * z + c, 0,
+			0, 0, 0, 1
+
+		);
+
+		return this;
+
+	}
+
+	makeScale( x, y, z ) {
+
+		this.set(
+
+			x, 0, 0, 0,
+			0, y, 0, 0,
+			0, 0, z, 0,
+			0, 0, 0, 1
+
+		);
+
+		return this;
+
+	}
+
+	makeShear( xy, xz, yx, yz, zx, zy ) {
+
+		this.set(
+
+			1, yx, zx, 0,
+			xy, 1, zy, 0,
+			xz, yz, 1, 0,
+			0, 0, 0, 1
+
+		);
+
+		return this;
+
+	}
+
+	compose( position, quaternion, scale ) {
+
+		const te = this.elements;
+
+		const x = quaternion._x, y = quaternion._y, z = quaternion._z, w = quaternion._w;
+		const x2 = x + x,	y2 = y + y, z2 = z + z;
+		const xx = x * x2, xy = x * y2, xz = x * z2;
+		const yy = y * y2, yz = y * z2, zz = z * z2;
+		const wx = w * x2, wy = w * y2, wz = w * z2;
+
+		const sx = scale.x, sy = scale.y, sz = scale.z;
+
+		te[<span class="hljs-number"> 0 </span>] = (<span class="hljs-number"> 1 </span>- ( yy + zz ) ) * sx;
+		te[<span class="hljs-number"> 1 </span>] = ( xy + wz ) * sx;
+		te[<span class="hljs-number"> 2 </span>] = ( xz - wy ) * sx;
+		te[<span class="hljs-number"> 3 </span>] = 0;
+
+		te[<span class="hljs-number"> 4 </span>] = ( xy - wz ) * sy;
+		te[<span class="hljs-number"> 5 </span>] = (<span class="hljs-number"> 1 </span>- ( xx + zz ) ) * sy;
+		te[<span class="hljs-number"> 6 </span>] = ( yz + wx ) * sy;
+		te[<span class="hljs-number"> 7 </span>] = 0;
+
+		te[<span class="hljs-number"> 8 </span>] = ( xz + wy ) * sz;
+		te[<span class="hljs-number"> 9 </span>] = ( yz - wx ) * sz;
+		te[<span class="hljs-number"> 10 </span>] = (<span class="hljs-number"> 1 </span>- ( xx + yy ) ) * sz;
+		te[<span class="hljs-number"> 11 </span>] = 0;
+
+		te[<span class="hljs-number"> 12 </span>] = position.x;
+		te[<span class="hljs-number"> 13 </span>] = position.y;
+		te[<span class="hljs-number"> 14 </span>] = position.z;
+		te[<span class="hljs-number"> 15 </span>] = 1;
+
+		return this;
+
+	}
+
+	decompose( position, quaternion, scale ) {
+
+		const te = this.elements;
+
+		let sx = _v1.set( te[<span class="hljs-number"> 0 </span>], te[<span class="hljs-number"> 1 </span>], te[<span class="hljs-number"> 2 </span>] ).length();
+		const sy = _v1.set( te[<span class="hljs-number"> 4 </span>], te[<span class="hljs-number"> 5 </span>], te[<span class="hljs-number"> 6 </span>] ).length();
+		const sz = _v1.set( te[<span class="hljs-number"> 8 </span>], te[<span class="hljs-number"> 9 </span>], te[<span class="hljs-number"> 10 </span>] ).length();
+
+		// if determine is negative, we need to invert one scale
+		const det = this.determinant();
+		if ( det &lt;<span class="hljs-number"> 0 </span>) sx = - sx;
+
+		position.x = te[<span class="hljs-number"> 12 </span>];
+		position.y = te[<span class="hljs-number"> 13 </span>];
+		position.z = te[<span class="hljs-number"> 14 </span>];
+
+		// scale the rotation part
+		_m1.copy( this );
+
+		const invSX =<span class="hljs-number"> 1 </span>/ sx;
+		const invSY =<span class="hljs-number"> 1 </span>/ sy;
+		const invSZ =<span class="hljs-number"> 1 </span>/ sz;
+
+		_m1.elements[<span class="hljs-number"> 0 </span>] *= invSX;
+		_m1.elements[<span class="hljs-number"> 1 </span>] *= invSX;
+		_m1.elements[<span class="hljs-number"> 2 </span>] *= invSX;
+
+		_m1.elements[<span class="hljs-number"> 4 </span>] *= invSY;
+		_m1.elements[<span class="hljs-number"> 5 </span>] *= invSY;
+		_m1.elements[<span class="hljs-number"> 6 </span>] *= invSY;
+
+		_m1.elements[<span class="hljs-number"> 8 </span>] *= invSZ;
+		_m1.elements[<span class="hljs-number"> 9 </span>] *= invSZ;
+		_m1.elements[<span class="hljs-number"> 10 </span>] *= invSZ;
+
+		quaternion.setFromRotationMatrix( _m1 );
+
+		scale.x = sx;
+		scale.y = sy;
+		scale.z = sz;
+
+		return this;
+
+	}
+
+	makePerspective( left, right, top, bottom, near, far, coordinateSystem = WebGLCoordinateSystem ) {
+
+		const te = this.elements;
+		const x =<span class="hljs-number"> 2 </span>* near / ( right - left );
+		const y =<span class="hljs-number"> 2 </span>* near / ( top - bottom );
+
+		const a = ( right + left ) / ( right - left );
+		const b = ( top + bottom ) / ( top - bottom );
+
+		let c, d;
+
+		if ( coordinateSystem === WebGLCoordinateSystem ) {
+
+			c = - ( far + near ) / ( far - near );
+			d = ( -<span class="hljs-number"> 2 </span>* far * near ) / ( far - near );
+
+		} else if ( coordinateSystem === WebGPUCoordinateSystem ) {
+
+			c = - far / ( far - near );
+			d = ( - far * near ) / ( far - near );
+
+		} else {
+
+			throw new Error( &#x27;THREE.Matrix4.makePerspective(): Invalid coordinate system: &#x27; + coordinateSystem );
+
+		}
+
+		te[<span class="hljs-number"> 0 </span>] = x;	te[<span class="hljs-number"> 4 </span>] = 0;	te[<span class="hljs-number"> 8 </span>] = a; 	te[<span class="hljs-number"> 12 </span>] = 0;
+		te[<span class="hljs-number"> 1 </span>] = 0;	te[<span class="hljs-number"> 5 </span>] = y;	te[<span class="hljs-number"> 9 </span>] = b; 	te[<span class="hljs-number"> 13 </span>] = 0;
+		te[<span class="hljs-number"> 2 </span>] = 0;	te[<span class="hljs-number"> 6 </span>] = 0;	te[<span class="hljs-number"> 10 </span>] = c; 	te[<span class="hljs-number"> 14 </span>] = d;
+		te[<span class="hljs-number"> 3 </span>] = 0;	te[<span class="hljs-number"> 7 </span>] = 0;	te[<span class="hljs-number"> 11 </span>] = - 1;	te[<span class="hljs-number"> 15 </span>] = 0;
+
+		return this;
+
+	}
+
+	makeOrthographic( left, right, top, bottom, near, far, coordinateSystem = WebGLCoordinateSystem ) {
+
+		const te = this.elements;
+		const w = 1.0 / ( right - left );
+		const h = 1.0 / ( top - bottom );
+		const p = 1.0 / ( far - near );
+
+		const x = ( right + left ) * w;
+		const y = ( top + bottom ) * h;
+
+		let z, zInv;
+
+		if ( coordinateSystem === WebGLCoordinateSystem ) {
+
+			z = ( far + near ) * p;
+			zInv = -<span class="hljs-number"> 2 </span>* p;
+
+		} else if ( coordinateSystem === WebGPUCoordinateSystem ) {
+
+			z = near * p;
+			zInv = -<span class="hljs-number"> 1 </span>* p;
+
+		} else {
+
+			throw new Error( &#x27;THREE.Matrix4.makeOrthographic(): Invalid coordinate system: &#x27; + coordinateSystem );
+
+		}
+
+		te[<span class="hljs-number"> 0 </span>] =<span class="hljs-number"> 2 </span>* w;	te[<span class="hljs-number"> 4 </span>] = 0;		te[<span class="hljs-number"> 8 </span>] = 0; 		te[<span class="hljs-number"> 12 </span>] = - x;
+		te[<span class="hljs-number"> 1 </span>] = 0; 		te[<span class="hljs-number"> 5 </span>] =<span class="hljs-number"> 2 </span>* h;	te[<span class="hljs-number"> 9 </span>] = 0; 		te[<span class="hljs-number"> 13 </span>] = - y;
+		te[<span class="hljs-number"> 2 </span>] = 0; 		te[<span class="hljs-number"> 6 </span>] = 0;		te[<span class="hljs-number"> 10 </span>] = zInv;	te[<span class="hljs-number"> 14 </span>] = - z;
+		te[<span class="hljs-number"> 3 </span>] = 0; 		te[<span class="hljs-number"> 7 </span>] = 0;		te[<span class="hljs-number"> 11 </span>] = 0;		te[<span class="hljs-number"> 15 </span>] = 1;
+
+		return this;
+
+	}
+
+	equals( matrix ) {
+
+		const te = this.elements;
+		const me = matrix.elements;
+
+		for ( let i = 0; i &lt; 16; i ++ ) {
+
+			if ( te[ i ] !== me[ i ] ) return false;
+
+		}
+
+		return true;
+
+	}
+
+	fromArray( array, offset =<span class="hljs-number"> 0 </span>) {
+
+		for ( let i = 0; i &lt; 16; i ++ ) {
+
+			this.elements[ i ] = array[ i + offset ];
+
+		}
+
+		return this;
+
+	}
+
+	toArray( array = [], offset =<span class="hljs-number"> 0 </span>) {
+
+		const te = this.elements;
+
+		array[ offset ] = te[<span class="hljs-number"> 0 </span>];
+		array[ offset +<span class="hljs-number"> 1 </span>] = te[<span class="hljs-number"> 1 </span>];
+		array[ offset +<span class="hljs-number"> 2 </span>] = te[<span class="hljs-number"> 2 </span>];
+		array[ offset +<span class="hljs-number"> 3 </span>] = te[<span class="hljs-number"> 3 </span>];
+
+		array[ offset +<span class="hljs-number"> 4 </span>] = te[<span class="hljs-number"> 4 </span>];
+		array[ offset +<span class="hljs-number"> 5 </span>] = te[<span class="hljs-number"> 5 </span>];
+		array[ offset +<span class="hljs-number"> 6 </span>] = te[<span class="hljs-number"> 6 </span>];
+		array[ offset +<span class="hljs-number"> 7 </span>] = te[<span class="hljs-number"> 7 </span>];
+
+		array[ offset +<span class="hljs-number"> 8 </span>] = te[<span class="hljs-number"> 8 </span>];
+		array[ offset +<span class="hljs-number"> 9 </span>] = te[<span class="hljs-number"> 9 </span>];
+		array[ offset +<span class="hljs-number"> 10 </span>] = te[<span class="hljs-number"> 10 </span>];
+		array[ offset +<span class="hljs-number"> 11 </span>] = te[<span class="hljs-number"> 11 </span>];
+
+		array[ offset +<span class="hljs-number"> 12 </span>] = te[<span class="hljs-number"> 12 </span>];
+		array[ offset +<span class="hljs-number"> 13 </span>] = te[<span class="hljs-number"> 13 </span>];
+		array[ offset +<span class="hljs-number"> 14 </span>] = te[<span class="hljs-number"> 14 </span>];
+		array[ offset +<span class="hljs-number"> 15 </span>] = te[<span class="hljs-number"> 15 </span>];
+
+		return array;
+
+	}
+
+}
+
+const _v1 = /*@__PURE__*/ new Vector3();
+const _m1 = /*@__PURE__*/ new Matrix4();
+const _zero = /*@__PURE__*/ new Vector3( 0, 0,<span class="hljs-number"> 0 </span>);
+const _one = /*@__PURE__*/ new Vector3( 1, 1,<span class="hljs-number"> 1 </span>);
+const _x = /*@__PURE__*/ new Vector3();
+const _y = /*@__PURE__*/ new Vector3();
+const _z = /*@__PURE__*/ new Vector3();
+
+export { Matrix4 };</code></pre>
+    </div>
+  </div>
+</main>
+
+    <div class="footer">
+      <div class="center">
+        Powered by <a target="_blank" href="https://benignware.com">Benignware</a>
+      </div>
+    </div>
+  </body>
+</html>

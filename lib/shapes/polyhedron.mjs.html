@@ -1,0 +1,337 @@
+<html>
+  <head>
+    <base href="../.."/>
+    <title>css3d - polyhedron.mjs</title>
+
+    <link rel="stylesheet" href="public/github-markdown.min-05fea8df8ec68cb6c27337f6db65733e.css">
+    <link rel="stylesheet" href="public/highlight-c281e701b2830b095c67417cd9a7b210.css">
+    <link rel="stylesheet" href="public/style-aea3468ccb7ee0c3c4c2b5d339fc989e.css">
+    <link rel="stylesheet" href="public/all-cc69a8b8824029ae06797ee01a3cc5c8.css">
+
+    <script src="public/plugins/core/example/ExampleViewer.js"></script>
+              
+              <script src="-/index.mjs" type="module"></script>
+            
+  </head>
+  <body class="markdown-body flex-column">
+    <div class="header flex">
+      <a class="header-brand" href="./index.html">css3d</a>
+      
+<ul class="menu flex align-center justify-center">
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="elements/Sphere.html"
+        
+        
+          role="button"
+          
+          aria-expanded="false"
+        
+      >
+        Elements
+      </a>
+      
+    </li>
+    
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="examples/textures.html"
+        
+        
+          role="button"
+          
+          aria-expanded="false"
+        
+      >
+        Examples
+      </a>
+      
+    </li>
+    
+  
+</ul>
+      <nav class="links">
+        
+          
+            
+          
+        
+      </nav>
+    </div>
+      
+      
+
+<main class="flex-grow flex h-100">
+  <div class="sidebar sidebar-left border-right mr-2 flex-noshrink">
+  
+<ul class="menu">
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="elements/Sphere.html"
+        
+        
+          role="button"
+          
+          aria-expanded="false"
+        
+      >
+        Elements
+      </a>
+      
+        
+<ul class="menu">
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="elements/Sphere.html"
+        
+        
+      >
+        Sphere
+      </a>
+      
+    </li>
+    
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="elements/Polyhedron.html"
+        
+        
+      >
+        Polyhedron
+      </a>
+      
+    </li>
+    
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="elements/Cylinder.html"
+        
+        
+      >
+        Cylinder
+      </a>
+      
+    </li>
+    
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="elements/Box.html"
+        
+        
+      >
+        Box
+      </a>
+      
+    </li>
+    
+  
+</ul>
+      
+    </li>
+    
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="examples/textures.html"
+        
+        
+          role="button"
+          
+          aria-expanded="false"
+        
+      >
+        Examples
+      </a>
+      
+        
+<ul class="menu">
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="examples/textures.html"
+        
+        
+      >
+        Textures
+      </a>
+      
+    </li>
+    
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="examples/planets.html"
+        
+        
+      >
+        Planets
+      </a>
+      
+    </li>
+    
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="examples/crane.html"
+        
+        
+      >
+        Crane
+      </a>
+      
+    </li>
+    
+  
+</ul>
+      
+    </li>
+    
+  
+</ul>
+</div>
+  <div class="flex-grow">
+    <div class="container py-4">
+      <h1>Source: polyhedron.mjs</h1>
+      <p>
+        lib/shapes/polyhedron.mjs
+      </p>
+      
+      <pre><code class="hljs">import qh_def from <span class="hljs-string">&#x27;quickhull3d&#x27;</span>;
+import { <span class="hljs-built_in">centroid</span>, rad2deg } from <span class="hljs-string">&#x27;../math/utils.mjs&#x27;</span>;
+import { Vector3 } from <span class="hljs-string">&#x27;../math/Vector3.mjs&#x27;</span>;
+
+const qh = qh_def[<span class="hljs-string">&#x27;default&#x27;</span>];
+
+export const polyhedron = <span class="hljs-function">(<span class="hljs-params">points</span>) =&gt;</span> {
+  <span class="hljs-built_in">console</span>.<span class="hljs-built_in">log</span>(<span class="hljs-string">&#x27;polyhedron...&#x27;</span>, points);
+  points = points.<span class="hljs-built_in">map</span>(<span class="hljs-function"><span class="hljs-params">point</span> =&gt;</span> [...<span class="hljs-built_in">point</span>]);
+  points = points.<span class="hljs-built_in">filter</span>(<span class="hljs-function">(<span class="hljs-params"><span class="hljs-built_in">point</span>, index</span>) =&gt;</span> points.findIndex(<span class="hljs-function"><span class="hljs-params">p</span> =&gt;</span> p.join() === <span class="hljs-built_in">point</span>.join()) === index);
+
+  <span class="hljs-keyword">if</span> (points.<span class="hljs-built_in">length</span> &lt; <span class="hljs-number">4</span>) {
+    <span class="hljs-keyword">return</span> <span class="hljs-string">&#x27;&#x27;</span>;
+  }
+
+  <span class="hljs-built_in">console</span>.<span class="hljs-built_in">log</span>(<span class="hljs-string">&#x27;points&#x27;</span>, points);
+  const faces = qh(points)
+    .<span class="hljs-built_in">map</span>(<span class="hljs-function"><span class="hljs-params">face</span> =&gt;</span> face.<span class="hljs-built_in">map</span>(<span class="hljs-function"><span class="hljs-params">index</span> =&gt;</span> points[index]))
+    .<span class="hljs-built_in">map</span>(<span class="hljs-function"><span class="hljs-params">face</span> =&gt;</span> face.<span class="hljs-built_in">map</span>(<span class="hljs-function"><span class="hljs-params">point</span> =&gt;</span> <span class="hljs-keyword">new</span> Vector3(...<span class="hljs-built_in">point</span>)))
+    .<span class="hljs-built_in">map</span>(<span class="hljs-function">(<span class="hljs-params">face, index</span>) =&gt;</span> {
+      const [a, b, c] = face;
+      const center = <span class="hljs-built_in">centroid</span>(a, b, c);
+
+      const normal = b.clone().sub(a).cross(c.clone().sub(a)).normalize();
+      const <span class="hljs-built_in">angle</span> = Math.<span class="hljs-built_in">acos</span>(normal.z);
+      const axis = normal.clone().cross(<span class="hljs-keyword">new</span> Vector3(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">-1</span>)).normalize();
+
+      const points2d = face.<span class="hljs-built_in">map</span>(<span class="hljs-function"><span class="hljs-params">point</span> =&gt;</span> <span class="hljs-built_in">point</span>.clone().sub(center).applyAxisAngle(axis, -<span class="hljs-built_in">angle</span>));
+
+      const minX = Math.<span class="hljs-built_in">min</span>(...points2d.<span class="hljs-built_in">map</span>(<span class="hljs-function"><span class="hljs-params">point</span> =&gt;</span> <span class="hljs-built_in">point</span>.x));
+      const minY = Math.<span class="hljs-built_in">min</span>(...points2d.<span class="hljs-built_in">map</span>(<span class="hljs-function"><span class="hljs-params">point</span> =&gt;</span> <span class="hljs-built_in">point</span>.y));
+      const maxX = Math.<span class="hljs-built_in">max</span>(...points2d.<span class="hljs-built_in">map</span>(<span class="hljs-function"><span class="hljs-params">point</span> =&gt;</span> <span class="hljs-built_in">point</span>.x));
+      const maxY = Math.<span class="hljs-built_in">max</span>(...points2d.<span class="hljs-built_in">map</span>(<span class="hljs-function"><span class="hljs-params">point</span> =&gt;</span> <span class="hljs-built_in">point</span>.y));
+
+      const width = maxX - minX;
+      const height = maxY - minY;
+
+      const shiftX = minX + width / <span class="hljs-number">2</span>;
+      const shiftY = minY + height / <span class="hljs-number">2</span>;
+
+      const local2d = points2d.<span class="hljs-built_in">map</span>(<span class="hljs-function"><span class="hljs-params">point</span> =&gt;</span> <span class="hljs-keyword">new</span> Vector3(<span class="hljs-built_in">point</span>.x - minX, <span class="hljs-built_in">point</span>.y - minY, <span class="hljs-number">0</span>));
+
+      const clipPath = <span class="hljs-string">`polygon(<span class="hljs-subst">${local2d.<span class="hljs-built_in">map</span>(<span class="hljs-built_in">point</span> =&gt; <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-built_in">point</span>.x}</span>px <span class="hljs-subst">${<span class="hljs-built_in">point</span>.y}</span>px`</span>).join(<span class="hljs-string">&#x27;, &#x27;</span>)}</span>)`</span>;
+
+      const transform = <span class="hljs-string">`
+        translate(-50%, -50%)
+        translate3d(<span class="hljs-subst">${center.x}</span>px, <span class="hljs-subst">${center.y}</span>px, <span class="hljs-subst">${center.z}</span>px)
+        rotate3d(<span class="hljs-subst">${axis.x}</span>, <span class="hljs-subst">${axis.y}</span>, <span class="hljs-subst">${axis.z}</span>, <span class="hljs-subst">${rad2deg(<span class="hljs-built_in">angle</span>)}</span>deg)
+        translate(<span class="hljs-subst">${shiftX}</span>px, <span class="hljs-subst">${shiftY}</span>px)
+      `</span>;
+
+      <span class="hljs-keyword">return</span> <span class="hljs-string">`
+        &lt;div
+          class=&quot;face&quot;
+          style=&quot;
+            width: <span class="hljs-subst">${width}</span>px;
+            height: <span class="hljs-subst">${height}</span>px;
+            transform:  <span class="hljs-subst">${transform}</span>;
+            clip-path: <span class="hljs-subst">${clipPath}</span>;
+          &quot;
+        &gt;
+        &lt;/div&gt;
+      `</span>
+    })
+    
+  <span class="hljs-keyword">return</span> <span class="hljs-string">`
+    &lt;style scoped&gt;
+      :host {
+        --background: rgba(0, 255, 255, 0.5);
+        cursor: pointer;
+      }
+
+      .face {
+        position: absolute;
+        left: 0;
+        top: 0;
+        transform-style: preserve-3d;
+        transform-origin: center;
+        background: var(--background);
+        /*backface-visibility: hidden;*/
+        
+      }
+
+    &lt;/style&gt;
+    <span class="hljs-subst">${faces.join(<span class="hljs-string">&#x27;&#x27;</span>)}</span>
+  `</span>;
+}
+</code></pre>
+    </div>
+  </div>
+</main>
+
+    <div class="footer">
+      <div class="center">
+        Powered by <a target="_blank" href="https://benignware.com">Benignware</a>
+      </div>
+    </div>
+  </body>
+</html>

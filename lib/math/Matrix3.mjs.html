@@ -1,0 +1,637 @@
+<html>
+  <head>
+    <base href="../.."/>
+    <title>css3d - Matrix3.mjs</title>
+
+    <link rel="stylesheet" href="public/github-markdown.min-05fea8df8ec68cb6c27337f6db65733e.css">
+    <link rel="stylesheet" href="public/highlight-c281e701b2830b095c67417cd9a7b210.css">
+    <link rel="stylesheet" href="public/style-aea3468ccb7ee0c3c4c2b5d339fc989e.css">
+    <link rel="stylesheet" href="public/all-cc69a8b8824029ae06797ee01a3cc5c8.css">
+
+    <script src="public/plugins/core/example/ExampleViewer.js"></script>
+              
+              <script src="-/index.mjs" type="module"></script>
+            
+  </head>
+  <body class="markdown-body flex-column">
+    <div class="header flex">
+      <a class="header-brand" href="./index.html">css3d</a>
+      
+<ul class="menu flex align-center justify-center">
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="elements/Sphere.html"
+        
+        
+          role="button"
+          
+          aria-expanded="false"
+        
+      >
+        Elements
+      </a>
+      
+    </li>
+    
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="examples/textures.html"
+        
+        
+          role="button"
+          
+          aria-expanded="false"
+        
+      >
+        Examples
+      </a>
+      
+    </li>
+    
+  
+</ul>
+      <nav class="links">
+        
+          
+            
+          
+        
+      </nav>
+    </div>
+      
+      
+
+<main class="flex-grow flex h-100">
+  <div class="sidebar sidebar-left border-right mr-2 flex-noshrink">
+  
+<ul class="menu">
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="elements/Sphere.html"
+        
+        
+          role="button"
+          
+          aria-expanded="false"
+        
+      >
+        Elements
+      </a>
+      
+        
+<ul class="menu">
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="elements/Sphere.html"
+        
+        
+      >
+        Sphere
+      </a>
+      
+    </li>
+    
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="elements/Polyhedron.html"
+        
+        
+      >
+        Polyhedron
+      </a>
+      
+    </li>
+    
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="elements/Cylinder.html"
+        
+        
+      >
+        Cylinder
+      </a>
+      
+    </li>
+    
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="elements/Box.html"
+        
+        
+      >
+        Box
+      </a>
+      
+    </li>
+    
+  
+</ul>
+      
+    </li>
+    
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="examples/textures.html"
+        
+        
+          role="button"
+          
+          aria-expanded="false"
+        
+      >
+        Examples
+      </a>
+      
+        
+<ul class="menu">
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="examples/textures.html"
+        
+        
+      >
+        Textures
+      </a>
+      
+    </li>
+    
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="examples/planets.html"
+        
+        
+      >
+        Planets
+      </a>
+      
+    </li>
+    
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="examples/crane.html"
+        
+        
+      >
+        Crane
+      </a>
+      
+    </li>
+    
+  
+</ul>
+      
+    </li>
+    
+  
+</ul>
+</div>
+  <div class="flex-grow">
+    <div class="container py-4">
+      <h1>Source: Matrix3.mjs</h1>
+      <p>
+        lib/math/Matrix3.mjs
+      </p>
+      
+      <pre><code class="hljs"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Matrix3</span> {
+
+	<span class="hljs-keyword">constructor</span>( n11, n12, n13, n21, n22, n23, n31, n32, n33 ) {
+
+		Matrix3.prototype.isMatrix3 = <span class="hljs-literal">true</span>;
+
+		<span class="hljs-keyword">this</span>.elements = [
+
+			<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>,
+			<span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>,
+			<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>
+
+		];
+
+		<span class="hljs-keyword">if</span> ( n11 !== undefined ) {
+
+			<span class="hljs-keyword">this</span>.<span class="hljs-keyword">set</span>( n11, n12, n13, n21, n22, n23, n31, n32, n33 );
+
+		}
+
+	}
+
+	<span class="hljs-keyword">set</span>( n11, n12, n13, n21, n22, n23, n31, n32, n33 ) {
+
+		<span class="hljs-keyword">const</span> te = <span class="hljs-keyword">this</span>.elements;
+
+		te[ <span class="hljs-number">0</span> ] = n11; te[ <span class="hljs-number">1</span> ] = n21; te[ <span class="hljs-number">2</span> ] = n31;
+		te[ <span class="hljs-number">3</span> ] = n12; te[ <span class="hljs-number">4</span> ] = n22; te[ <span class="hljs-number">5</span> ] = n32;
+		te[ <span class="hljs-number">6</span> ] = n13; te[ <span class="hljs-number">7</span> ] = n23; te[ <span class="hljs-number">8</span> ] = n33;
+
+		<span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+
+	}
+
+	identity() {
+
+		<span class="hljs-keyword">this</span>.<span class="hljs-keyword">set</span>(
+
+			<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>,
+			<span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>,
+			<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>
+
+		);
+
+		<span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+
+	}
+
+	copy( m ) {
+
+		<span class="hljs-keyword">const</span> te = <span class="hljs-keyword">this</span>.elements;
+		<span class="hljs-keyword">const</span> me = m.elements;
+
+		te[ <span class="hljs-number">0</span> ] = me[ <span class="hljs-number">0</span> ]; te[ <span class="hljs-number">1</span> ] = me[ <span class="hljs-number">1</span> ]; te[ <span class="hljs-number">2</span> ] = me[ <span class="hljs-number">2</span> ];
+		te[ <span class="hljs-number">3</span> ] = me[ <span class="hljs-number">3</span> ]; te[ <span class="hljs-number">4</span> ] = me[ <span class="hljs-number">4</span> ]; te[ <span class="hljs-number">5</span> ] = me[ <span class="hljs-number">5</span> ];
+		te[ <span class="hljs-number">6</span> ] = me[ <span class="hljs-number">6</span> ]; te[ <span class="hljs-number">7</span> ] = me[ <span class="hljs-number">7</span> ]; te[ <span class="hljs-number">8</span> ] = me[ <span class="hljs-number">8</span> ];
+
+		<span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+
+	}
+
+	extractBasis( xAxis, yAxis, zAxis ) {
+
+		xAxis.setFromMatrix3Column( <span class="hljs-keyword">this</span>, <span class="hljs-number">0</span> );
+		yAxis.setFromMatrix3Column( <span class="hljs-keyword">this</span>, <span class="hljs-number">1</span> );
+		zAxis.setFromMatrix3Column( <span class="hljs-keyword">this</span>, <span class="hljs-number">2</span> );
+
+		<span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+
+	}
+
+	setFromMatrix4( m ) {
+
+		<span class="hljs-keyword">const</span> me = m.elements;
+
+		<span class="hljs-keyword">this</span>.<span class="hljs-keyword">set</span>(
+
+			me[ <span class="hljs-number">0</span> ], me[ <span class="hljs-number">4</span> ], me[ <span class="hljs-number">8</span> ],
+			me[ <span class="hljs-number">1</span> ], me[ <span class="hljs-number">5</span> ], me[ <span class="hljs-number">9</span> ],
+			me[ <span class="hljs-number">2</span> ], me[ <span class="hljs-number">6</span> ], me[ <span class="hljs-number">10</span> ]
+
+		);
+
+		<span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+
+	}
+
+	multiply( m ) {
+
+		<span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.multiplyMatrices( <span class="hljs-keyword">this</span>, m );
+
+	}
+
+	premultiply( m ) {
+
+		<span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.multiplyMatrices( m, <span class="hljs-keyword">this</span> );
+
+	}
+
+	multiplyMatrices( a, b ) {
+
+		<span class="hljs-keyword">const</span> ae = a.elements;
+		<span class="hljs-keyword">const</span> be = b.elements;
+		<span class="hljs-keyword">const</span> te = <span class="hljs-keyword">this</span>.elements;
+
+		<span class="hljs-keyword">const</span> a11 = ae[ <span class="hljs-number">0</span> ], a12 = ae[ <span class="hljs-number">3</span> ], a13 = ae[ <span class="hljs-number">6</span> ];
+		<span class="hljs-keyword">const</span> a21 = ae[ <span class="hljs-number">1</span> ], a22 = ae[ <span class="hljs-number">4</span> ], a23 = ae[ <span class="hljs-number">7</span> ];
+		<span class="hljs-keyword">const</span> a31 = ae[ <span class="hljs-number">2</span> ], a32 = ae[ <span class="hljs-number">5</span> ], a33 = ae[ <span class="hljs-number">8</span> ];
+
+		<span class="hljs-keyword">const</span> b11 = be[ <span class="hljs-number">0</span> ], b12 = be[ <span class="hljs-number">3</span> ], b13 = be[ <span class="hljs-number">6</span> ];
+		<span class="hljs-keyword">const</span> b21 = be[ <span class="hljs-number">1</span> ], b22 = be[ <span class="hljs-number">4</span> ], b23 = be[ <span class="hljs-number">7</span> ];
+		<span class="hljs-keyword">const</span> b31 = be[ <span class="hljs-number">2</span> ], b32 = be[ <span class="hljs-number">5</span> ], b33 = be[ <span class="hljs-number">8</span> ];
+
+		te[ <span class="hljs-number">0</span> ] = a11 * b11 + a12 * b21 + a13 * b31;
+		te[ <span class="hljs-number">3</span> ] = a11 * b12 + a12 * b22 + a13 * b32;
+		te[ <span class="hljs-number">6</span> ] = a11 * b13 + a12 * b23 + a13 * b33;
+
+		te[ <span class="hljs-number">1</span> ] = a21 * b11 + a22 * b21 + a23 * b31;
+		te[ <span class="hljs-number">4</span> ] = a21 * b12 + a22 * b22 + a23 * b32;
+		te[ <span class="hljs-number">7</span> ] = a21 * b13 + a22 * b23 + a23 * b33;
+
+		te[ <span class="hljs-number">2</span> ] = a31 * b11 + a32 * b21 + a33 * b31;
+		te[ <span class="hljs-number">5</span> ] = a31 * b12 + a32 * b22 + a33 * b32;
+		te[ <span class="hljs-number">8</span> ] = a31 * b13 + a32 * b23 + a33 * b33;
+
+		<span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+
+	}
+
+	multiplyScalar( s ) {
+
+		<span class="hljs-keyword">const</span> te = <span class="hljs-keyword">this</span>.elements;
+
+		te[ <span class="hljs-number">0</span> ] *= s; te[ <span class="hljs-number">3</span> ] *= s; te[ <span class="hljs-number">6</span> ] *= s;
+		te[ <span class="hljs-number">1</span> ] *= s; te[ <span class="hljs-number">4</span> ] *= s; te[ <span class="hljs-number">7</span> ] *= s;
+		te[ <span class="hljs-number">2</span> ] *= s; te[ <span class="hljs-number">5</span> ] *= s; te[ <span class="hljs-number">8</span> ] *= s;
+
+		<span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+
+	}
+
+	determinant() {
+
+		<span class="hljs-keyword">const</span> te = <span class="hljs-keyword">this</span>.elements;
+
+		<span class="hljs-keyword">const</span> a = te[ <span class="hljs-number">0</span> ], b = te[ <span class="hljs-number">1</span> ], c = te[ <span class="hljs-number">2</span> ],
+			d = te[ <span class="hljs-number">3</span> ], e = te[ <span class="hljs-number">4</span> ], f = te[ <span class="hljs-number">5</span> ],
+			g = te[ <span class="hljs-number">6</span> ], h = te[ <span class="hljs-number">7</span> ], i = te[ <span class="hljs-number">8</span> ];
+
+		<span class="hljs-keyword">return</span> a * e * i - a * f * h - b * d * i + b * f * g + c * d * h - c * e * g;
+
+	}
+
+	invert() {
+
+		<span class="hljs-keyword">const</span> te = <span class="hljs-keyword">this</span>.elements,
+
+			n11 = te[ <span class="hljs-number">0</span> ], n21 = te[ <span class="hljs-number">1</span> ], n31 = te[ <span class="hljs-number">2</span> ],
+			n12 = te[ <span class="hljs-number">3</span> ], n22 = te[ <span class="hljs-number">4</span> ], n32 = te[ <span class="hljs-number">5</span> ],
+			n13 = te[ <span class="hljs-number">6</span> ], n23 = te[ <span class="hljs-number">7</span> ], n33 = te[ <span class="hljs-number">8</span> ],
+
+			t11 = n33 * n22 - n32 * n23,
+			t12 = n32 * n13 - n33 * n12,
+			t13 = n23 * n12 - n22 * n13,
+
+			det = n11 * t11 + n21 * t12 + n31 * t13;
+
+		<span class="hljs-keyword">if</span> ( det === <span class="hljs-number">0</span> ) <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.<span class="hljs-keyword">set</span>( <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span> );
+
+		<span class="hljs-keyword">const</span> detInv = <span class="hljs-number">1</span> / det;
+
+		te[ <span class="hljs-number">0</span> ] = t11 * detInv;
+		te[ <span class="hljs-number">1</span> ] = ( n31 * n23 - n33 * n21 ) * detInv;
+		te[ <span class="hljs-number">2</span> ] = ( n32 * n21 - n31 * n22 ) * detInv;
+
+		te[ <span class="hljs-number">3</span> ] = t12 * detInv;
+		te[ <span class="hljs-number">4</span> ] = ( n33 * n11 - n31 * n13 ) * detInv;
+		te[ <span class="hljs-number">5</span> ] = ( n31 * n12 - n32 * n11 ) * detInv;
+
+		te[ <span class="hljs-number">6</span> ] = t13 * detInv;
+		te[ <span class="hljs-number">7</span> ] = ( n21 * n13 - n23 * n11 ) * detInv;
+		te[ <span class="hljs-number">8</span> ] = ( n22 * n11 - n21 * n12 ) * detInv;
+
+		<span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+
+	}
+
+	transpose() {
+
+		let tmp;
+		<span class="hljs-keyword">const</span> m = <span class="hljs-keyword">this</span>.elements;
+
+		tmp = m[ <span class="hljs-number">1</span> ]; m[ <span class="hljs-number">1</span> ] = m[ <span class="hljs-number">3</span> ]; m[ <span class="hljs-number">3</span> ] = tmp;
+		tmp = m[ <span class="hljs-number">2</span> ]; m[ <span class="hljs-number">2</span> ] = m[ <span class="hljs-number">6</span> ]; m[ <span class="hljs-number">6</span> ] = tmp;
+		tmp = m[ <span class="hljs-number">5</span> ]; m[ <span class="hljs-number">5</span> ] = m[ <span class="hljs-number">7</span> ]; m[ <span class="hljs-number">7</span> ] = tmp;
+
+		<span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+
+	}
+
+	getNormalMatrix( matrix4 ) {
+
+		<span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.setFromMatrix4( matrix4 ).invert().transpose();
+
+	}
+
+	transposeIntoArray( r ) {
+
+		<span class="hljs-keyword">const</span> m = <span class="hljs-keyword">this</span>.elements;
+
+		r[ <span class="hljs-number">0</span> ] = m[ <span class="hljs-number">0</span> ];
+		r[ <span class="hljs-number">1</span> ] = m[ <span class="hljs-number">3</span> ];
+		r[ <span class="hljs-number">2</span> ] = m[ <span class="hljs-number">6</span> ];
+		r[ <span class="hljs-number">3</span> ] = m[ <span class="hljs-number">1</span> ];
+		r[ <span class="hljs-number">4</span> ] = m[ <span class="hljs-number">4</span> ];
+		r[ <span class="hljs-number">5</span> ] = m[ <span class="hljs-number">7</span> ];
+		r[ <span class="hljs-number">6</span> ] = m[ <span class="hljs-number">2</span> ];
+		r[ <span class="hljs-number">7</span> ] = m[ <span class="hljs-number">5</span> ];
+		r[ <span class="hljs-number">8</span> ] = m[ <span class="hljs-number">8</span> ];
+
+		<span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+
+	}
+
+	setUvTransform( tx, ty, sx, sy, rotation, cx, cy ) {
+
+		<span class="hljs-keyword">const</span> c = Math.cos( rotation );
+		<span class="hljs-keyword">const</span> s = Math.sin( rotation );
+
+		<span class="hljs-keyword">this</span>.<span class="hljs-keyword">set</span>(
+			sx * c, sx * s, - sx * ( c * cx + s * cy ) + cx + tx,
+			- sy * s, sy * c, - sy * ( - s * cx + c * cy ) + cy + ty,
+			<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>
+		);
+
+		<span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+
+	}
+
+	<span class="hljs-comment">//</span>
+
+	scale( sx, sy ) {
+
+		<span class="hljs-keyword">this</span>.premultiply( _m3.makeScale( sx, sy ) );
+
+		<span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+
+	}
+
+	rotate( theta ) {
+
+		<span class="hljs-keyword">this</span>.premultiply( _m3.makeRotation( - theta ) );
+
+		<span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+
+	}
+
+	translate( tx, ty ) {
+
+		<span class="hljs-keyword">this</span>.premultiply( _m3.makeTranslation( tx, ty ) );
+
+		<span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+
+	}
+
+	<span class="hljs-comment">// for 2D Transforms</span>
+
+	makeTranslation( x, y ) {
+
+		<span class="hljs-keyword">if</span> ( x.isVector2 ) {
+
+			<span class="hljs-keyword">this</span>.<span class="hljs-keyword">set</span>(
+
+				<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, x.x,
+				<span class="hljs-number">0</span>, <span class="hljs-number">1</span>, x.y,
+				<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>
+
+			);
+
+		} <span class="hljs-keyword">else</span> {
+
+			<span class="hljs-keyword">this</span>.<span class="hljs-keyword">set</span>(
+
+				<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, x,
+				<span class="hljs-number">0</span>, <span class="hljs-number">1</span>, y,
+				<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>
+
+			);
+
+		}
+
+		<span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+
+	}
+
+	makeRotation( theta ) {
+
+		<span class="hljs-comment">// counterclockwise</span>
+
+		<span class="hljs-keyword">const</span> c = Math.cos( theta );
+		<span class="hljs-keyword">const</span> s = Math.sin( theta );
+
+		<span class="hljs-keyword">this</span>.<span class="hljs-keyword">set</span>(
+
+			c, - s, <span class="hljs-number">0</span>,
+			s, c, <span class="hljs-number">0</span>,
+			<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>
+
+		);
+
+		<span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+
+	}
+
+	makeScale( x, y ) {
+
+		<span class="hljs-keyword">this</span>.<span class="hljs-keyword">set</span>(
+
+			x, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>,
+			<span class="hljs-number">0</span>, y, <span class="hljs-number">0</span>,
+			<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>
+
+		);
+
+		<span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+
+	}
+
+	<span class="hljs-comment">//</span>
+
+	equals( matrix ) {
+
+		<span class="hljs-keyword">const</span> te = <span class="hljs-keyword">this</span>.elements;
+		<span class="hljs-keyword">const</span> me = matrix.elements;
+
+		<span class="hljs-keyword">for</span> ( let i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">9</span>; i ++ ) {
+
+			<span class="hljs-keyword">if</span> ( te[ i ] !== me[ i ] ) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
+
+		}
+
+		<span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;
+
+	}
+
+	fromArray( array, offset = <span class="hljs-number">0</span> ) {
+
+		<span class="hljs-keyword">for</span> ( let i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">9</span>; i ++ ) {
+
+			<span class="hljs-keyword">this</span>.elements[ i ] = array[ i + offset ];
+
+		}
+
+		<span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+
+	}
+
+	toArray( array = [], offset = <span class="hljs-number">0</span> ) {
+
+		<span class="hljs-keyword">const</span> te = <span class="hljs-keyword">this</span>.elements;
+
+		array[ offset ] = te[ <span class="hljs-number">0</span> ];
+		array[ offset + <span class="hljs-number">1</span> ] = te[ <span class="hljs-number">1</span> ];
+		array[ offset + <span class="hljs-number">2</span> ] = te[ <span class="hljs-number">2</span> ];
+
+		array[ offset + <span class="hljs-number">3</span> ] = te[ <span class="hljs-number">3</span> ];
+		array[ offset + <span class="hljs-number">4</span> ] = te[ <span class="hljs-number">4</span> ];
+		array[ offset + <span class="hljs-number">5</span> ] = te[ <span class="hljs-number">5</span> ];
+
+		array[ offset + <span class="hljs-number">6</span> ] = te[ <span class="hljs-number">6</span> ];
+		array[ offset + <span class="hljs-number">7</span> ] = te[ <span class="hljs-number">7</span> ];
+		array[ offset + <span class="hljs-number">8</span> ] = te[ <span class="hljs-number">8</span> ];
+
+		<span class="hljs-keyword">return</span> array;
+
+	}
+
+	clone() {
+
+		<span class="hljs-keyword">return</span> new <span class="hljs-keyword">this</span>.<span class="hljs-keyword">constructor</span>().fromArray( <span class="hljs-keyword">this</span>.elements );
+
+	}
+
+}
+
+<span class="hljs-keyword">const</span> _m3 = <span class="hljs-comment">/*@__PURE__*/</span> new Matrix3();
+
+export { Matrix3 };</code></pre>
+    </div>
+  </div>
+</main>
+
+    <div class="footer">
+      <div class="center">
+        Powered by <a target="_blank" href="https://benignware.com">Benignware</a>
+      </div>
+    </div>
+  </body>
+</html>

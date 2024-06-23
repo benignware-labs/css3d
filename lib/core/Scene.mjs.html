@@ -1,0 +1,357 @@
+<html>
+  <head>
+    <base href="../.."/>
+    <title>css3d - Scene.mjs</title>
+
+    <link rel="stylesheet" href="public/github-markdown.min-05fea8df8ec68cb6c27337f6db65733e.css">
+    <link rel="stylesheet" href="public/highlight-c281e701b2830b095c67417cd9a7b210.css">
+    <link rel="stylesheet" href="public/style-aea3468ccb7ee0c3c4c2b5d339fc989e.css">
+    <link rel="stylesheet" href="public/all-cc69a8b8824029ae06797ee01a3cc5c8.css">
+
+    <script src="public/plugins/core/example/ExampleViewer.js"></script>
+              
+              <script src="-/index.mjs" type="module"></script>
+            
+  </head>
+  <body class="markdown-body flex-column">
+    <div class="header flex">
+      <a class="header-brand" href="./index.html">css3d</a>
+      
+<ul class="menu flex align-center justify-center">
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="elements/Sphere.html"
+        
+        
+          role="button"
+          
+          aria-expanded="false"
+        
+      >
+        Elements
+      </a>
+      
+    </li>
+    
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="examples/textures.html"
+        
+        
+          role="button"
+          
+          aria-expanded="false"
+        
+      >
+        Examples
+      </a>
+      
+    </li>
+    
+  
+</ul>
+      <nav class="links">
+        
+          
+            
+          
+        
+      </nav>
+    </div>
+      
+      
+
+<main class="flex-grow flex h-100">
+  <div class="sidebar sidebar-left border-right mr-2 flex-noshrink">
+  
+<ul class="menu">
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="elements/Sphere.html"
+        
+        
+          role="button"
+          
+          aria-expanded="false"
+        
+      >
+        Elements
+      </a>
+      
+        
+<ul class="menu">
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="elements/Sphere.html"
+        
+        
+      >
+        Sphere
+      </a>
+      
+    </li>
+    
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="elements/Polyhedron.html"
+        
+        
+      >
+        Polyhedron
+      </a>
+      
+    </li>
+    
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="elements/Cylinder.html"
+        
+        
+      >
+        Cylinder
+      </a>
+      
+    </li>
+    
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="elements/Box.html"
+        
+        
+      >
+        Box
+      </a>
+      
+    </li>
+    
+  
+</ul>
+      
+    </li>
+    
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="examples/textures.html"
+        
+        
+          role="button"
+          
+          aria-expanded="false"
+        
+      >
+        Examples
+      </a>
+      
+        
+<ul class="menu">
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="examples/textures.html"
+        
+        
+      >
+        Textures
+      </a>
+      
+    </li>
+    
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="examples/planets.html"
+        
+        
+      >
+        Planets
+      </a>
+      
+    </li>
+    
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="examples/crane.html"
+        
+        
+      >
+        Crane
+      </a>
+      
+    </li>
+    
+  
+</ul>
+      
+    </li>
+    
+  
+</ul>
+</div>
+  <div class="flex-grow">
+    <div class="container py-4">
+      <h1>Source: Scene.mjs</h1>
+      <p>
+        lib/core/Scene.mjs
+      </p>
+      
+      <pre><code class="hljs"><span class="hljs-keyword">import</span> { PerspectiveCamera } from <span class="hljs-string">&#x27;../cameras/PerspectiveCamera.mjs&#x27;</span>;
+<span class="hljs-keyword">import</span> { CSS3DRenderer } from <span class="hljs-string">&#x27;./Renderer.mjs&#x27;</span>;
+<span class="hljs-keyword">import</span> { OrbitControls } from <span class="hljs-string">&#x27;../controls/OrbitControls.mjs&#x27;</span>;
+
+<span class="hljs-keyword">class</span> <span class="hljs-title class_">C3Scene</span> <span class="hljs-title">extends</span> <span class="hljs-title">HTMLElement</span> {
+  #camera;
+  #renderer;
+
+  <span class="hljs-keyword">constructor</span>() {
+    <span class="hljs-keyword">super</span>();
+
+    <span class="hljs-keyword">this</span>.handleResize = <span class="hljs-keyword">this</span>.handleResize.bind(<span class="hljs-keyword">this</span>);
+    <span class="hljs-keyword">this</span>.render = <span class="hljs-keyword">this</span>.render.bind(<span class="hljs-keyword">this</span>);
+
+    <span class="hljs-comment">// Add any initialization code here</span>
+    <span class="hljs-keyword">const</span> shadowRoot = <span class="hljs-keyword">this</span>.attachShadow({ mode: <span class="hljs-string">&#x27;open&#x27;</span> });
+    shadowRoot.innerHTML = `
+      &lt;style&gt;
+        :host {
+          display: block;
+          min-height: 250px;
+          display: flex;
+          overflow: hidden;
+          position: relative;
+          perspective: 300px;
+          -webkit-perspective: 300px;
+          perspective-origin: center center;
+          transform-style: preserve-<span class="hljs-number">3d</span>;
+          aspect-ratio: <span class="hljs-number">16</span>/<span class="hljs-number">9</span>;
+          padding: <span class="hljs-number">0</span>;
+        }
+
+        :host * {
+          transform-style: preserve-<span class="hljs-number">3d</span>;
+          box-sizing: border-box;
+        }
+
+        :host .view {
+          width: <span class="hljs-number">100</span>%;
+          height: <span class="hljs-number">100</span>%;
+          position: absolute;
+          top: <span class="hljs-number">0</span>;
+          left: <span class="hljs-number">0</span>;
+          right: <span class="hljs-number">0</span>;
+          bottom: <span class="hljs-number">0</span>;
+          transform-style: preserve-<span class="hljs-number">3d</span>;
+        }
+
+        :host slot {
+          display: block;
+          transform-style: preserve-<span class="hljs-number">3d</span>;
+        }
+
+      &lt;/style&gt;
+      &lt;div <span class="hljs-keyword">class</span>=<span class="hljs-string">&quot;view&quot;</span>&gt;
+        &lt;div <span class="hljs-keyword">class</span>=<span class="hljs-string">&quot;camera&quot;</span>&gt;
+          &lt;slot&gt;&lt;/slot&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    `;
+
+    <span class="hljs-keyword">const</span> { width, height } = <span class="hljs-keyword">this</span>.getBoundingClientRect();
+
+    <span class="hljs-keyword">this</span>.#camera = new PerspectiveCamera(<span class="hljs-number">50</span>, width / height, <span class="hljs-number">0.1</span>, <span class="hljs-number">1000</span>);
+    <span class="hljs-keyword">this</span>.#camera.position.x = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">this</span>.#camera.position.y = <span class="hljs-number">100</span>;
+    <span class="hljs-keyword">this</span>.#camera.position.z = <span class="hljs-number">580</span>;
+    
+    <span class="hljs-keyword">const</span> viewElement = shadowRoot.querySelector(<span class="hljs-string">&#x27;.view&#x27;</span>);
+    <span class="hljs-keyword">const</span> cameraElement = shadowRoot.querySelector(<span class="hljs-string">&#x27;.camera&#x27;</span>);
+
+    <span class="hljs-keyword">this</span>.#renderer = new CSS3DRenderer(<span class="hljs-keyword">this</span>.#camera, viewElement, cameraElement);
+    <span class="hljs-keyword">this</span>.#renderer.setSize(width, height);
+
+    <span class="hljs-keyword">const</span> controls = new OrbitControls(<span class="hljs-keyword">this</span>.#camera, viewElement);
+    controls.addEventListener(<span class="hljs-string">&#x27;change&#x27;</span>, <span class="hljs-keyword">this</span>.render);
+
+    <span class="hljs-keyword">this</span>.render();
+
+    <span class="hljs-keyword">this</span>.#camera.lookAt(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
+  }
+
+  <span class="hljs-keyword">get</span> camera() {
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.#camera;
+  }
+
+  connectedCallback() {
+    window.addEventListener(<span class="hljs-string">&#x27;resize&#x27;</span>, <span class="hljs-keyword">this</span>.handleResize);
+
+    <span class="hljs-keyword">this</span>.render();
+  }
+
+  handleResize() {
+    <span class="hljs-keyword">const</span> { width, height } = <span class="hljs-keyword">this</span>.getBoundingClientRect();
+
+    <span class="hljs-keyword">this</span>.#camera.aspect = width / height;
+    <span class="hljs-keyword">this</span>.#camera.updateProjectionMatrix();
+    <span class="hljs-keyword">this</span>.#renderer.setSize(width, height);
+  }
+
+  render() {
+    <span class="hljs-keyword">this</span>.#renderer.render();
+  }
+}
+
+customElements.define(<span class="hljs-string">&#x27;c3-scene&#x27;</span>, C3Scene);
+
+export { C3Scene };</code></pre>
+    </div>
+  </div>
+</main>
+
+    <div class="footer">
+      <div class="center">
+        Powered by <a target="_blank" href="https://benignware.com">Benignware</a>
+      </div>
+    </div>
+  </body>
+</html>

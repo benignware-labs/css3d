@@ -1,0 +1,460 @@
+<html>
+  <head>
+    <base href="../.."/>
+    <title>css3d - cylinder.mjs</title>
+
+    <link rel="stylesheet" href="public/github-markdown.min-05fea8df8ec68cb6c27337f6db65733e.css">
+    <link rel="stylesheet" href="public/highlight-c281e701b2830b095c67417cd9a7b210.css">
+    <link rel="stylesheet" href="public/style-aea3468ccb7ee0c3c4c2b5d339fc989e.css">
+    <link rel="stylesheet" href="public/all-cc69a8b8824029ae06797ee01a3cc5c8.css">
+
+    <script src="public/plugins/core/example/ExampleViewer.js"></script>
+              
+              <script src="-/index.mjs" type="module"></script>
+            
+  </head>
+  <body class="markdown-body flex-column">
+    <div class="header flex">
+      <a class="header-brand" href="./index.html">css3d</a>
+      
+<ul class="menu flex align-center justify-center">
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="elements/Sphere.html"
+        
+        
+          role="button"
+          
+          aria-expanded="false"
+        
+      >
+        Elements
+      </a>
+      
+    </li>
+    
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="examples/textures.html"
+        
+        
+          role="button"
+          
+          aria-expanded="false"
+        
+      >
+        Examples
+      </a>
+      
+    </li>
+    
+  
+</ul>
+      <nav class="links">
+        
+          
+            
+          
+        
+      </nav>
+    </div>
+      
+      
+
+<main class="flex-grow flex h-100">
+  <div class="sidebar sidebar-left border-right mr-2 flex-noshrink">
+  
+<ul class="menu">
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="elements/Sphere.html"
+        
+        
+          role="button"
+          
+          aria-expanded="false"
+        
+      >
+        Elements
+      </a>
+      
+        
+<ul class="menu">
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="elements/Sphere.html"
+        
+        
+      >
+        Sphere
+      </a>
+      
+    </li>
+    
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="elements/Polyhedron.html"
+        
+        
+      >
+        Polyhedron
+      </a>
+      
+    </li>
+    
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="elements/Cylinder.html"
+        
+        
+      >
+        Cylinder
+      </a>
+      
+    </li>
+    
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="elements/Box.html"
+        
+        
+      >
+        Box
+      </a>
+      
+    </li>
+    
+  
+</ul>
+      
+    </li>
+    
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="examples/textures.html"
+        
+        
+          role="button"
+          
+          aria-expanded="false"
+        
+      >
+        Examples
+      </a>
+      
+        
+<ul class="menu">
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="examples/textures.html"
+        
+        
+      >
+        Textures
+      </a>
+      
+    </li>
+    
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="examples/planets.html"
+        
+        
+      >
+        Planets
+      </a>
+      
+    </li>
+    
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="examples/crane.html"
+        
+        
+      >
+        Crane
+      </a>
+      
+    </li>
+    
+  
+</ul>
+      
+    </li>
+    
+  
+</ul>
+</div>
+  <div class="flex-grow">
+    <div class="container py-4">
+      <h1>Source: cylinder.mjs</h1>
+      <p>
+        lib/shapes/cylinder.mjs
+      </p>
+      
+      <pre><code class="hljs">const FACETS = 16;
+
+export const cylinder = `
+  <span class="hljs-tag">&lt;<span class="hljs-name">style</span> <span class="hljs-attr">scoped</span>&gt;</span><span class="language-css">
+    <span class="hljs-selector-pseudo">:host</span> {
+      <span class="hljs-attr">--radius</span>: <span class="hljs-number">100px</span>;
+      <span class="hljs-attr">--topRadius</span>: <span class="hljs-number">100px</span>;
+      <span class="hljs-attr">--bottomRadius</span>: <span class="hljs-number">100px</span>;
+      <span class="hljs-attr">--height</span>: <span class="hljs-number">200px</span>;
+      <span class="hljs-attr">--facets</span>: ${FACETS};
+      <span class="hljs-attr">--background</span>: <span class="hljs-built_in">rgba</span>(<span class="hljs-number">0</span>, <span class="hljs-number">255</span>, <span class="hljs-number">255</span>, <span class="hljs-number">0.1</span>);
+    }
+
+    <span class="hljs-comment">/*
+    :host::before,
+    :host::after {
+      --r: calc(max(var(--topRadius), var(--bottomRadius)));
+      content: &#x27;&#x27;;
+      display: block;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: calc(var(--r) * 2);
+      height: var(--height);
+      transform: translateX(-50%) translateY(-50%) translateZ(calc(var(--r)));
+      outline: 2px solid green;
+    }
+
+    :host::after {
+      transform: translateX(-50%) translateY(-50%) translateZ(calc(-1 * var(--r)));
+    }
+    */</span>
+
+    <span class="hljs-selector-class">.shape</span> {
+      <span class="hljs-attr">--_topRadius</span>: <span class="hljs-built_in">var</span>(--topRadius, <span class="hljs-built_in">var</span>(--radius));
+      <span class="hljs-attr">--_bottomRadius</span>: <span class="hljs-built_in">var</span>(--bottomRadius, <span class="hljs-built_in">var</span>(--radius));
+    }
+
+    <span class="hljs-selector-class">.shape</span> {
+      <span class="hljs-attribute">transform</span>: <span class="hljs-built_in">translate3d</span>(-<span class="hljs-number">50%</span>, -<span class="hljs-number">50%</span>, <span class="hljs-built_in">calc</span>(<span class="hljs-built_in">var</span>(--radiusTop) / <span class="hljs-number">2</span>));
+      <span class="hljs-attribute">transform-style</span>: preserve-<span class="hljs-number">3</span>d;
+    }
+
+    <span class="hljs-selector-class">.top</span>, <span class="hljs-selector-class">.bottom</span>, <span class="hljs-selector-class">.body</span> {
+      <span class="hljs-attribute">transform-style</span>: preserve-<span class="hljs-number">3</span>d;
+    }
+
+    
+
+    <span class="hljs-selector-class">.facet</span> {
+      <span class="hljs-attr">--r</span>: <span class="hljs-built_in">calc</span>((<span class="hljs-built_in">var</span>(--_bottomRadius) + <span class="hljs-built_in">var</span>(--_topRadius)) / <span class="hljs-number">2</span>);
+      <span class="hljs-attr">--angle</span>: <span class="hljs-built_in">calc</span>(<span class="hljs-built_in">var</span>(--facet) * <span class="hljs-number">360deg</span> / <span class="hljs-built_in">var</span>(--facets));
+      <span class="hljs-attr">--x</span>: <span class="hljs-built_in">calc</span>(<span class="hljs-built_in">var</span>(--r) * <span class="hljs-built_in">cos</span>(<span class="hljs-built_in">var</span>(--angle)) - <span class="hljs-number">50%</span>);
+      <span class="hljs-attr">--y</span>: -<span class="hljs-number">50%</span>;
+      <span class="hljs-attr">--z</span>: <span class="hljs-built_in">calc</span>(<span class="hljs-built_in">var</span>(--r) * <span class="hljs-built_in">sin</span>(<span class="hljs-built_in">var</span>(--angle)));
+      <span class="hljs-attr">--w2</span>: <span class="hljs-built_in">calc</span>(<span class="hljs-built_in">var</span>(--_topRadius) * <span class="hljs-number">2</span> * <span class="hljs-built_in">tan</span>(<span class="hljs-number">180deg</span> / <span class="hljs-built_in">var</span>(--facets)));
+      <span class="hljs-attr">--w1</span>: <span class="hljs-built_in">calc</span>(<span class="hljs-built_in">var</span>(--_bottomRadius) * <span class="hljs-number">2</span> * <span class="hljs-built_in">tan</span>(<span class="hljs-number">180deg</span> / <span class="hljs-built_in">var</span>(--facets)));
+
+      <span class="hljs-attr">--w</span>: <span class="hljs-built_in">max</span>(<span class="hljs-built_in">var</span>(--w1), <span class="hljs-built_in">var</span>(--w2));
+      <span class="hljs-attr">--ax</span>: <span class="hljs-built_in">calc</span>(<span class="hljs-built_in">atan2</span>(<span class="hljs-built_in">var</span>(--_bottomRadius) - <span class="hljs-built_in">var</span>(--_topRadius), <span class="hljs-built_in">var</span>(--height)));
+      <span class="hljs-attr">--lx</span>: <span class="hljs-built_in">calc</span>(<span class="hljs-built_in">min</span>(<span class="hljs-built_in">var</span>(--w1), <span class="hljs-built_in">var</span>(--w2)) / <span class="hljs-number">2</span>);
+      <span class="hljs-attr">--h</span>: <span class="hljs-built_in">calc</span>(<span class="hljs-built_in">var</span>(--height) + <span class="hljs-built_in">var</span>(--lx) * <span class="hljs-built_in">sin</span>(ax));
+      <span class="hljs-attr">--s</span>: <span class="hljs-built_in">calc</span>(<span class="hljs-built_in">var</span>(--height) / <span class="hljs-built_in">cos</span>(<span class="hljs-built_in">var</span>(--ax) * -<span class="hljs-number">1</span>));
+      <span class="hljs-attr">--a</span>: <span class="hljs-built_in">calc</span>(<span class="hljs-built_in">atan2</span>(<span class="hljs-built_in">var</span>(--s), <span class="hljs-built_in">var</span>(--w2) / <span class="hljs-number">2</span> - <span class="hljs-built_in">var</span>(--w1) / <span class="hljs-number">2</span>) - <span class="hljs-number">45deg</span>);
+
+      <span class="hljs-attribute">transform-style</span>: preserve-<span class="hljs-number">3</span>d;
+    }
+
+    <span class="hljs-selector-class">.body</span> <span class="hljs-selector-class">.facet</span> {
+      <span class="hljs-attribute">position</span>: absolute;
+      <span class="hljs-attribute">top</span>: <span class="hljs-number">0</span>;
+      <span class="hljs-attribute">left</span>: <span class="hljs-number">0</span>;
+      <span class="hljs-attribute">width</span>: <span class="hljs-built_in">var</span>(--w);
+      <span class="hljs-attribute">height</span>: <span class="hljs-built_in">var</span>(--s);
+      <span class="hljs-attribute">transform-origin</span>: <span class="hljs-number">50%</span> <span class="hljs-number">50%</span>;
+      <span class="hljs-attribute">transform</span>: <span class="hljs-built_in">translate3d</span>(<span class="hljs-built_in">var</span>(--x), <span class="hljs-built_in">var</span>(--y), <span class="hljs-built_in">var</span>(--z)) <span class="hljs-built_in">rotateY</span>(<span class="hljs-built_in">calc</span>(-<span class="hljs-number">1</span> * <span class="hljs-built_in">var</span>(--angle) + <span class="hljs-number">90deg</span>)) <span class="hljs-built_in">rotateX</span>(<span class="hljs-built_in">calc</span>(<span class="hljs-built_in">var</span>(--ax) * -<span class="hljs-number">1</span>));
+      
+      <span class="hljs-attribute">background</span>: <span class="hljs-built_in">var</span>(--background);
+      <span class="hljs-attribute">background-position</span>-x: <span class="hljs-built_in">calc</span>(<span class="hljs-number">100%</span> * <span class="hljs-built_in">var</span>(--facet));
+      <span class="hljs-comment">/* background-size: calc(100% * var(--facets)) 100%; */</span>
+
+      <span class="hljs-attr">--mc</span>: orange;
+      <span class="hljs-attr">--mt</span>: <span class="hljs-built_in">rgba</span>(<span class="hljs-number">0</span>, <span class="hljs-number">255</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0.5</span>);
+      <span class="hljs-attr">--mt</span>: transparent; 
+     
+      <span class="hljs-attribute">mask-image</span>:
+        <span class="hljs-built_in">conic-gradient</span>(
+          from <span class="hljs-number">135deg</span> at <span class="hljs-built_in">calc</span>( <span class="hljs-number">50%</span> - <span class="hljs-built_in">var</span>(--w1) / <span class="hljs-number">2</span>) <span class="hljs-number">0</span>,
+          <span class="hljs-built_in">var</span>(--mt) <span class="hljs-number">45deg</span>,
+          <span class="hljs-built_in">var</span>(--mc) <span class="hljs-number">0</span>,
+          <span class="hljs-built_in">var</span>(--mc) <span class="hljs-built_in">calc</span>(<span class="hljs-number">90deg</span> - <span class="hljs-built_in">var</span>(--a)),
+          <span class="hljs-built_in">var</span>(--mt) <span class="hljs-built_in">calc</span>(<span class="hljs-number">90deg</span> - <span class="hljs-built_in">var</span>(--a))
+        ),
+
+        <span class="hljs-built_in">conic-gradient</span>(
+          from <span class="hljs-number">135deg</span> at <span class="hljs-built_in">calc</span>( <span class="hljs-number">50%</span> + <span class="hljs-built_in">var</span>(--w1) / <span class="hljs-number">2</span>) <span class="hljs-number">0</span>,
+            <span class="hljs-built_in">var</span>(--mt) <span class="hljs-built_in">calc</span>(<span class="hljs-built_in">var</span>(--a)),
+            <span class="hljs-built_in">var</span>(--mc) <span class="hljs-built_in">calc</span>(<span class="hljs-number">45deg</span> - <span class="hljs-built_in">var</span>(--a)),
+            <span class="hljs-built_in">var</span>(--mc) <span class="hljs-built_in">calc</span>(<span class="hljs-number">45deg</span>),
+            <span class="hljs-built_in">var</span>(--mt) <span class="hljs-built_in">calc</span>(<span class="hljs-number">45deg</span>)
+        ),
+
+        <span class="hljs-built_in">conic-gradient</span>(
+          from -<span class="hljs-number">45deg</span> at <span class="hljs-built_in">calc</span>( <span class="hljs-number">50%</span> - <span class="hljs-built_in">var</span>(--w2) / <span class="hljs-number">2</span>) <span class="hljs-number">100%</span>,
+            <span class="hljs-built_in">var</span>(--mt) <span class="hljs-built_in">calc</span>(<span class="hljs-number">90deg</span> - <span class="hljs-built_in">var</span>(--a)),
+            <span class="hljs-built_in">var</span>(--mc) <span class="hljs-built_in">calc</span>(<span class="hljs-number">90deg</span> - <span class="hljs-built_in">var</span>(--a)),
+            <span class="hljs-built_in">var</span>(--mc) <span class="hljs-number">45deg</span>,
+            <span class="hljs-built_in">var</span>(--mt) <span class="hljs-number">45deg</span>
+        ),
+        
+        <span class="hljs-built_in">conic-gradient</span>(
+          from -<span class="hljs-number">45deg</span> at <span class="hljs-built_in">calc</span>( <span class="hljs-number">50%</span> + <span class="hljs-built_in">var</span>(--w2) / <span class="hljs-number">2</span>) <span class="hljs-number">100%</span>,
+            <span class="hljs-built_in">var</span>(--mt) <span class="hljs-number">45deg</span>,
+            <span class="hljs-built_in">var</span>(--mc) <span class="hljs-number">45deg</span>,
+            <span class="hljs-built_in">var</span>(--mc) <span class="hljs-built_in">calc</span>(<span class="hljs-built_in">var</span>(--a)),
+            <span class="hljs-built_in">var</span>(--mt) <span class="hljs-built_in">calc</span>(<span class="hljs-built_in">var</span>(--a))
+        ),
+        
+        <span class="hljs-built_in">linear-gradient</span>(<span class="hljs-number">90deg</span>,
+          <span class="hljs-built_in">var</span>(--mt) <span class="hljs-built_in">calc</span>(<span class="hljs-number">50%</span> - <span class="hljs-built_in">var</span>(--lx)),
+          <span class="hljs-built_in">var</span>(--mc) <span class="hljs-built_in">calc</span>(<span class="hljs-number">50%</span> - <span class="hljs-built_in">var</span>(--lx)),
+          <span class="hljs-built_in">var</span>(--mc) <span class="hljs-built_in">calc</span>(<span class="hljs-number">50%</span> + <span class="hljs-built_in">var</span>(--lx) + <span class="hljs-number">0.5px</span>),
+          <span class="hljs-built_in">var</span>(--mt) <span class="hljs-built_in">calc</span>(<span class="hljs-number">50%</span> + <span class="hljs-built_in">var</span>(--lx) + <span class="hljs-number">0.5px</span>)
+        );
+    }
+
+    <span class="hljs-selector-class">.top</span> <span class="hljs-selector-class">.facet</span> {
+      <span class="hljs-attr">--sx</span>: <span class="hljs-built_in">var</span>(--w2);
+      <span class="hljs-attr">--w</span>: <span class="hljs-built_in">calc</span>(<span class="hljs-built_in">var</span>(--topRadius, <span class="hljs-built_in">var</span>(--radius)) * <span class="hljs-number">2</span>);
+      <span class="hljs-attr">--h</span>: <span class="hljs-built_in">calc</span>(<span class="hljs-built_in">var</span>(--topRadius, <span class="hljs-built_in">var</span>(--radius)) * <span class="hljs-number">2</span>);
+    }
+
+    <span class="hljs-selector-class">.bottom</span> <span class="hljs-selector-class">.facet</span> {
+      <span class="hljs-attr">--sx</span>: <span class="hljs-built_in">var</span>(--w1);
+      <span class="hljs-attr">--w</span>: <span class="hljs-built_in">calc</span>(<span class="hljs-built_in">var</span>(--bottomRadius, <span class="hljs-built_in">var</span>(--radius)) * <span class="hljs-number">2</span>);
+      <span class="hljs-attr">--h</span>: <span class="hljs-built_in">calc</span>(<span class="hljs-built_in">var</span>(--bottomRadius, <span class="hljs-built_in">var</span>(--radius)) * <span class="hljs-number">2</span>);
+    }
+
+    <span class="hljs-selector-class">.bottom</span> {
+      <span class="hljs-attribute">position</span>: absolute;
+      <span class="hljs-attribute">top</span>: <span class="hljs-built_in">calc</span>( -<span class="hljs-number">1</span> * <span class="hljs-built_in">var</span>(--height));
+    }
+
+    <span class="hljs-selector-class">.top</span> <span class="hljs-selector-class">.facet</span>,
+    <span class="hljs-selector-class">.bottom</span> <span class="hljs-selector-class">.facet</span> {
+      <span class="hljs-attr">--mc</span>: orange;
+      <span class="hljs-attr">--mt</span>: transparent;
+      <span class="hljs-attr">--r</span>: <span class="hljs-built_in">calc</span>((<span class="hljs-built_in">var</span>(--_bottomRadius) + <span class="hljs-built_in">var</span>(--_topRadius)) / <span class="hljs-number">2</span>);
+      <span class="hljs-attr">--a</span>: <span class="hljs-built_in">calc</span>(<span class="hljs-built_in">atan2</span>(<span class="hljs-built_in">var</span>(--h), <span class="hljs-built_in">var</span>(--sx)));
+      <span class="hljs-attr">--b</span>: <span class="hljs-built_in">calc</span>(<span class="hljs-built_in">atan2</span>(<span class="hljs-built_in">var</span>(--h), <span class="hljs-built_in">var</span>(--sx) * -<span class="hljs-number">1</span>));
+      <span class="hljs-attr">--fy</span>: <span class="hljs-built_in">calc</span>(<span class="hljs-built_in">var</span>(--facet) * <span class="hljs-number">0px</span>); 
+    }
+
+    <span class="hljs-selector-class">.bottom</span> <span class="hljs-selector-class">.facet</span> {
+      <span class="hljs-comment">/*transform: translate(-50%, calc(var(--height) / -2 - 50% + var(--fy) )) rotateX(90deg) rotateZ(calc(var(--angle)));*/</span>
+    }
+
+    <span class="hljs-selector-class">.top</span> <span class="hljs-selector-class">.facet</span><span class="hljs-selector-pseudo">::before</span>,
+    <span class="hljs-selector-class">.bottom</span> <span class="hljs-selector-class">.facet</span><span class="hljs-selector-pseudo">::before</span> {
+      <span class="hljs-attribute">content</span>: <span class="hljs-string">&#x27;&#x27;</span>;
+      <span class="hljs-attribute">display</span>: block;
+      <span class="hljs-attribute">position</span>: absolute;
+      <span class="hljs-attribute">top</span>: <span class="hljs-number">50%</span>;
+      <span class="hljs-attribute">left</span>: <span class="hljs-number">50%</span>;
+      <span class="hljs-attribute">width</span>: <span class="hljs-built_in">calc</span>(<span class="hljs-built_in">var</span>(--_topRadius) * <span class="hljs-number">2</span>);
+      <span class="hljs-attribute">height</span>: <span class="hljs-built_in">calc</span>(<span class="hljs-built_in">var</span>(--_topRadius) * <span class="hljs-number">2</span>);
+      <span class="hljs-attribute">background</span>: <span class="hljs-built_in">var</span>(--background);
+     
+      <span class="hljs-attribute">transform</span>: <span class="hljs-built_in">translate</span>(-<span class="hljs-number">50%</span>, -<span class="hljs-number">50%</span>) <span class="hljs-built_in">rotateZ</span>(<span class="hljs-built_in">calc</span>(-<span class="hljs-number">1</span> * <span class="hljs-built_in">var</span>(--angle)));
+      <span class="hljs-attribute">transform-origin</span>: <span class="hljs-number">50%</span> <span class="hljs-number">50%</span>;
+    }
+
+    <span class="hljs-selector-class">.bottom</span> <span class="hljs-selector-class">.facet</span><span class="hljs-selector-pseudo">::before</span> {
+      <span class="hljs-attribute">width</span>: <span class="hljs-built_in">calc</span>(<span class="hljs-built_in">var</span>(--_bottomRadius) * <span class="hljs-number">2</span>);
+      <span class="hljs-attribute">height</span>: <span class="hljs-built_in">calc</span>(<span class="hljs-built_in">var</span>(--_bottomRadius) * <span class="hljs-number">2</span>);
+      <span class="hljs-attribute">transform</span>: <span class="hljs-built_in">translate</span>(-<span class="hljs-number">50%</span>, -<span class="hljs-number">50%</span>) <span class="hljs-built_in">rotateZ</span>(<span class="hljs-built_in">calc</span>(-<span class="hljs-number">1</span> * <span class="hljs-built_in">var</span>(--angle))) <span class="hljs-built_in">scaleX</span>(-<span class="hljs-number">1</span>);
+    }
+
+    <span class="hljs-selector-class">.top</span> <span class="hljs-selector-class">.facet</span>,
+    <span class="hljs-selector-class">.bottom</span> <span class="hljs-selector-class">.facet</span> {
+      <span class="hljs-attribute">background-size</span>: auto <span class="hljs-number">100%</span>;
+    }
+
+    <span class="hljs-selector-class">.top</span> <span class="hljs-selector-class">.facet</span>,
+    <span class="hljs-selector-class">.bottom</span> <span class="hljs-selector-class">.facet</span> {
+      <span class="hljs-attribute">position</span>: absolute;
+      <span class="hljs-attribute">width</span>: <span class="hljs-built_in">var</span>(--w);
+      <span class="hljs-attribute">height</span>: <span class="hljs-built_in">var</span>(--h);
+      <span class="hljs-attribute">transform-origin</span>: <span class="hljs-number">50%</span> <span class="hljs-number">50%</span>;
+      <span class="hljs-attribute">transform</span>: <span class="hljs-built_in">translate</span>(-<span class="hljs-number">50%</span>, <span class="hljs-built_in">calc</span>(<span class="hljs-built_in">var</span>(--height) / <span class="hljs-number">2</span> - <span class="hljs-number">50%</span> + <span class="hljs-built_in">var</span>(--fy) )) <span class="hljs-built_in">rotateX</span>(<span class="hljs-number">90deg</span>) <span class="hljs-built_in">rotateZ</span>(<span class="hljs-built_in">calc</span>(<span class="hljs-built_in">var</span>(--angle)));
+      <span class="hljs-attribute">mask-image</span>: <span class="hljs-built_in">conic-gradient</span>(from <span class="hljs-built_in">calc</span>(<span class="hljs-number">0deg</span> ) at <span class="hljs-number">50%</span> <span class="hljs-number">50%</span>, <span class="hljs-built_in">var</span>(--mt) <span class="hljs-built_in">var</span>(--a), <span class="hljs-built_in">var</span>(--mc) <span class="hljs-built_in">var</span>(--a), <span class="hljs-built_in">var</span>(--mc) <span class="hljs-built_in">calc</span>(<span class="hljs-built_in">var</span>(--b)), <span class="hljs-built_in">var</span>(--mt) <span class="hljs-built_in">calc</span>(<span class="hljs-built_in">var</span>(--b)));
+
+      <span class="hljs-attribute">outline</span>: <span class="hljs-number">3px</span> solid blue;
+    }
+
+    
+  </span><span class="hljs-tag">&lt;/<span class="hljs-name">style</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;shape cylinder&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;top&quot;</span>&gt;</span>
+      ${Array.from({length: FACETS}, (_, i) =&gt; `<span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;facet&quot;</span> <span class="hljs-attr">style</span>=<span class="hljs-string">&quot;--facet: ${i}&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>`).join(&#x27;\n&#x27;)}
+    <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;body&quot;</span>&gt;</span>
+      ${Array.from({length: FACETS}, (_, i) =&gt; `<span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;facet&quot;</span> <span class="hljs-attr">style</span>=<span class="hljs-string">&quot;--facet: ${i}&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>`).join(&#x27;\n&#x27;)}
+    <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;bottom&quot;</span>&gt;</span>
+      ${Array.from({length: FACETS}, (_, i) =&gt; `<span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;facet&quot;</span> <span class="hljs-attr">style</span>=<span class="hljs-string">&quot;--facet: ${i}&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>`).join(&#x27;\n&#x27;)}
+    <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+  
+`;
+</code></pre>
+    </div>
+  </div>
+</main>
+
+    <div class="footer">
+      <div class="center">
+        Powered by <a target="_blank" href="https://benignware.com">Benignware</a>
+      </div>
+    </div>
+  </body>
+</html>

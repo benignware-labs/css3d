@@ -1,0 +1,688 @@
+<html>
+  <head>
+    <base href=".."/>
+    <title>css3d - Example: Crane</title>
+
+    <link rel="stylesheet" href="public/github-markdown.min-05fea8df8ec68cb6c27337f6db65733e.css">
+    <link rel="stylesheet" href="public/highlight-c281e701b2830b095c67417cd9a7b210.css">
+    <link rel="stylesheet" href="public/style-aea3468ccb7ee0c3c4c2b5d339fc989e.css">
+    <link rel="stylesheet" href="public/all-cc69a8b8824029ae06797ee01a3cc5c8.css">
+
+    <script src="public/plugins/core/example/ExampleViewer.js"></script>
+              
+              <script src="-/index.mjs" type="module"></script>
+            
+  </head>
+  <body class="markdown-body flex-column">
+    <div class="header flex">
+      <a class="header-brand" href="./index.html">css3d</a>
+      
+<ul class="menu flex align-center justify-center">
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="elements/Sphere.html"
+        
+        
+          role="button"
+          
+          aria-expanded="false"
+        
+      >
+        Elements
+      </a>
+      
+    </li>
+    
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="examples/textures.html"
+        
+        
+          role="button"
+          
+          aria-expanded="false"
+        
+      >
+        Examples
+      </a>
+      
+    </li>
+    
+  
+</ul>
+      <nav class="links">
+        
+          
+            
+          
+        
+      </nav>
+    </div>
+      
+      
+
+<main class="flex-grow flex h-100">
+  <div class="sidebar sidebar-left border-right mr-2 flex-noshrink">
+  
+<ul class="menu">
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="elements/Sphere.html"
+        
+        
+          role="button"
+          
+          aria-expanded="false"
+        
+      >
+        Elements
+      </a>
+      
+        
+<ul class="menu">
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="elements/Sphere.html"
+        
+        
+      >
+        Sphere
+      </a>
+      
+    </li>
+    
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="elements/Polyhedron.html"
+        
+        
+      >
+        Polyhedron
+      </a>
+      
+    </li>
+    
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="elements/Cylinder.html"
+        
+        
+      >
+        Cylinder
+      </a>
+      
+    </li>
+    
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="elements/Box.html"
+        
+        
+      >
+        Box
+      </a>
+      
+    </li>
+    
+  
+</ul>
+      
+    </li>
+    
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="examples/textures.html"
+        
+        
+          role="button"
+          
+          aria-expanded="false"
+        
+      >
+        Examples
+      </a>
+      
+        
+<ul class="menu">
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="examples/textures.html"
+        
+        
+      >
+        Textures
+      </a>
+      
+    </li>
+    
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="examples/planets.html"
+        
+        
+      >
+        Planets
+      </a>
+      
+    </li>
+    
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link active"
+        
+          href="examples/crane.html"
+        
+        
+      >
+        Crane
+      </a>
+      
+    </li>
+    
+  
+</ul>
+      
+    </li>
+    
+  
+</ul>
+</div>
+  <div class="flex-grow">
+    <div class="container py-4">
+      <h1>Example: Crane</h1>
+      <p>Animated Construction Crane</p>
+<p>
+
+  <template id="example-8-template">
+    
+
+    <style>
+.texture-crane {
+  --color: yellow;
+  --tile: 20px;
+  --stroke: 1px;
+  --background: 
+    repeating-linear-gradient(
+      135deg,
+      transparent,
+      transparent calc((var( --tile) - var(--stroke) / 2) * sin(135deg)),
+      var(--color) calc((var( --tile) - var(--stroke) / 2) * sin(135deg)),
+      var(--color) calc((var( --tile) + var(--stroke) / 2) * sin(135deg)),
+      transparent calc((var( --tile) + var(--stroke) / 2) * sin(135deg)),
+      transparent calc(var( --tile) * 2 * sin(135deg))
+    ),
+    repeating-linear-gradient(
+      -135deg,
+      transparent,
+      transparent calc((var( --tile) * 2 - var(--stroke)) * sin(135deg)),
+      var(--color) calc((var( --tile) * 2 - var(--stroke)) * sin(135deg)),
+      var(--color) calc((var( --tile) * 2) * sin(135deg)),
+      transparent calc((var( --tile) * 2 + var(--stroke) / 2) * sin(135deg))
+    ),
+    repeating-linear-gradient(
+      90deg,
+      var(--color),
+      var(--color) calc(var(--stroke) / 2),
+      transparent calc(var(--stroke) / 2),
+      transparent calc(var(--tile) - var(--stroke) / 2 ),
+      var(--color) calc(var(--tile) - var(--stroke) / 2),
+      var(--color) calc(var(--tile))
+    ),
+    repeating-linear-gradient(
+      180deg,
+      var(--color),
+      var(--color) calc(var(--stroke) / 2),
+      transparent calc(var(--stroke) / 2),
+      transparent calc(var(--tile) - var(--stroke) / 2 ),
+      var(--color) calc(var(--tile) - var(--stroke) / 2),
+      var(--color) calc(var(--tile))
+    );
+  }
+
+
+  @keyframes spin {
+    100% {
+      rotate: y 360deg;
+    }
+  }
+
+  @keyframes crane {
+    0% {
+      rotate: y 0deg;
+    }
+    15% {
+      rotate: y -90deg;
+    }
+    35% {
+      rotate: y -90deg;
+    }
+    50% {
+      rotate: y 0deg;
+    }
+    65% {
+      rotate: y 90deg;
+    }
+    80% {
+      rotate: y 90deg;
+    }
+    100% {
+      rotate: y 0;
+    }
+  }
+
+  @keyframes move {
+    0% {
+      translate: 0 0 0;
+      visibility: hidden;
+    }
+    20% {
+      translate: 0 0 0;
+      visibility: hidden;
+    }
+    30% {
+      translate: 0 50px 0;
+      visibility: visible;
+    }
+    70% {
+      translate: 0 50px 0;
+      visibility: visible;
+    }
+    80% {
+      translate: 0 0 0;
+      visibility: hidden;
+    }
+    100% {
+      translate: 0 0 0;
+      visibility: hidden;
+    }
+  }
+
+  @keyframes block1 {
+    0% {
+      visibility: visible;
+      transform: scale3d(0, 0, 0);
+    }
+    5% {
+      visibility: visible;
+      transform: scale3d(1, 1, 1);
+    }
+    20% {
+      visibility: hidden;
+      transform: scale(1)
+    }
+    100% {
+      visibility: hidden;
+      transform: scale3d(1, 1, 1);
+    }
+  }
+
+  @keyframes block2 {
+    0% {
+      visibility: hidden;
+      transform: scale3d(1, 1, 1);
+    }
+    70% {
+      visibility: hidden;
+      transform: scale3d(1, 1, 1);
+    }
+    80% {
+      visibility: hidden;
+      transform: scale3d(1, 1, 1);
+    }
+    95% {
+      visibility: visible;
+      transform: scale3d(1, 1, 1);
+    }
+    100% {
+      visibility: hidden;
+      transform: scale3d(0, 0, 0);
+    }
+  }
+</style>
+
+    <div class="example-body">
+      <c3-scene>
+  <c3-group
+    animation="spin 10s linear infinite"
+  >
+  <c3-grid></c3-grid>
+  <c3-group>
+    <c3-group
+      animation="crane 2s linear infinite"
+    >
+      <c3-box
+        class="texture-crane"
+        rotate="x 90deg"
+        position="0 105px 30px"
+        width="20px"
+        height="80px"
+        depth="20px"
+    ></c3-box>
+    <c3-box
+        class="texture-crane"
+        position="0 45px 0"
+        width="20px"
+        height="100px"
+        depth="20px"
+        background="url('./img/Baltimore.jpg') repeat 20% 20% / 400px 200px"
+      
+    ></c3-box>
+    <c3-group
+      position="0 15px 70px"
+      
+    >
+      <c3-box
+        class="box"
+        animation="move 2s linear infinite" 
+        width="30px"
+        height="30px"
+        depth="30px"
+        background="url('./img/Baltimore.jpg') repeat 50% 50% / 600px 400px"
+        
+      ></c3-box>
+    </c3-group>
+    
+    </c3-group>
+    <c3-group
+      position="0 0 0"
+    >
+      <c3-box
+        animation="block1 2s linear infinite"
+        class="box"
+        position="-70px 15px 0"
+        rotate="y -90deg"
+        width="30px"
+        height="30px"
+        depth="30px"
+        background="url('./img/Baltimore.jpg') repeat 50% 50% / 600px 400px"
+      ></c3-box>
+
+      <c3-box
+        animation="block2 2s linear infinite"
+        class="box"
+        position="70px 15px 0"
+        rotate="y 90deg"
+        width="30px"
+        height="30px"
+        depth="30px"
+        background="url('./img/Baltimore.jpg') repeat 50% 50% / 600px 400px"
+      ></c3-box>
+    </c3-group>
+  </c3-group>
+  </c3-group>
+</c3-scene>
+
+    </div>
+  </template>
+  <example-viewer class="example" id="example-8-viewer" template="#example-8-template">
+
+  </example-viewer>
+</p>
+<pre><code class="hljs">
+<span class="hljs-selector-class">.texture-crane</span> {
+  <span class="hljs-attr">--color</span>: yellow;
+  <span class="hljs-attr">--tile</span>: <span class="hljs-number">20px</span>;
+  <span class="hljs-attr">--stroke</span>: <span class="hljs-number">1px</span>;
+  <span class="hljs-attr">--background</span>: 
+    <span class="hljs-built_in">repeating-linear-gradient</span>(
+      <span class="hljs-number">135deg</span>,
+      transparent,
+      transparent <span class="hljs-built_in">calc</span>((<span class="hljs-built_in">var</span>( --tile) - <span class="hljs-built_in">var</span>(--stroke) / <span class="hljs-number">2</span>) * <span class="hljs-built_in">sin</span>(<span class="hljs-number">135deg</span>)),
+      <span class="hljs-built_in">var</span>(--color) <span class="hljs-built_in">calc</span>((<span class="hljs-built_in">var</span>( --tile) - <span class="hljs-built_in">var</span>(--stroke) / <span class="hljs-number">2</span>) * <span class="hljs-built_in">sin</span>(<span class="hljs-number">135deg</span>)),
+      <span class="hljs-built_in">var</span>(--color) <span class="hljs-built_in">calc</span>((<span class="hljs-built_in">var</span>( --tile) + <span class="hljs-built_in">var</span>(--stroke) / <span class="hljs-number">2</span>) * <span class="hljs-built_in">sin</span>(<span class="hljs-number">135deg</span>)),
+      transparent <span class="hljs-built_in">calc</span>((<span class="hljs-built_in">var</span>( --tile) + <span class="hljs-built_in">var</span>(--stroke) / <span class="hljs-number">2</span>) * <span class="hljs-built_in">sin</span>(<span class="hljs-number">135deg</span>)),
+      transparent <span class="hljs-built_in">calc</span>(<span class="hljs-built_in">var</span>( --tile) * <span class="hljs-number">2</span> * <span class="hljs-built_in">sin</span>(<span class="hljs-number">135deg</span>))
+    ),
+    <span class="hljs-built_in">repeating-linear-gradient</span>(
+      -<span class="hljs-number">135deg</span>,
+      transparent,
+      transparent <span class="hljs-built_in">calc</span>((<span class="hljs-built_in">var</span>( --tile) * <span class="hljs-number">2</span> - <span class="hljs-built_in">var</span>(--stroke)) * <span class="hljs-built_in">sin</span>(<span class="hljs-number">135deg</span>)),
+      <span class="hljs-built_in">var</span>(--color) <span class="hljs-built_in">calc</span>((<span class="hljs-built_in">var</span>( --tile) * <span class="hljs-number">2</span> - <span class="hljs-built_in">var</span>(--stroke)) * <span class="hljs-built_in">sin</span>(<span class="hljs-number">135deg</span>)),
+      <span class="hljs-built_in">var</span>(--color) <span class="hljs-built_in">calc</span>((<span class="hljs-built_in">var</span>( --tile) * <span class="hljs-number">2</span>) * <span class="hljs-built_in">sin</span>(<span class="hljs-number">135deg</span>)),
+      transparent <span class="hljs-built_in">calc</span>((<span class="hljs-built_in">var</span>( --tile) * <span class="hljs-number">2</span> + <span class="hljs-built_in">var</span>(--stroke) / <span class="hljs-number">2</span>) * <span class="hljs-built_in">sin</span>(<span class="hljs-number">135deg</span>))
+    ),
+    <span class="hljs-built_in">repeating-linear-gradient</span>(
+      <span class="hljs-number">90deg</span>,
+      <span class="hljs-built_in">var</span>(--color),
+      <span class="hljs-built_in">var</span>(--color) <span class="hljs-built_in">calc</span>(<span class="hljs-built_in">var</span>(--stroke) / <span class="hljs-number">2</span>),
+      transparent <span class="hljs-built_in">calc</span>(<span class="hljs-built_in">var</span>(--stroke) / <span class="hljs-number">2</span>),
+      transparent <span class="hljs-built_in">calc</span>(<span class="hljs-built_in">var</span>(--tile) - <span class="hljs-built_in">var</span>(--stroke) / <span class="hljs-number">2</span> ),
+      <span class="hljs-built_in">var</span>(--color) <span class="hljs-built_in">calc</span>(<span class="hljs-built_in">var</span>(--tile) - <span class="hljs-built_in">var</span>(--stroke) / <span class="hljs-number">2</span>),
+      <span class="hljs-built_in">var</span>(--color) <span class="hljs-built_in">calc</span>(<span class="hljs-built_in">var</span>(--tile))
+    ),
+    <span class="hljs-built_in">repeating-linear-gradient</span>(
+      <span class="hljs-number">180deg</span>,
+      <span class="hljs-built_in">var</span>(--color),
+      <span class="hljs-built_in">var</span>(--color) <span class="hljs-built_in">calc</span>(<span class="hljs-built_in">var</span>(--stroke) / <span class="hljs-number">2</span>),
+      transparent <span class="hljs-built_in">calc</span>(<span class="hljs-built_in">var</span>(--stroke) / <span class="hljs-number">2</span>),
+      transparent <span class="hljs-built_in">calc</span>(<span class="hljs-built_in">var</span>(--tile) - <span class="hljs-built_in">var</span>(--stroke) / <span class="hljs-number">2</span> ),
+      <span class="hljs-built_in">var</span>(--color) <span class="hljs-built_in">calc</span>(<span class="hljs-built_in">var</span>(--tile) - <span class="hljs-built_in">var</span>(--stroke) / <span class="hljs-number">2</span>),
+      <span class="hljs-built_in">var</span>(--color) <span class="hljs-built_in">calc</span>(<span class="hljs-built_in">var</span>(--tile))
+    );
+  }
+
+
+  <span class="hljs-keyword">@keyframes</span> spin {
+    <span class="hljs-number">100%</span> {
+      rotate: y <span class="hljs-number">360deg</span>;
+    }
+  }
+
+  <span class="hljs-keyword">@keyframes</span> crane {
+    <span class="hljs-number">0%</span> {
+      rotate: y <span class="hljs-number">0deg</span>;
+    }
+    <span class="hljs-number">15%</span> {
+      rotate: y -<span class="hljs-number">90deg</span>;
+    }
+    <span class="hljs-number">35%</span> {
+      rotate: y -<span class="hljs-number">90deg</span>;
+    }
+    <span class="hljs-number">50%</span> {
+      rotate: y <span class="hljs-number">0deg</span>;
+    }
+    <span class="hljs-number">65%</span> {
+      rotate: y <span class="hljs-number">90deg</span>;
+    }
+    <span class="hljs-number">80%</span> {
+      rotate: y <span class="hljs-number">90deg</span>;
+    }
+    <span class="hljs-number">100%</span> {
+      rotate: y <span class="hljs-number">0</span>;
+    }
+  }
+
+  <span class="hljs-keyword">@keyframes</span> move {
+    <span class="hljs-number">0%</span> {
+      translate: <span class="hljs-number">0</span> <span class="hljs-number">0</span> <span class="hljs-number">0</span>;
+      <span class="hljs-attribute">visibility</span>: hidden;
+    }
+    <span class="hljs-number">20%</span> {
+      translate: <span class="hljs-number">0</span> <span class="hljs-number">0</span> <span class="hljs-number">0</span>;
+      <span class="hljs-attribute">visibility</span>: hidden;
+    }
+    <span class="hljs-number">30%</span> {
+      translate: <span class="hljs-number">0</span> <span class="hljs-number">50px</span> <span class="hljs-number">0</span>;
+      <span class="hljs-attribute">visibility</span>: visible;
+    }
+    <span class="hljs-number">70%</span> {
+      translate: <span class="hljs-number">0</span> <span class="hljs-number">50px</span> <span class="hljs-number">0</span>;
+      <span class="hljs-attribute">visibility</span>: visible;
+    }
+    <span class="hljs-number">80%</span> {
+      translate: <span class="hljs-number">0</span> <span class="hljs-number">0</span> <span class="hljs-number">0</span>;
+      <span class="hljs-attribute">visibility</span>: hidden;
+    }
+    <span class="hljs-number">100%</span> {
+      translate: <span class="hljs-number">0</span> <span class="hljs-number">0</span> <span class="hljs-number">0</span>;
+      <span class="hljs-attribute">visibility</span>: hidden;
+    }
+  }
+
+  <span class="hljs-keyword">@keyframes</span> block1 {
+    <span class="hljs-number">0%</span> {
+      <span class="hljs-attribute">visibility</span>: visible;
+      <span class="hljs-attribute">transform</span>: <span class="hljs-built_in">scale3d</span>(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
+    }
+    <span class="hljs-number">5%</span> {
+      <span class="hljs-attribute">visibility</span>: visible;
+      <span class="hljs-attribute">transform</span>: <span class="hljs-built_in">scale3d</span>(<span class="hljs-number">1</span>, <span class="hljs-number">1</span>, <span class="hljs-number">1</span>);
+    }
+    <span class="hljs-number">20%</span> {
+      <span class="hljs-attribute">visibility</span>: hidden;
+      <span class="hljs-attribute">transform</span>: <span class="hljs-built_in">scale</span>(<span class="hljs-number">1</span>)
+    }
+    <span class="hljs-number">100%</span> {
+      <span class="hljs-attribute">visibility</span>: hidden;
+      <span class="hljs-attribute">transform</span>: <span class="hljs-built_in">scale3d</span>(<span class="hljs-number">1</span>, <span class="hljs-number">1</span>, <span class="hljs-number">1</span>);
+    }
+  }
+
+  <span class="hljs-keyword">@keyframes</span> block2 {
+    <span class="hljs-number">0%</span> {
+      <span class="hljs-attribute">visibility</span>: hidden;
+      <span class="hljs-attribute">transform</span>: <span class="hljs-built_in">scale3d</span>(<span class="hljs-number">1</span>, <span class="hljs-number">1</span>, <span class="hljs-number">1</span>);
+    }
+    <span class="hljs-number">70%</span> {
+      <span class="hljs-attribute">visibility</span>: hidden;
+      <span class="hljs-attribute">transform</span>: <span class="hljs-built_in">scale3d</span>(<span class="hljs-number">1</span>, <span class="hljs-number">1</span>, <span class="hljs-number">1</span>);
+    }
+    <span class="hljs-number">80%</span> {
+      <span class="hljs-attribute">visibility</span>: hidden;
+      <span class="hljs-attribute">transform</span>: <span class="hljs-built_in">scale3d</span>(<span class="hljs-number">1</span>, <span class="hljs-number">1</span>, <span class="hljs-number">1</span>);
+    }
+    <span class="hljs-number">95%</span> {
+      <span class="hljs-attribute">visibility</span>: visible;
+      <span class="hljs-attribute">transform</span>: <span class="hljs-built_in">scale3d</span>(<span class="hljs-number">1</span>, <span class="hljs-number">1</span>, <span class="hljs-number">1</span>);
+    }
+    <span class="hljs-number">100%</span> {
+      <span class="hljs-attribute">visibility</span>: hidden;
+      <span class="hljs-attribute">transform</span>: <span class="hljs-built_in">scale3d</span>(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
+    }
+  }
+</code></pre>
+<pre><code class="hljs"><span class="hljs-tag">&lt;<span class="hljs-name">c3-scene</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">c3-group</span>
+    <span class="hljs-attr">animation</span>=<span class="hljs-string">&quot;spin 10s linear infinite&quot;</span>
+  &gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">c3-grid</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">c3-grid</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">c3-group</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">c3-group</span>
+      <span class="hljs-attr">animation</span>=<span class="hljs-string">&quot;crane 2s linear infinite&quot;</span>
+    &gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">c3-box</span>
+        <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;texture-crane&quot;</span>
+        <span class="hljs-attr">rotate</span>=<span class="hljs-string">&quot;x 90deg&quot;</span>
+        <span class="hljs-attr">position</span>=<span class="hljs-string">&quot;0 105px 30px&quot;</span>
+        <span class="hljs-attr">width</span>=<span class="hljs-string">&quot;20px&quot;</span>
+        <span class="hljs-attr">height</span>=<span class="hljs-string">&quot;80px&quot;</span>
+        <span class="hljs-attr">depth</span>=<span class="hljs-string">&quot;20px&quot;</span>
+    &gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">c3-box</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">c3-box</span>
+        <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;texture-crane&quot;</span>
+        <span class="hljs-attr">position</span>=<span class="hljs-string">&quot;0 45px 0&quot;</span>
+        <span class="hljs-attr">width</span>=<span class="hljs-string">&quot;20px&quot;</span>
+        <span class="hljs-attr">height</span>=<span class="hljs-string">&quot;100px&quot;</span>
+        <span class="hljs-attr">depth</span>=<span class="hljs-string">&quot;20px&quot;</span>
+        <span class="hljs-attr">background</span>=<span class="hljs-string">&quot;url(&#x27;./img/Baltimore.jpg&#x27;) repeat 20% 20% / 400px 200px&quot;</span>
+      
+    &gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">c3-box</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">c3-group</span>
+      <span class="hljs-attr">position</span>=<span class="hljs-string">&quot;0 15px 70px&quot;</span>
+      
+    &gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">c3-box</span>
+        <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;box&quot;</span>
+        <span class="hljs-attr">animation</span>=<span class="hljs-string">&quot;move 2s linear infinite&quot;</span> 
+        <span class="hljs-attr">width</span>=<span class="hljs-string">&quot;30px&quot;</span>
+        <span class="hljs-attr">height</span>=<span class="hljs-string">&quot;30px&quot;</span>
+        <span class="hljs-attr">depth</span>=<span class="hljs-string">&quot;30px&quot;</span>
+        <span class="hljs-attr">background</span>=<span class="hljs-string">&quot;url(&#x27;./img/Baltimore.jpg&#x27;) repeat 50% 50% / 600px 400px&quot;</span>
+        
+      &gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">c3-box</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">c3-group</span>&gt;</span>
+    
+    <span class="hljs-tag">&lt;/<span class="hljs-name">c3-group</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">c3-group</span>
+      <span class="hljs-attr">position</span>=<span class="hljs-string">&quot;0 0 0&quot;</span>
+    &gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">c3-box</span>
+        <span class="hljs-attr">animation</span>=<span class="hljs-string">&quot;block1 2s linear infinite&quot;</span>
+        <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;box&quot;</span>
+        <span class="hljs-attr">position</span>=<span class="hljs-string">&quot;-70px 15px 0&quot;</span>
+        <span class="hljs-attr">rotate</span>=<span class="hljs-string">&quot;y -90deg&quot;</span>
+        <span class="hljs-attr">width</span>=<span class="hljs-string">&quot;30px&quot;</span>
+        <span class="hljs-attr">height</span>=<span class="hljs-string">&quot;30px&quot;</span>
+        <span class="hljs-attr">depth</span>=<span class="hljs-string">&quot;30px&quot;</span>
+        <span class="hljs-attr">background</span>=<span class="hljs-string">&quot;url(&#x27;./img/Baltimore.jpg&#x27;) repeat 50% 50% / 600px 400px&quot;</span>
+      &gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">c3-box</span>&gt;</span>
+
+      <span class="hljs-tag">&lt;<span class="hljs-name">c3-box</span>
+        <span class="hljs-attr">animation</span>=<span class="hljs-string">&quot;block2 2s linear infinite&quot;</span>
+        <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;box&quot;</span>
+        <span class="hljs-attr">position</span>=<span class="hljs-string">&quot;70px 15px 0&quot;</span>
+        <span class="hljs-attr">rotate</span>=<span class="hljs-string">&quot;y 90deg&quot;</span>
+        <span class="hljs-attr">width</span>=<span class="hljs-string">&quot;30px&quot;</span>
+        <span class="hljs-attr">height</span>=<span class="hljs-string">&quot;30px&quot;</span>
+        <span class="hljs-attr">depth</span>=<span class="hljs-string">&quot;30px&quot;</span>
+        <span class="hljs-attr">background</span>=<span class="hljs-string">&quot;url(&#x27;./img/Baltimore.jpg&#x27;) repeat 50% 50% / 600px 400px&quot;</span>
+      &gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">c3-box</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">c3-group</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">c3-group</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">c3-group</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">c3-scene</span>&gt;</span>
+</code></pre>
+
+    </div>
+  </div>
+</main>
+
+    <div class="footer">
+      <div class="center">
+        Powered by <a target="_blank" href="https://benignware.com">Benignware</a>
+      </div>
+    </div>
+  </body>
+</html>

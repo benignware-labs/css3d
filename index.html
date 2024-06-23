@@ -1,0 +1,148 @@
+<html>
+  <head>
+    <base href="."/>
+    <title>css3d - css3d</title>
+
+    <link rel="stylesheet" href="public/github-markdown.min-05fea8df8ec68cb6c27337f6db65733e.css">
+    <link rel="stylesheet" href="public/highlight-c281e701b2830b095c67417cd9a7b210.css">
+    <link rel="stylesheet" href="public/style-aea3468ccb7ee0c3c4c2b5d339fc989e.css">
+    <link rel="stylesheet" href="public/all-cc69a8b8824029ae06797ee01a3cc5c8.css">
+
+    <script src="public/plugins/core/example/ExampleViewer.js"></script>
+              
+              <script src="-/index.mjs" type="module"></script>
+            
+  </head>
+  <body class="markdown-body flex-column">
+    <div class="header flex">
+      <a class="header-brand" href="./index.html">css3d</a>
+      
+<ul class="menu flex align-center justify-center">
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="elements/Sphere.html"
+        
+        
+          role="button"
+          
+          aria-expanded="false"
+        
+      >
+        Elements
+      </a>
+      
+    </li>
+    
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="examples/textures.html"
+        
+        
+          role="button"
+          
+          aria-expanded="false"
+        
+      >
+        Examples
+      </a>
+      
+    </li>
+    
+  
+</ul>
+      <nav class="links">
+        
+          
+            
+          
+        
+      </nav>
+    </div>
+      
+      
+
+<main class="flex-grow flex-column h-100 container-fluid">
+  <div class="container-xl flex">
+    <div class="flex-grow">
+      <div>
+        <h1>css3d</h1>
+        <p>A set of web components for working with css 3d objects.</p>
+<p>
+
+  <template id="example-1-template">
+    
+
+    <style>  @keyframes spin {
+    100% {
+      rotate: y 360deg;
+    }
+  }
+</style>
+
+    <div class="example-body">
+      <c3-scene>
+  <c3-box
+    class="box"
+    background="url('_/brick-aaed9a582f6d38d96d28b446bc11e774.jpg') repeat 200px 200px / 600px 400px"
+    animation="spin 5s linear infinite"
+  ></c3-box>
+</c3-scene>
+
+    </div>
+  </template>
+  <example-viewer class="example" id="example-1-viewer" template="#example-1-template">
+
+  </example-viewer>
+</p>
+<pre><code class="hljs">  <span class="hljs-keyword">@keyframes</span> spin {
+    <span class="hljs-number">100%</span> {
+      rotate: y <span class="hljs-number">360deg</span>;
+    }
+  }
+</code></pre>
+<pre><code class="hljs"><span class="hljs-tag">&lt;<span class="hljs-name">c3-scene</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">c3-box</span>
+    <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;box&quot;</span>
+    <span class="hljs-attr">background</span>=<span class="hljs-string">&quot;url(&#x27;./examples/img/brick.jpg&#x27;) repeat 200px 200px / 600px 400px&quot;</span>
+    <span class="hljs-attr">animation</span>=<span class="hljs-string">&quot;spin 5s linear infinite&quot;</span>
+  &gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">c3-box</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">c3-scene</span>&gt;</span>
+</code></pre>
+
+      </div>
+    </div>
+    
+      <div class="sidebar sidebar-right ml-2 flex-noshrink">
+        <h4>About</h4>
+        <div class="muted">
+          A set of web components for working with css 3d objects.
+        </div>
+        
+          
+            <h4>Version</h4>
+            <div>
+              1.0.0
+            </div>
+            
+          
+        
+      </div>
+    
+  </div>
+</main>
+
+    <div class="footer">
+      <div class="center">
+        Powered by <a target="_blank" href="https://benignware.com">Benignware</a>
+      </div>
+    </div>
+  </body>
+</html>

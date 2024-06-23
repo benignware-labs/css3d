@@ -1,0 +1,440 @@
+<html>
+  <head>
+    <base href="../.."/>
+    <title>css3d - Vector3.mjs</title>
+
+    <link rel="stylesheet" href="public/github-markdown.min-05fea8df8ec68cb6c27337f6db65733e.css">
+    <link rel="stylesheet" href="public/highlight-c281e701b2830b095c67417cd9a7b210.css">
+    <link rel="stylesheet" href="public/style-aea3468ccb7ee0c3c4c2b5d339fc989e.css">
+    <link rel="stylesheet" href="public/all-cc69a8b8824029ae06797ee01a3cc5c8.css">
+
+    <script src="public/plugins/core/example/ExampleViewer.js"></script>
+              
+              <script src="-/index.mjs" type="module"></script>
+            
+  </head>
+  <body class="markdown-body flex-column">
+    <div class="header flex">
+      <a class="header-brand" href="./index.html">css3d</a>
+      
+<ul class="menu flex align-center justify-center">
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="elements/Sphere.html"
+        
+        
+          role="button"
+          
+          aria-expanded="false"
+        
+      >
+        Elements
+      </a>
+      
+    </li>
+    
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="examples/textures.html"
+        
+        
+          role="button"
+          
+          aria-expanded="false"
+        
+      >
+        Examples
+      </a>
+      
+    </li>
+    
+  
+</ul>
+      <nav class="links">
+        
+          
+            
+          
+        
+      </nav>
+    </div>
+      
+      
+
+<main class="flex-grow flex h-100">
+  <div class="sidebar sidebar-left border-right mr-2 flex-noshrink">
+  
+<ul class="menu">
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="elements/Sphere.html"
+        
+        
+          role="button"
+          
+          aria-expanded="false"
+        
+      >
+        Elements
+      </a>
+      
+        
+<ul class="menu">
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="elements/Sphere.html"
+        
+        
+      >
+        Sphere
+      </a>
+      
+    </li>
+    
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="elements/Polyhedron.html"
+        
+        
+      >
+        Polyhedron
+      </a>
+      
+    </li>
+    
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="elements/Cylinder.html"
+        
+        
+      >
+        Cylinder
+      </a>
+      
+    </li>
+    
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="elements/Box.html"
+        
+        
+      >
+        Box
+      </a>
+      
+    </li>
+    
+  
+</ul>
+      
+    </li>
+    
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="examples/textures.html"
+        
+        
+          role="button"
+          
+          aria-expanded="false"
+        
+      >
+        Examples
+      </a>
+      
+        
+<ul class="menu">
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="examples/textures.html"
+        
+        
+      >
+        Textures
+      </a>
+      
+    </li>
+    
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="examples/planets.html"
+        
+        
+      >
+        Planets
+      </a>
+      
+    </li>
+    
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="examples/crane.html"
+        
+        
+      >
+        Crane
+      </a>
+      
+    </li>
+    
+  
+</ul>
+      
+    </li>
+    
+  
+</ul>
+</div>
+  <div class="flex-grow">
+    <div class="container py-4">
+      <h1>Source: Vector3.mjs</h1>
+      <p>
+        lib/math/Vector3.mjs
+      </p>
+      
+      <pre><code class="hljs"><span class="hljs-keyword">import</span> { clamp } from <span class="hljs-string">&#x27;./utils.mjs&#x27;</span>;
+<span class="hljs-keyword">import</span> { Quaternion } from <span class="hljs-string">&#x27;./Quaternion.mjs&#x27;</span>;
+
+<span class="hljs-keyword">class</span> <span class="hljs-title class_">Vector3</span> {
+	<span class="hljs-keyword">constructor</span>( x = <span class="hljs-number">0</span>, y = <span class="hljs-number">0</span>, z = <span class="hljs-number">0</span> ) {
+		<span class="hljs-keyword">this</span>.x = x;
+		<span class="hljs-keyword">this</span>.y = y;
+		<span class="hljs-keyword">this</span>.z = z;
+	}
+
+	<span class="hljs-keyword">set</span>( x, y, z ) {
+		<span class="hljs-keyword">if</span> ( z === undefined ) z = <span class="hljs-keyword">this</span>.z; <span class="hljs-comment">// sprite.scale.set(x,y)</span>
+
+		<span class="hljs-keyword">this</span>.x = x;
+		<span class="hljs-keyword">this</span>.y = y;
+		<span class="hljs-keyword">this</span>.z = z;
+
+		<span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+	}
+
+	clone() {
+		<span class="hljs-keyword">return</span> new <span class="hljs-keyword">this</span>.<span class="hljs-keyword">constructor</span>( <span class="hljs-keyword">this</span>.x, <span class="hljs-keyword">this</span>.y, <span class="hljs-keyword">this</span>.z );
+	}
+
+	copy( v ) {
+		<span class="hljs-keyword">this</span>.x = v.x;
+		<span class="hljs-keyword">this</span>.y = v.y;
+		<span class="hljs-keyword">this</span>.z = v.z;
+
+		<span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+	}
+
+	add( v ) {
+		<span class="hljs-keyword">return</span> new Vector3( <span class="hljs-keyword">this</span>.x + v.x, <span class="hljs-keyword">this</span>.y + v.y, <span class="hljs-keyword">this</span>.z + v.z );
+	}
+
+	divide( v ) {
+		v = typeof v === <span class="hljs-string">&#x27;number&#x27;</span> ? new Vector3( v, v, v ) : v;
+		<span class="hljs-keyword">return</span> new Vector3( <span class="hljs-keyword">this</span>.x / v.x, <span class="hljs-keyword">this</span>.y / v.y, <span class="hljs-keyword">this</span>.z / v.z );
+	}
+
+	dot( v ) {
+		<span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.x * v.x + <span class="hljs-keyword">this</span>.y * v.y + <span class="hljs-keyword">this</span>.z * v.z;
+	}
+
+	equals( v ) {
+		<span class="hljs-keyword">return</span> v.x === <span class="hljs-keyword">this</span>.x &amp;&amp; v.y === <span class="hljs-keyword">this</span>.y &amp;&amp; v.z === <span class="hljs-keyword">this</span>.z;
+	}
+
+	cross( v ) {
+		<span class="hljs-keyword">return</span> new Vector3(
+			<span class="hljs-keyword">this</span>.y * v.z - <span class="hljs-keyword">this</span>.z * v.y,
+			<span class="hljs-keyword">this</span>.z * v.x - <span class="hljs-keyword">this</span>.x * v.z,
+			<span class="hljs-keyword">this</span>.x * v.y - <span class="hljs-keyword">this</span>.y * v.x
+		);
+	}
+
+	rotateX( angle ) {
+		<span class="hljs-keyword">const</span> cos = Math.cos( angle );
+		<span class="hljs-keyword">const</span> sin = Math.sin( angle );
+
+		<span class="hljs-keyword">const</span> y = <span class="hljs-keyword">this</span>.y * cos - <span class="hljs-keyword">this</span>.z * sin;
+		<span class="hljs-keyword">const</span> z = <span class="hljs-keyword">this</span>.y * sin + <span class="hljs-keyword">this</span>.z * cos;
+
+		<span class="hljs-keyword">return</span> new Vector3( <span class="hljs-keyword">this</span>.x, y, z );
+	}
+
+	rotateY( angle ) {
+		<span class="hljs-keyword">const</span> cos = Math.cos( angle );
+		<span class="hljs-keyword">const</span> sin = Math.sin( angle );
+
+		<span class="hljs-keyword">const</span> x = <span class="hljs-keyword">this</span>.x * cos - <span class="hljs-keyword">this</span>.z * sin;
+		<span class="hljs-keyword">const</span> z = <span class="hljs-keyword">this</span>.x * sin + <span class="hljs-keyword">this</span>.z * cos;
+
+		<span class="hljs-keyword">return</span> new Vector3( x, <span class="hljs-keyword">this</span>.y, z );
+	}
+
+	rotateZ( angle ) {
+		<span class="hljs-keyword">const</span> cos = Math.cos( angle );
+		<span class="hljs-keyword">const</span> sin = Math.sin( angle );
+
+		<span class="hljs-keyword">const</span> x = <span class="hljs-keyword">this</span>.x * cos - <span class="hljs-keyword">this</span>.y * sin;
+		<span class="hljs-keyword">const</span> y = <span class="hljs-keyword">this</span>.x * sin + <span class="hljs-keyword">this</span>.y * cos;
+
+		<span class="hljs-keyword">return</span> new Vector3( x, y, <span class="hljs-keyword">this</span>.z );
+	}
+	
+
+	valueOf() {
+		<span class="hljs-keyword">return</span> [ <span class="hljs-keyword">this</span>.x, <span class="hljs-keyword">this</span>.y, <span class="hljs-keyword">this</span>.z ];
+	}
+
+	toString() {
+		<span class="hljs-keyword">return</span> `(${<span class="hljs-keyword">this</span>.x}, ${<span class="hljs-keyword">this</span>.y}, ${<span class="hljs-keyword">this</span>.z})`;
+	}
+
+	applyAxisAngle( axis, angle ) {
+		<span class="hljs-keyword">const</span> quaternion = new Quaternion().setFromAxisAngle( axis, angle );
+		<span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.applyQuaternion( quaternion );
+	}
+
+	applyQuaternion( q ) {
+		<span class="hljs-keyword">const</span> x = <span class="hljs-keyword">this</span>.x, y = <span class="hljs-keyword">this</span>.y, z = <span class="hljs-keyword">this</span>.z;
+		<span class="hljs-keyword">const</span> qx = q.x, qy = q.y, qz = q.z, qw = q.w;
+
+		<span class="hljs-comment">// calculate quat * vector</span>
+
+		<span class="hljs-keyword">const</span> ix = qw * x + qy * z - qz * y;
+		<span class="hljs-keyword">const</span> iy = qw * y + qz * x - qx * z;
+		<span class="hljs-keyword">const</span> iz = qw * z + qx * y - qy * x;
+		<span class="hljs-keyword">const</span> iw = - qx * x - qy * y - qz * z;
+
+		<span class="hljs-comment">// calculate result * inverse quat</span>
+
+		<span class="hljs-keyword">this</span>.x = ix * qw + iw * - qx + iy * - qz - iz * - qy;
+		<span class="hljs-keyword">this</span>.y = iy * qw + iw * - qy + iz * - qx - ix * - qz;
+		<span class="hljs-keyword">this</span>.z = iz * qw + iw * - qz + ix * - qy - iy * - qx;
+
+		<span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+	}
+
+	subVectors( a, b ) {
+		<span class="hljs-keyword">this</span>.x = a.x - b.x;
+		<span class="hljs-keyword">this</span>.y = a.y - b.y;
+		<span class="hljs-keyword">this</span>.z = a.z - b.z;
+
+		<span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+	}
+
+	multiplyScalar( scalar ) {
+		<span class="hljs-keyword">this</span>.x *= scalar;
+		<span class="hljs-keyword">this</span>.y *= scalar;
+		<span class="hljs-keyword">this</span>.z *= scalar;
+
+		<span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+	}
+
+	divideScalar( scalar ) {
+		<span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.multiplyScalar( <span class="hljs-number">1</span> / scalar );
+	}
+
+	lengthSq() {
+		<span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.x * <span class="hljs-keyword">this</span>.x + <span class="hljs-keyword">this</span>.y * <span class="hljs-keyword">this</span>.y + <span class="hljs-keyword">this</span>.z * <span class="hljs-keyword">this</span>.z;
+	}
+
+	length() {
+		<span class="hljs-keyword">return</span> Math.sqrt( <span class="hljs-keyword">this</span>.x * <span class="hljs-keyword">this</span>.x + <span class="hljs-keyword">this</span>.y * <span class="hljs-keyword">this</span>.y + <span class="hljs-keyword">this</span>.z * <span class="hljs-keyword">this</span>.z );
+	}
+
+	normalize() {
+		<span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.divideScalar( <span class="hljs-keyword">this</span>.length() || <span class="hljs-number">1</span> );
+	}
+
+	sub( v ) {
+		<span class="hljs-keyword">this</span>.x -= v.x;
+		<span class="hljs-keyword">this</span>.y -= v.y;
+		<span class="hljs-keyword">this</span>.z -= v.z;
+
+		<span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+	}
+
+	crossVectors( a, b ) {
+		<span class="hljs-keyword">const</span> ax = a.x, ay = a.y, az = a.z;
+		<span class="hljs-keyword">const</span> bx = b.x, <span class="hljs-keyword">by</span> = b.y, bz = b.z;
+
+		<span class="hljs-keyword">this</span>.x = ay * bz - az * <span class="hljs-keyword">by</span>;
+		<span class="hljs-keyword">this</span>.y = az * bx - ax * bz;
+		<span class="hljs-keyword">this</span>.z = ax * <span class="hljs-keyword">by</span> - ay * bx;
+
+		<span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+	}
+
+	setFromMatrixPosition( m ) {
+		<span class="hljs-keyword">const</span> e = m.elements;
+
+		<span class="hljs-keyword">this</span>.x = e[ <span class="hljs-number">12</span> ];
+		<span class="hljs-keyword">this</span>.y = e[ <span class="hljs-number">13</span> ];
+		<span class="hljs-keyword">this</span>.z = e[ <span class="hljs-number">14</span> ];
+
+		<span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+	}
+
+	*[ Symbol.iterator ]() {
+		yield <span class="hljs-keyword">this</span>.x;
+		yield <span class="hljs-keyword">this</span>.y;
+		yield <span class="hljs-keyword">this</span>.z;
+	}
+
+}
+
+export { Vector3 };</code></pre>
+    </div>
+  </div>
+</main>
+
+    <div class="footer">
+      <div class="center">
+        Powered by <a target="_blank" href="https://benignware.com">Benignware</a>
+      </div>
+    </div>
+  </body>
+</html>

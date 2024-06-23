@@ -1,0 +1,564 @@
+<html>
+  <head>
+    <base href="../.."/>
+    <title>css3d - Euler.mjs</title>
+
+    <link rel="stylesheet" href="public/github-markdown.min-05fea8df8ec68cb6c27337f6db65733e.css">
+    <link rel="stylesheet" href="public/highlight-c281e701b2830b095c67417cd9a7b210.css">
+    <link rel="stylesheet" href="public/style-aea3468ccb7ee0c3c4c2b5d339fc989e.css">
+    <link rel="stylesheet" href="public/all-cc69a8b8824029ae06797ee01a3cc5c8.css">
+
+    <script src="public/plugins/core/example/ExampleViewer.js"></script>
+              
+              <script src="-/index.mjs" type="module"></script>
+            
+  </head>
+  <body class="markdown-body flex-column">
+    <div class="header flex">
+      <a class="header-brand" href="./index.html">css3d</a>
+      
+<ul class="menu flex align-center justify-center">
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="elements/Sphere.html"
+        
+        
+          role="button"
+          
+          aria-expanded="false"
+        
+      >
+        Elements
+      </a>
+      
+    </li>
+    
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="examples/textures.html"
+        
+        
+          role="button"
+          
+          aria-expanded="false"
+        
+      >
+        Examples
+      </a>
+      
+    </li>
+    
+  
+</ul>
+      <nav class="links">
+        
+          
+            
+          
+        
+      </nav>
+    </div>
+      
+      
+
+<main class="flex-grow flex h-100">
+  <div class="sidebar sidebar-left border-right mr-2 flex-noshrink">
+  
+<ul class="menu">
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="elements/Sphere.html"
+        
+        
+          role="button"
+          
+          aria-expanded="false"
+        
+      >
+        Elements
+      </a>
+      
+        
+<ul class="menu">
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="elements/Sphere.html"
+        
+        
+      >
+        Sphere
+      </a>
+      
+    </li>
+    
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="elements/Polyhedron.html"
+        
+        
+      >
+        Polyhedron
+      </a>
+      
+    </li>
+    
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="elements/Cylinder.html"
+        
+        
+      >
+        Cylinder
+      </a>
+      
+    </li>
+    
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="elements/Box.html"
+        
+        
+      >
+        Box
+      </a>
+      
+    </li>
+    
+  
+</ul>
+      
+    </li>
+    
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="examples/textures.html"
+        
+        
+          role="button"
+          
+          aria-expanded="false"
+        
+      >
+        Examples
+      </a>
+      
+        
+<ul class="menu">
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="examples/textures.html"
+        
+        
+      >
+        Textures
+      </a>
+      
+    </li>
+    
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="examples/planets.html"
+        
+        
+      >
+        Planets
+      </a>
+      
+    </li>
+    
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="examples/crane.html"
+        
+        
+      >
+        Crane
+      </a>
+      
+    </li>
+    
+  
+</ul>
+      
+    </li>
+    
+  
+</ul>
+</div>
+  <div class="flex-grow">
+    <div class="container py-4">
+      <h1>Source: Euler.mjs</h1>
+      <p>
+        lib/math/Euler.mjs
+      </p>
+      
+      <pre><code class="hljs"><span class="hljs-keyword">import</span> { Quaternion } from <span class="hljs-string">&#x27;./Quaternion.mjs&#x27;</span>;
+<span class="hljs-keyword">import</span> { Matrix4 } from <span class="hljs-string">&#x27;./Matrix4.mjs&#x27;</span>;
+<span class="hljs-keyword">import</span> { clamp } from <span class="hljs-string">&#x27;./utils.mjs&#x27;</span>;
+
+<span class="hljs-keyword">const</span> _matrix = <span class="hljs-comment">/*@__PURE__*/</span> new Matrix4();
+<span class="hljs-keyword">const</span> _quaternion = <span class="hljs-comment">/*@__PURE__*/</span> new Quaternion();
+
+<span class="hljs-keyword">class</span> <span class="hljs-title class_">Euler</span> {
+
+	<span class="hljs-keyword">constructor</span>( x = <span class="hljs-number">0</span>, y = <span class="hljs-number">0</span>, z = <span class="hljs-number">0</span>, order = Euler.DEFAULT_ORDER ) {
+
+		<span class="hljs-keyword">this</span>.isEuler = <span class="hljs-literal">true</span>;
+
+		<span class="hljs-keyword">this</span>._x = x;
+		<span class="hljs-keyword">this</span>._y = y;
+		<span class="hljs-keyword">this</span>._z = z;
+		<span class="hljs-keyword">this</span>._order = order;
+
+	}
+
+	<span class="hljs-keyword">get</span> x() {
+
+		<span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>._x;
+
+	}
+
+	<span class="hljs-keyword">set</span> x( value ) {
+
+		<span class="hljs-keyword">this</span>._x = value;
+		<span class="hljs-keyword">this</span>._onChangeCallback();
+
+	}
+
+	<span class="hljs-keyword">get</span> y() {
+
+		<span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>._y;
+
+	}
+
+	<span class="hljs-keyword">set</span> y( value ) {
+
+		<span class="hljs-keyword">this</span>._y = value;
+		<span class="hljs-keyword">this</span>._onChangeCallback();
+
+	}
+
+	<span class="hljs-keyword">get</span> z() {
+
+		<span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>._z;
+
+	}
+
+	<span class="hljs-keyword">set</span> z( value ) {
+
+		<span class="hljs-keyword">this</span>._z = value;
+		<span class="hljs-keyword">this</span>._onChangeCallback();
+
+	}
+
+	<span class="hljs-keyword">get</span> order() {
+
+		<span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>._order;
+
+	}
+
+	<span class="hljs-keyword">set</span> order( value ) {
+
+		<span class="hljs-keyword">this</span>._order = value;
+		<span class="hljs-keyword">this</span>._onChangeCallback();
+
+	}
+
+	<span class="hljs-keyword">set</span>( x, y, z, order = <span class="hljs-keyword">this</span>._order ) {
+
+		<span class="hljs-keyword">this</span>._x = x;
+		<span class="hljs-keyword">this</span>._y = y;
+		<span class="hljs-keyword">this</span>._z = z;
+		<span class="hljs-keyword">this</span>._order = order;
+
+		<span class="hljs-keyword">this</span>._onChangeCallback();
+
+		<span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+
+	}
+
+	clone() {
+
+		<span class="hljs-keyword">return</span> new <span class="hljs-keyword">this</span>.<span class="hljs-keyword">constructor</span>( <span class="hljs-keyword">this</span>._x, <span class="hljs-keyword">this</span>._y, <span class="hljs-keyword">this</span>._z, <span class="hljs-keyword">this</span>._order );
+
+	}
+
+	copy( euler ) {
+
+		<span class="hljs-keyword">this</span>._x = euler._x;
+		<span class="hljs-keyword">this</span>._y = euler._y;
+		<span class="hljs-keyword">this</span>._z = euler._z;
+		<span class="hljs-keyword">this</span>._order = euler._order;
+
+		<span class="hljs-keyword">this</span>._onChangeCallback();
+
+		<span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+
+	}
+
+	setFromRotationMatrix( m, order = <span class="hljs-keyword">this</span>._order, update = <span class="hljs-literal">true</span> ) {
+
+		<span class="hljs-comment">// assumes the upper 3x3 of m is a pure rotation matrix (i.e, unscaled)</span>
+
+		<span class="hljs-keyword">const</span> te = m.elements;
+		<span class="hljs-keyword">const</span> m11 = te[ <span class="hljs-number">0</span> ], m12 = te[ <span class="hljs-number">4</span> ], m13 = te[ <span class="hljs-number">8</span> ];
+		<span class="hljs-keyword">const</span> m21 = te[ <span class="hljs-number">1</span> ], m22 = te[ <span class="hljs-number">5</span> ], m23 = te[ <span class="hljs-number">9</span> ];
+		<span class="hljs-keyword">const</span> m31 = te[ <span class="hljs-number">2</span> ], m32 = te[ <span class="hljs-number">6</span> ], m33 = te[ <span class="hljs-number">10</span> ];
+
+		switch ( order ) {
+
+			case <span class="hljs-string">&#x27;XYZ&#x27;</span>:
+
+				<span class="hljs-keyword">this</span>._y = Math.asin( clamp( m13, - <span class="hljs-number">1</span>, <span class="hljs-number">1</span> ) );
+
+				<span class="hljs-keyword">if</span> ( Math.abs( m13 ) &lt; <span class="hljs-number">0.9999999</span> ) {
+
+					<span class="hljs-keyword">this</span>._x = Math.atan2( - m23, m33 );
+					<span class="hljs-keyword">this</span>._z = Math.atan2( - m12, m11 );
+
+				} <span class="hljs-keyword">else</span> {
+
+					<span class="hljs-keyword">this</span>._x = Math.atan2( m32, m22 );
+					<span class="hljs-keyword">this</span>._z = <span class="hljs-number">0</span>;
+
+				}
+
+				<span class="hljs-keyword">break</span>;
+
+			case <span class="hljs-string">&#x27;YXZ&#x27;</span>:
+
+				<span class="hljs-keyword">this</span>._x = Math.asin( - clamp( m23, - <span class="hljs-number">1</span>, <span class="hljs-number">1</span> ) );
+
+				<span class="hljs-keyword">if</span> ( Math.abs( m23 ) &lt; <span class="hljs-number">0.9999999</span> ) {
+
+					<span class="hljs-keyword">this</span>._y = Math.atan2( m13, m33 );
+					<span class="hljs-keyword">this</span>._z = Math.atan2( m21, m22 );
+
+				} <span class="hljs-keyword">else</span> {
+
+					<span class="hljs-keyword">this</span>._y = Math.atan2( - m31, m11 );
+					<span class="hljs-keyword">this</span>._z = <span class="hljs-number">0</span>;
+
+				}
+
+				<span class="hljs-keyword">break</span>;
+
+			case <span class="hljs-string">&#x27;ZXY&#x27;</span>:
+
+				<span class="hljs-keyword">this</span>._x = Math.asin( clamp( m32, - <span class="hljs-number">1</span>, <span class="hljs-number">1</span> ) );
+
+				<span class="hljs-keyword">if</span> ( Math.abs( m32 ) &lt; <span class="hljs-number">0.9999999</span> ) {
+
+					<span class="hljs-keyword">this</span>._y = Math.atan2( - m31, m33 );
+					<span class="hljs-keyword">this</span>._z = Math.atan2( - m12, m22 );
+
+				} <span class="hljs-keyword">else</span> {
+
+					<span class="hljs-keyword">this</span>._y = <span class="hljs-number">0</span>;
+					<span class="hljs-keyword">this</span>._z = Math.atan2( m21, m11 );
+
+				}
+
+				<span class="hljs-keyword">break</span>;
+
+			case <span class="hljs-string">&#x27;ZYX&#x27;</span>:
+
+				<span class="hljs-keyword">this</span>._y = Math.asin( - clamp( m31, - <span class="hljs-number">1</span>, <span class="hljs-number">1</span> ) );
+
+				<span class="hljs-keyword">if</span> ( Math.abs( m31 ) &lt; <span class="hljs-number">0.9999999</span> ) {
+
+					<span class="hljs-keyword">this</span>._x = Math.atan2( m32, m33 );
+					<span class="hljs-keyword">this</span>._z = Math.atan2( m21, m11 );
+
+				} <span class="hljs-keyword">else</span> {
+
+					<span class="hljs-keyword">this</span>._x = <span class="hljs-number">0</span>;
+					<span class="hljs-keyword">this</span>._z = Math.atan2( - m12, m22 );
+
+				}
+
+				<span class="hljs-keyword">break</span>;
+
+			case <span class="hljs-string">&#x27;YZX&#x27;</span>:
+
+				<span class="hljs-keyword">this</span>._z = Math.asin( clamp( m21, - <span class="hljs-number">1</span>, <span class="hljs-number">1</span> ) );
+
+				<span class="hljs-keyword">if</span> ( Math.abs( m21 ) &lt; <span class="hljs-number">0.9999999</span> ) {
+
+					<span class="hljs-keyword">this</span>._x = Math.atan2( - m23, m22 );
+					<span class="hljs-keyword">this</span>._y = Math.atan2( - m31, m11 );
+
+				} <span class="hljs-keyword">else</span> {
+
+					<span class="hljs-keyword">this</span>._x = <span class="hljs-number">0</span>;
+					<span class="hljs-keyword">this</span>._y = Math.atan2( m13, m33 );
+
+				}
+
+				<span class="hljs-keyword">break</span>;
+
+			case <span class="hljs-string">&#x27;XZY&#x27;</span>:
+
+				<span class="hljs-keyword">this</span>._z = Math.asin( - clamp( m12, - <span class="hljs-number">1</span>, <span class="hljs-number">1</span> ) );
+
+				<span class="hljs-keyword">if</span> ( Math.abs( m12 ) &lt; <span class="hljs-number">0.9999999</span> ) {
+
+					<span class="hljs-keyword">this</span>._x = Math.atan2( m32, m22 );
+					<span class="hljs-keyword">this</span>._y = Math.atan2( m13, m11 );
+
+				} <span class="hljs-keyword">else</span> {
+
+					<span class="hljs-keyword">this</span>._x = Math.atan2( - m23, m33 );
+					<span class="hljs-keyword">this</span>._y = <span class="hljs-number">0</span>;
+
+				}
+
+				<span class="hljs-keyword">break</span>;
+
+			default:
+
+				console.warn( <span class="hljs-string">&#x27;THREE.Euler: .setFromRotationMatrix() encountered an unknown order: &#x27;</span> + order );
+
+		}
+
+		<span class="hljs-keyword">this</span>._order = order;
+
+		<span class="hljs-keyword">if</span> ( update === <span class="hljs-literal">true</span> ) <span class="hljs-keyword">this</span>._onChangeCallback();
+
+		<span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+
+	}
+
+	setFromQuaternion( q, order, update ) {
+
+		_matrix.makeRotationFromQuaternion( q );
+
+		<span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.setFromRotationMatrix( _matrix, order, update );
+
+	}
+
+	setFromVector3( v, order = <span class="hljs-keyword">this</span>._order ) {
+
+		<span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.<span class="hljs-keyword">set</span>( v.x, v.y, v.z, order );
+
+	}
+
+	reorder( newOrder ) {
+
+		<span class="hljs-comment">// WARNING: this discards revolution information -bhouston</span>
+
+		_quaternion.setFromEuler( <span class="hljs-keyword">this</span> );
+
+		<span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.setFromQuaternion( _quaternion, newOrder );
+
+	}
+
+	equals( euler ) {
+
+		<span class="hljs-keyword">return</span> ( euler._x === <span class="hljs-keyword">this</span>._x ) &amp;&amp; ( euler._y === <span class="hljs-keyword">this</span>._y ) &amp;&amp; ( euler._z === <span class="hljs-keyword">this</span>._z ) &amp;&amp; ( euler._order === <span class="hljs-keyword">this</span>._order );
+
+	}
+
+	fromArray( array ) {
+
+		<span class="hljs-keyword">this</span>._x = array[ <span class="hljs-number">0</span> ];
+		<span class="hljs-keyword">this</span>._y = array[ <span class="hljs-number">1</span> ];
+		<span class="hljs-keyword">this</span>._z = array[ <span class="hljs-number">2</span> ];
+		<span class="hljs-keyword">if</span> ( array[ <span class="hljs-number">3</span> ] !== undefined ) <span class="hljs-keyword">this</span>._order = array[ <span class="hljs-number">3</span> ];
+
+		<span class="hljs-keyword">this</span>._onChangeCallback();
+
+		<span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+
+	}
+
+	toArray( array = [], offset = <span class="hljs-number">0</span> ) {
+
+		array[ offset ] = <span class="hljs-keyword">this</span>._x;
+		array[ offset + <span class="hljs-number">1</span> ] = <span class="hljs-keyword">this</span>._y;
+		array[ offset + <span class="hljs-number">2</span> ] = <span class="hljs-keyword">this</span>._z;
+		array[ offset + <span class="hljs-number">3</span> ] = <span class="hljs-keyword">this</span>._order;
+
+		<span class="hljs-keyword">return</span> array;
+
+	}
+
+	_onChange( callback ) {
+
+		<span class="hljs-keyword">this</span>._onChangeCallback = callback;
+
+		<span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+
+	}
+
+	_onChangeCallback() {}
+
+	*[ Symbol.iterator ]() {
+
+		yield <span class="hljs-keyword">this</span>._x;
+		yield <span class="hljs-keyword">this</span>._y;
+		yield <span class="hljs-keyword">this</span>._z;
+		yield <span class="hljs-keyword">this</span>._order;
+
+	}
+
+}
+
+Euler.DEFAULT_ORDER = <span class="hljs-string">&#x27;XYZ&#x27;</span>;
+
+export { Euler };</code></pre>
+    </div>
+  </div>
+</main>
+
+    <div class="footer">
+      <div class="center">
+        Powered by <a target="_blank" href="https://benignware.com">Benignware</a>
+      </div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,364 @@
+<html>
+  <head>
+    <base href="../.."/>
+    <title>css3d - 3DObject.mjs</title>
+
+    <link rel="stylesheet" href="public/github-markdown.min-05fea8df8ec68cb6c27337f6db65733e.css">
+    <link rel="stylesheet" href="public/highlight-c281e701b2830b095c67417cd9a7b210.css">
+    <link rel="stylesheet" href="public/style-aea3468ccb7ee0c3c4c2b5d339fc989e.css">
+    <link rel="stylesheet" href="public/all-cc69a8b8824029ae06797ee01a3cc5c8.css">
+
+    <script src="public/plugins/core/example/ExampleViewer.js"></script>
+              
+              <script src="-/index.mjs" type="module"></script>
+            
+  </head>
+  <body class="markdown-body flex-column">
+    <div class="header flex">
+      <a class="header-brand" href="./index.html">css3d</a>
+      
+<ul class="menu flex align-center justify-center">
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="elements/Sphere.html"
+        
+        
+          role="button"
+          
+          aria-expanded="false"
+        
+      >
+        Elements
+      </a>
+      
+    </li>
+    
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="examples/textures.html"
+        
+        
+          role="button"
+          
+          aria-expanded="false"
+        
+      >
+        Examples
+      </a>
+      
+    </li>
+    
+  
+</ul>
+      <nav class="links">
+        
+          
+            
+          
+        
+      </nav>
+    </div>
+      
+      
+
+<main class="flex-grow flex h-100">
+  <div class="sidebar sidebar-left border-right mr-2 flex-noshrink">
+  
+<ul class="menu">
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="elements/Sphere.html"
+        
+        
+          role="button"
+          
+          aria-expanded="false"
+        
+      >
+        Elements
+      </a>
+      
+        
+<ul class="menu">
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="elements/Sphere.html"
+        
+        
+      >
+        Sphere
+      </a>
+      
+    </li>
+    
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="elements/Polyhedron.html"
+        
+        
+      >
+        Polyhedron
+      </a>
+      
+    </li>
+    
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="elements/Cylinder.html"
+        
+        
+      >
+        Cylinder
+      </a>
+      
+    </li>
+    
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="elements/Box.html"
+        
+        
+      >
+        Box
+      </a>
+      
+    </li>
+    
+  
+</ul>
+      
+    </li>
+    
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="examples/textures.html"
+        
+        
+          role="button"
+          
+          aria-expanded="false"
+        
+      >
+        Examples
+      </a>
+      
+        
+<ul class="menu">
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="examples/textures.html"
+        
+        
+      >
+        Textures
+      </a>
+      
+    </li>
+    
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="examples/planets.html"
+        
+        
+      >
+        Planets
+      </a>
+      
+    </li>
+    
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="examples/crane.html"
+        
+        
+      >
+        Crane
+      </a>
+      
+    </li>
+    
+  
+</ul>
+      
+    </li>
+    
+  
+</ul>
+</div>
+  <div class="flex-grow">
+    <div class="container py-4">
+      <h1>Source: 3DObject.mjs</h1>
+      <p>
+        lib/core/3DObject.mjs
+      </p>
+      
+      <pre><code class="hljs"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">CSSStyleMixin</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixins/CSSStyleMixin.mjs&#x27;</span>;
+<span class="hljs-keyword">import</span> { <span class="hljs-title class_">Vector3</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../math/Vector3.mjs&#x27;</span>;
+<span class="hljs-keyword">import</span> { camelize } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../utils.mjs&#x27;</span>;
+
+<span class="hljs-keyword">class</span> <span class="hljs-title class_">C3Object</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_ inherited__">HTMLElement</span> {
+  #style;
+
+  <span class="hljs-title function_">constructor</span>(<span class="hljs-params"></span>) {
+    <span class="hljs-variable language_">super</span>();
+
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">render</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">render</span>.<span class="hljs-title function_">bind</span>(<span class="hljs-variable language_">this</span>);
+
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">attachShadow</span>({ <span class="hljs-attr">mode</span>: <span class="hljs-string">&#x27;open&#x27;</span> });
+
+    <span class="hljs-comment">// Create stylesheet</span>
+    <span class="hljs-variable language_">this</span>.#style = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">createElement</span>(<span class="hljs-string">&#x27;style&#x27;</span>);
+    <span class="hljs-variable language_">this</span>.#style.<span class="hljs-property">textContent</span> = <span class="hljs-string">`
+      :host {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 0;
+        height: 0;
+        display: block;
+        pointer-events: auto;
+        user-select: none;
+        transform-style: preserve-3d;
+      }
+
+      :host * {
+        transform-style: preserve-3d;
+      }
+
+      :host::before {
+        content: &#x27;&#x27;;
+        display: none;
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        outline: 5px solid blue;
+        transform-style: preserve-3d;
+      }
+    `</span>;
+  
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">shadowRoot</span>.<span class="hljs-title function_">appendChild</span>(<span class="hljs-variable language_">this</span>.#style);
+  }
+
+  <span class="hljs-keyword">static</span> <span class="hljs-keyword">get</span> <span class="hljs-title function_">observedAttributes</span>() {
+    <span class="hljs-keyword">return</span> [
+      <span class="hljs-string">&#x27;position&#x27;</span>,
+      <span class="hljs-string">&#x27;rotate&#x27;</span>,
+      <span class="hljs-string">&#x27;scale&#x27;</span>,
+      <span class="hljs-string">&#x27;animation&#x27;</span>,
+      <span class="hljs-string">&#x27;background&#x27;</span>,
+      <span class="hljs-string">&#x27;color&#x27;</span>
+    ];
+  }
+
+  <span class="hljs-keyword">static</span> <span class="hljs-title function_">getPosition</span>(<span class="hljs-params">target</span>) {
+    <span class="hljs-keyword">const</span> position = <span class="hljs-variable language_">window</span>.<span class="hljs-title function_">getComputedStyle</span>(target).<span class="hljs-title function_">getPropertyValue</span>(<span class="hljs-string">&#x27;translate&#x27;</span>);
+    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;position&#x27;</span>, position);
+    <span class="hljs-keyword">const</span> [x = <span class="hljs-number">0</span>, y = <span class="hljs-number">0</span>, z = <span class="hljs-number">0</span>] = position
+      .<span class="hljs-title function_">split</span>(<span class="hljs-regexp">/\s+/</span>)
+      .<span class="hljs-title function_">map</span>(<span class="hljs-function">(<span class="hljs-params">n = <span class="hljs-string">&#x27;&#x27;</span></span>) =&gt;</span> <span class="hljs-title class_">Number</span>(n.<span class="hljs-title function_">replace</span>(<span class="hljs-regexp">/px$/g</span>, <span class="hljs-string">&#x27;&#x27;</span>)))
+      .<span class="hljs-title function_">map</span>(<span class="hljs-function"><span class="hljs-params">n</span> =&gt;</span> !<span class="hljs-built_in">isNaN</span>(n) ? n : <span class="hljs-number">0</span>);
+
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Vector3</span>(x, y, z);
+  }
+
+  <span class="hljs-title function_">connectedCallback</span>(<span class="hljs-params"></span>) {
+    <span class="hljs-variable language_">window</span>.<span class="hljs-title function_">requestAnimationFrame</span>(<span class="hljs-function">() =&gt;</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">render</span>());
+  }
+
+  <span class="hljs-title function_">attributeChangedCallback</span>(<span class="hljs-params">name, oldValue, newValue</span>) {
+    <span class="hljs-keyword">if</span> (oldValue === newValue) <span class="hljs-keyword">return</span>;
+    <span class="hljs-keyword">const</span> prop = <span class="hljs-title function_">camelize</span>(name);
+
+    <span class="hljs-keyword">if</span> (<span class="hljs-title class_">Reflect</span>.<span class="hljs-title function_">has</span>(<span class="hljs-variable language_">this</span>, prop)) {
+      <span class="hljs-variable language_">this</span>[prop] = newValue;
+    } <span class="hljs-keyword">else</span> {
+      <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">render</span>();
+    }
+  }
+
+  <span class="hljs-keyword">get</span> <span class="hljs-title function_">x</span>() {
+    <span class="hljs-keyword">return</span> C3Object.<span class="hljs-title function_">getPosition</span>(<span class="hljs-variable language_">this</span>).<span class="hljs-property">x</span>;
+  }
+
+  <span class="hljs-keyword">get</span> <span class="hljs-title function_">y</span>() {
+    <span class="hljs-keyword">return</span> C3Object.<span class="hljs-title function_">getPosition</span>(<span class="hljs-variable language_">this</span>).<span class="hljs-property">y</span>;
+  }
+
+  <span class="hljs-keyword">get</span> <span class="hljs-title function_">z</span>() {
+    <span class="hljs-keyword">return</span> C3Object.<span class="hljs-title function_">getPosition</span>(<span class="hljs-variable language_">this</span>).<span class="hljs-property">y</span>;
+  }
+
+  <span class="hljs-keyword">get</span> <span class="hljs-title function_">scene</span>() {
+    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">closest</span>(<span class="hljs-string">&#x27;c3-scene&#x27;</span>);
+  }
+
+  <span class="hljs-title function_">render</span>(<span class="hljs-params"></span>) {
+    
+  }
+}
+
+<span class="hljs-title class_">CSSStyleMixin</span>(C3Object, [
+  [<span class="hljs-string">&#x27;position&#x27;</span>, <span class="hljs-string">&#x27;translate&#x27;</span>],
+  <span class="hljs-string">&#x27;rotate&#x27;</span>,
+  <span class="hljs-string">&#x27;scale&#x27;</span>,
+  <span class="hljs-string">&#x27;animation&#x27;</span>
+]);
+
+<span class="hljs-keyword">export</span> { C3Object };</code></pre>
+    </div>
+  </div>
+</main>
+
+    <div class="footer">
+      <div class="center">
+        Powered by <a target="_blank" href="https://benignware.com">Benignware</a>
+      </div>
+    </div>
+  </body>
+</html>

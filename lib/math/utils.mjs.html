@@ -1,0 +1,309 @@
+<html>
+  <head>
+    <base href="../.."/>
+    <title>css3d - utils.mjs</title>
+
+    <link rel="stylesheet" href="public/github-markdown.min-05fea8df8ec68cb6c27337f6db65733e.css">
+    <link rel="stylesheet" href="public/highlight-c281e701b2830b095c67417cd9a7b210.css">
+    <link rel="stylesheet" href="public/style-aea3468ccb7ee0c3c4c2b5d339fc989e.css">
+    <link rel="stylesheet" href="public/all-cc69a8b8824029ae06797ee01a3cc5c8.css">
+
+    <script src="public/plugins/core/example/ExampleViewer.js"></script>
+              
+              <script src="-/index.mjs" type="module"></script>
+            
+  </head>
+  <body class="markdown-body flex-column">
+    <div class="header flex">
+      <a class="header-brand" href="./index.html">css3d</a>
+      
+<ul class="menu flex align-center justify-center">
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="elements/Sphere.html"
+        
+        
+          role="button"
+          
+          aria-expanded="false"
+        
+      >
+        Elements
+      </a>
+      
+    </li>
+    
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="examples/textures.html"
+        
+        
+          role="button"
+          
+          aria-expanded="false"
+        
+      >
+        Examples
+      </a>
+      
+    </li>
+    
+  
+</ul>
+      <nav class="links">
+        
+          
+            
+          
+        
+      </nav>
+    </div>
+      
+      
+
+<main class="flex-grow flex h-100">
+  <div class="sidebar sidebar-left border-right mr-2 flex-noshrink">
+  
+<ul class="menu">
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="elements/Sphere.html"
+        
+        
+          role="button"
+          
+          aria-expanded="false"
+        
+      >
+        Elements
+      </a>
+      
+        
+<ul class="menu">
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="elements/Sphere.html"
+        
+        
+      >
+        Sphere
+      </a>
+      
+    </li>
+    
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="elements/Polyhedron.html"
+        
+        
+      >
+        Polyhedron
+      </a>
+      
+    </li>
+    
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="elements/Cylinder.html"
+        
+        
+      >
+        Cylinder
+      </a>
+      
+    </li>
+    
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="elements/Box.html"
+        
+        
+      >
+        Box
+      </a>
+      
+    </li>
+    
+  
+</ul>
+      
+    </li>
+    
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="examples/textures.html"
+        
+        
+          role="button"
+          
+          aria-expanded="false"
+        
+      >
+        Examples
+      </a>
+      
+        
+<ul class="menu">
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="examples/textures.html"
+        
+        
+      >
+        Textures
+      </a>
+      
+    </li>
+    
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="examples/planets.html"
+        
+        
+      >
+        Planets
+      </a>
+      
+    </li>
+    
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="examples/crane.html"
+        
+        
+      >
+        Crane
+      </a>
+      
+    </li>
+    
+  
+</ul>
+      
+    </li>
+    
+  
+</ul>
+</div>
+  <div class="flex-grow">
+    <div class="container py-4">
+      <h1>Source: utils.mjs</h1>
+      <p>
+        lib/math/utils.mjs
+      </p>
+      
+      <pre><code class="hljs"><span class="hljs-keyword">import</span> { Vector3 } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;./Vector3.mjs&quot;</span>;
+
+<span class="hljs-keyword">export</span> const clamp = <span class="hljs-function"><span class="hljs-params">( value, min, max )</span> =&gt;</span> <span class="hljs-built_in">Math</span>.max( min, <span class="hljs-built_in">Math</span>.min( max, value ) );
+
+<span class="hljs-keyword">export</span> const rad2deg = <span class="hljs-function"><span class="hljs-params">( radians )</span> =&gt;</span> radians * <span class="hljs-number">180</span> / <span class="hljs-built_in">Math</span>.PI;
+
+<span class="hljs-keyword">export</span> const deg2rad = <span class="hljs-function"><span class="hljs-params">( degrees )</span> =&gt;</span> degrees * <span class="hljs-built_in">Math</span>.PI / <span class="hljs-number">180</span>;
+
+<span class="hljs-keyword">export</span> const centroid = <span class="hljs-function"><span class="hljs-params">( ...vectors )</span> =&gt;</span> {
+  const sum = vectors.reduce( <span class="hljs-function"><span class="hljs-params">( sum, vector )</span> =&gt;</span> sum.add( vector ), <span class="hljs-keyword">new</span> Vector3() );
+  <span class="hljs-keyword">return</span> sum.divide( vectors.length );
+};
+
+<span class="hljs-regexp">//</span> <span class="hljs-keyword">export</span> const centroid = <span class="hljs-function"><span class="hljs-params">(...vectors)</span> =&gt;</span> {
+<span class="hljs-regexp">//</span>   const sum = vectors.reduce(<span class="hljs-function"><span class="hljs-params">(sum, vector)</span> =&gt;</span> sum.add(vector), <span class="hljs-keyword">new</span> Vector3());
+<span class="hljs-regexp">//</span>   <span class="hljs-keyword">return</span> sum.divide(vectors.length);
+<span class="hljs-regexp">//</span> }
+
+<span class="hljs-keyword">export</span> const euler = <span class="hljs-function"><span class="hljs-params">(x, y, z)</span> =&gt;</span> {
+  const c1 = <span class="hljs-built_in">Math</span>.cos(x / <span class="hljs-number">2</span>);
+  const c2 = <span class="hljs-built_in">Math</span>.cos(y / <span class="hljs-number">2</span>);
+  const c3 = <span class="hljs-built_in">Math</span>.cos(z / <span class="hljs-number">2</span>);
+  const s1 = <span class="hljs-built_in">Math</span>.sin(x / <span class="hljs-number">2</span>);
+  const s2 = <span class="hljs-built_in">Math</span>.sin(y / <span class="hljs-number">2</span>);
+  const s3 = <span class="hljs-built_in">Math</span>.sin(z / <span class="hljs-number">2</span>);
+
+  <span class="hljs-keyword">return</span> [
+    s1 * c2 * c3 + c1 * s2 * s3,
+    c1 * s2 * c3 - s1 * c2 * s3,
+    c1 * c2 * s3 + s1 * s2 * c3,
+    c1 * c2 * c3 - s1 * s2 * s3
+  ];
+}
+
+<span class="hljs-keyword">export</span> const convhulln = <span class="hljs-function"><span class="hljs-params">(points)</span> =&gt;</span> {
+  const n = points.length;
+  const indices = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Array</span>(n).fill(<span class="hljs-number">0</span>).map(<span class="hljs-function"><span class="hljs-params">(_, i)</span> =&gt;</span> i);
+  const hull = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Array</span>(n).fill(<span class="hljs-number">0</span>);
+  let m = <span class="hljs-number">0</span>;
+
+  <span class="hljs-keyword">for</span> (let i = <span class="hljs-number">0</span>; i &lt; n; i++) {
+    <span class="hljs-keyword">while</span> (m &gt;= <span class="hljs-number">2</span> &amp;&amp; cross(points[hull[m - <span class="hljs-number">2</span>]], points[hull[m - <span class="hljs-number">1</span>]], points[i]) &lt;= <span class="hljs-number">0</span>) {
+      m--;
+    }
+
+    hull[m++] = i;
+  }
+
+  let k = m;
+
+  <span class="hljs-keyword">for</span> (let i = n - <span class="hljs-number">2</span>; i &gt;= <span class="hljs-number">0</span>; i--) {
+    <span class="hljs-keyword">while</span> (m &gt;= k &amp;&amp; cross(points[hull[m - <span class="hljs-number">2</span>]], points[hull[m - <span class="hljs-number">1</span>]], points[i]) &lt;= <span class="hljs-number">0</span>) {
+      m--;
+    }
+
+    hull[m++] = i;
+  }
+
+  <span class="hljs-keyword">return</span> hull.slice(<span class="hljs-number">0</span>, m - <span class="hljs-number">1</span>);
+};</code></pre>
+    </div>
+  </div>
+</main>
+
+    <div class="footer">
+      <div class="center">
+        Powered by <a target="_blank" href="https://benignware.com">Benignware</a>
+      </div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,662 @@
+<html>
+  <head>
+    <base href="../.."/>
+    <title>css3d - Vector2.mjs</title>
+
+    <link rel="stylesheet" href="public/github-markdown.min-05fea8df8ec68cb6c27337f6db65733e.css">
+    <link rel="stylesheet" href="public/highlight-c281e701b2830b095c67417cd9a7b210.css">
+    <link rel="stylesheet" href="public/style-aea3468ccb7ee0c3c4c2b5d339fc989e.css">
+    <link rel="stylesheet" href="public/all-cc69a8b8824029ae06797ee01a3cc5c8.css">
+
+    <script src="public/plugins/core/example/ExampleViewer.js"></script>
+              
+              <script src="-/index.mjs" type="module"></script>
+            
+  </head>
+  <body class="markdown-body flex-column">
+    <div class="header flex">
+      <a class="header-brand" href="./index.html">css3d</a>
+      
+<ul class="menu flex align-center justify-center">
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="elements/Sphere.html"
+        
+        
+          role="button"
+          
+          aria-expanded="false"
+        
+      >
+        Elements
+      </a>
+      
+    </li>
+    
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="examples/textures.html"
+        
+        
+          role="button"
+          
+          aria-expanded="false"
+        
+      >
+        Examples
+      </a>
+      
+    </li>
+    
+  
+</ul>
+      <nav class="links">
+        
+          
+            
+          
+        
+      </nav>
+    </div>
+      
+      
+
+<main class="flex-grow flex h-100">
+  <div class="sidebar sidebar-left border-right mr-2 flex-noshrink">
+  
+<ul class="menu">
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="elements/Sphere.html"
+        
+        
+          role="button"
+          
+          aria-expanded="false"
+        
+      >
+        Elements
+      </a>
+      
+        
+<ul class="menu">
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="elements/Sphere.html"
+        
+        
+      >
+        Sphere
+      </a>
+      
+    </li>
+    
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="elements/Polyhedron.html"
+        
+        
+      >
+        Polyhedron
+      </a>
+      
+    </li>
+    
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="elements/Cylinder.html"
+        
+        
+      >
+        Cylinder
+      </a>
+      
+    </li>
+    
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="elements/Box.html"
+        
+        
+      >
+        Box
+      </a>
+      
+    </li>
+    
+  
+</ul>
+      
+    </li>
+    
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="examples/textures.html"
+        
+        
+          role="button"
+          
+          aria-expanded="false"
+        
+      >
+        Examples
+      </a>
+      
+        
+<ul class="menu">
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="examples/textures.html"
+        
+        
+      >
+        Textures
+      </a>
+      
+    </li>
+    
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="examples/planets.html"
+        
+        
+      >
+        Planets
+      </a>
+      
+    </li>
+    
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="examples/crane.html"
+        
+        
+      >
+        Crane
+      </a>
+      
+    </li>
+    
+  
+</ul>
+      
+    </li>
+    
+  
+</ul>
+</div>
+  <div class="flex-grow">
+    <div class="container py-4">
+      <h1>Source: Vector2.mjs</h1>
+      <p>
+        lib/math/Vector2.mjs
+      </p>
+      
+      <pre><code class="hljs"><span class="hljs-keyword">import</span> { clamp } from <span class="hljs-string">&#x27;./utils.mjs&#x27;</span>;
+
+<span class="hljs-keyword">class</span> <span class="hljs-title class_">Vector2</span> {
+
+	<span class="hljs-keyword">constructor</span>( x = <span class="hljs-number">0</span>, y = <span class="hljs-number">0</span> ) {
+		Vector2.prototype.isVector2 = <span class="hljs-literal">true</span>;
+
+		<span class="hljs-keyword">this</span>.x = x;
+		<span class="hljs-keyword">this</span>.y = y;
+	}
+
+	<span class="hljs-comment">// get width() {</span>
+	<span class="hljs-comment">// 	return this.x;</span>
+	<span class="hljs-comment">// }</span>
+
+	<span class="hljs-comment">// set width( value ) {</span>
+	<span class="hljs-comment">// 	this.x = value;</span>
+	<span class="hljs-comment">// }</span>
+
+	<span class="hljs-comment">// get height() {</span>
+	<span class="hljs-comment">// 	return this.y;</span>
+	<span class="hljs-comment">// }</span>
+
+	<span class="hljs-comment">// set height( value ) {</span>
+	<span class="hljs-comment">// 	this.y = value;</span>
+	<span class="hljs-comment">// }</span>
+
+	<span class="hljs-keyword">set</span>( x, y ) {
+		<span class="hljs-keyword">this</span>.x = x;
+		<span class="hljs-keyword">this</span>.y = y;
+
+		<span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+	}
+
+	<span class="hljs-comment">// setScalar( scalar ) {</span>
+	<span class="hljs-comment">// 	this.x = scalar;</span>
+	<span class="hljs-comment">// 	this.y = scalar;</span>
+
+	<span class="hljs-comment">// 	return this;</span>
+	<span class="hljs-comment">// }</span>
+
+	<span class="hljs-comment">// setX( x ) {</span>
+	<span class="hljs-comment">// 	this.x = x;</span>
+
+	<span class="hljs-comment">// 	return this;</span>
+	<span class="hljs-comment">// }</span>
+
+	<span class="hljs-comment">// setY( y ) {</span>
+	<span class="hljs-comment">// 	this.y = y;</span>
+
+	<span class="hljs-comment">// 	return this;</span>
+	<span class="hljs-comment">// }</span>
+
+	<span class="hljs-comment">// setComponent( index, value ) {</span>
+	<span class="hljs-comment">// 	switch ( index ) {</span>
+
+	<span class="hljs-comment">// 		case 0: this.x = value; break;</span>
+	<span class="hljs-comment">// 		case 1: this.y = value; break;</span>
+	<span class="hljs-comment">// 		default: throw new Error( &#x27;index is out of range: &#x27; + index );</span>
+
+	<span class="hljs-comment">// 	}</span>
+
+	<span class="hljs-comment">// 	return this;</span>
+	<span class="hljs-comment">// }</span>
+
+	<span class="hljs-comment">// getComponent( index ) {</span>
+	<span class="hljs-comment">// 	switch ( index ) {</span>
+	<span class="hljs-comment">// 		case 0: return this.x;</span>
+	<span class="hljs-comment">// 		case 1: return this.y;</span>
+	<span class="hljs-comment">// 		default: throw new Error( &#x27;index is out of range: &#x27; + index );</span>
+	<span class="hljs-comment">// 	}</span>
+	<span class="hljs-comment">// }</span>
+
+	<span class="hljs-comment">// clone() {</span>
+	<span class="hljs-comment">// 	return new this.constructor( this.x, this.y );</span>
+	<span class="hljs-comment">// }</span>
+
+	<span class="hljs-comment">// copy( v ) {</span>
+
+	<span class="hljs-comment">// 	this.x = v.x;</span>
+	<span class="hljs-comment">// 	this.y = v.y;</span>
+
+	<span class="hljs-comment">// 	return this;</span>
+	<span class="hljs-comment">// }</span>
+
+	<span class="hljs-comment">// add( v ) {</span>
+	<span class="hljs-comment">// 	this.x += v.x;</span>
+	<span class="hljs-comment">// 	this.y += v.y;</span>
+
+	<span class="hljs-comment">// 	return this;</span>
+	<span class="hljs-comment">// }</span>
+
+	<span class="hljs-comment">// addScalar( s ) {</span>
+	<span class="hljs-comment">// 	this.x += s;</span>
+	<span class="hljs-comment">// 	this.y += s;</span>
+
+	<span class="hljs-comment">// 	return this;</span>
+	<span class="hljs-comment">// }</span>
+
+	<span class="hljs-comment">// addVectors( a, b ) {</span>
+	<span class="hljs-comment">// 	this.x = a.x + b.x;</span>
+	<span class="hljs-comment">// 	this.y = a.y + b.y;</span>
+
+	<span class="hljs-comment">// 	return this;</span>
+	<span class="hljs-comment">// }</span>
+
+	<span class="hljs-comment">// addScaledVector( v, s ) {</span>
+	<span class="hljs-comment">// 	this.x += v.x * s;</span>
+	<span class="hljs-comment">// 	this.y += v.y * s;</span>
+
+	<span class="hljs-comment">// 	return this;</span>
+	<span class="hljs-comment">// }</span>
+
+	<span class="hljs-comment">// sub( v ) {</span>
+	<span class="hljs-comment">// 	this.x -= v.x;</span>
+	<span class="hljs-comment">// 	this.y -= v.y;</span>
+
+	<span class="hljs-comment">// 	return this;</span>
+	<span class="hljs-comment">// }</span>
+
+	<span class="hljs-comment">// subScalar( s ) {</span>
+	<span class="hljs-comment">// 	this.x -= s;</span>
+	<span class="hljs-comment">// 	this.y -= s;</span>
+
+	<span class="hljs-comment">// 	return this;</span>
+	<span class="hljs-comment">// }</span>
+
+	<span class="hljs-comment">// subVectors( a, b ) {</span>
+	<span class="hljs-comment">// 	this.x = a.x - b.x;</span>
+	<span class="hljs-comment">// 	this.y = a.y - b.y;</span>
+
+	<span class="hljs-comment">// 	return this;</span>
+	<span class="hljs-comment">// }</span>
+
+	<span class="hljs-comment">// multiply( v ) {</span>
+	<span class="hljs-comment">// 	this.x *= v.x;</span>
+	<span class="hljs-comment">// 	this.y *= v.y;</span>
+
+	<span class="hljs-comment">// 	return this;</span>
+	<span class="hljs-comment">// }</span>
+
+	<span class="hljs-comment">// multiplyScalar( scalar ) {</span>
+	<span class="hljs-comment">// 	this.x *= scalar;</span>
+	<span class="hljs-comment">// 	this.y *= scalar;</span>
+
+	<span class="hljs-comment">// 	return this;</span>
+	<span class="hljs-comment">// }</span>
+
+	<span class="hljs-comment">// divide( v ) {</span>
+	<span class="hljs-comment">// 	this.x /= v.x;</span>
+	<span class="hljs-comment">// 	this.y /= v.y;</span>
+
+	<span class="hljs-comment">// 	return this;</span>
+	<span class="hljs-comment">// }</span>
+
+	<span class="hljs-comment">// divideScalar( scalar ) {</span>
+	<span class="hljs-comment">// 	return this.multiplyScalar( 1 / scalar );</span>
+	<span class="hljs-comment">// }</span>
+
+	<span class="hljs-comment">// applyMatrix3( m ) {</span>
+	<span class="hljs-comment">// 	const x = this.x, y = this.y;</span>
+	<span class="hljs-comment">// 	const e = m.elements;</span>
+
+	<span class="hljs-comment">// 	this.x = e[ 0 ] * x + e[ 3 ] * y + e[ 6 ];</span>
+	<span class="hljs-comment">// 	this.y = e[ 1 ] * x + e[ 4 ] * y + e[ 7 ];</span>
+
+	<span class="hljs-comment">// 	return this;</span>
+	<span class="hljs-comment">// }</span>
+
+	<span class="hljs-comment">// min( v ) {</span>
+	<span class="hljs-comment">// 	this.x = Math.min( this.x, v.x );</span>
+	<span class="hljs-comment">// 	this.y = Math.min( this.y, v.y );</span>
+
+	<span class="hljs-comment">// 	return this;</span>
+	<span class="hljs-comment">// }</span>
+
+	<span class="hljs-comment">// max( v ) {</span>
+	<span class="hljs-comment">// 	this.x = Math.max( this.x, v.x );</span>
+	<span class="hljs-comment">// 	this.y = Math.max( this.y, v.y );</span>
+
+	<span class="hljs-comment">// 	return this;</span>
+	<span class="hljs-comment">// }</span>
+
+	<span class="hljs-comment">// clamp( min, max ) {</span>
+	<span class="hljs-comment">// 	// assumes min &lt; max, componentwise</span>
+
+	<span class="hljs-comment">// 	this.x = Math.max( min.x, Math.min( max.x, this.x ) );</span>
+	<span class="hljs-comment">// 	this.y = Math.max( min.y, Math.min( max.y, this.y ) );</span>
+
+	<span class="hljs-comment">// 	return this;</span>
+	<span class="hljs-comment">// }</span>
+
+	<span class="hljs-comment">// clampScalar( minVal, maxVal ) {</span>
+	<span class="hljs-comment">// 	this.x = Math.max( minVal, Math.min( maxVal, this.x ) );</span>
+	<span class="hljs-comment">// 	this.y = Math.max( minVal, Math.min( maxVal, this.y ) );</span>
+
+	<span class="hljs-comment">// 	return this;</span>
+	<span class="hljs-comment">// }</span>
+
+	<span class="hljs-comment">// clampLength( min, max ) {</span>
+	<span class="hljs-comment">// 	const length = this.length();</span>
+
+	<span class="hljs-comment">// 	return this.divideScalar( length || 1 ).multiplyScalar( Math.max( min, Math.min( max, length ) ) );</span>
+	<span class="hljs-comment">// }</span>
+
+	<span class="hljs-comment">// floor() {</span>
+	<span class="hljs-comment">// 	this.x = Math.floor( this.x );</span>
+	<span class="hljs-comment">// 	this.y = Math.floor( this.y );</span>
+
+	<span class="hljs-comment">// 	return this;</span>
+	<span class="hljs-comment">// }</span>
+
+	<span class="hljs-comment">// ceil() {</span>
+	<span class="hljs-comment">// 	this.x = Math.ceil( this.x );</span>
+	<span class="hljs-comment">// 	this.y = Math.ceil( this.y );</span>
+
+	<span class="hljs-comment">// 	return this;</span>
+
+	<span class="hljs-comment">// }</span>
+
+	<span class="hljs-comment">// round() {</span>
+
+	<span class="hljs-comment">// 	this.x = Math.round( this.x );</span>
+	<span class="hljs-comment">// 	this.y = Math.round( this.y );</span>
+
+	<span class="hljs-comment">// 	return this;</span>
+
+	<span class="hljs-comment">// }</span>
+
+	<span class="hljs-comment">// roundToZero() {</span>
+
+	<span class="hljs-comment">// 	this.x = Math.trunc( this.x );</span>
+	<span class="hljs-comment">// 	this.y = Math.trunc( this.y );</span>
+
+	<span class="hljs-comment">// 	return this;</span>
+
+	<span class="hljs-comment">// }</span>
+
+	<span class="hljs-comment">// negate() {</span>
+
+	<span class="hljs-comment">// 	this.x = - this.x;</span>
+	<span class="hljs-comment">// 	this.y = - this.y;</span>
+
+	<span class="hljs-comment">// 	return this;</span>
+
+	<span class="hljs-comment">// }</span>
+
+	<span class="hljs-comment">// dot( v ) {</span>
+
+	<span class="hljs-comment">// 	return this.x * v.x + this.y * v.y;</span>
+
+	<span class="hljs-comment">// }</span>
+
+	<span class="hljs-comment">// cross( v ) {</span>
+
+	<span class="hljs-comment">// 	return this.x * v.y - this.y * v.x;</span>
+
+	<span class="hljs-comment">// }</span>
+
+	<span class="hljs-comment">// lengthSq() {</span>
+
+	<span class="hljs-comment">// 	return this.x * this.x + this.y * this.y;</span>
+
+	<span class="hljs-comment">// }</span>
+
+	<span class="hljs-comment">// length() {</span>
+
+	<span class="hljs-comment">// 	return Math.sqrt( this.x * this.x + this.y * this.y );</span>
+
+	<span class="hljs-comment">// }</span>
+
+	<span class="hljs-comment">// manhattanLength() {</span>
+
+	<span class="hljs-comment">// 	return Math.abs( this.x ) + Math.abs( this.y );</span>
+
+	<span class="hljs-comment">// }</span>
+
+	<span class="hljs-comment">// normalize() {</span>
+
+	<span class="hljs-comment">// 	return this.divideScalar( this.length() || 1 );</span>
+
+	<span class="hljs-comment">// }</span>
+
+	<span class="hljs-comment">// angle() {</span>
+
+	<span class="hljs-comment">// 	// computes the angle in radians with respect to the positive x-axis</span>
+
+	<span class="hljs-comment">// 	const angle = Math.atan2( - this.y, - this.x ) + Math.PI;</span>
+
+	<span class="hljs-comment">// 	return angle;</span>
+
+	<span class="hljs-comment">// }</span>
+
+	<span class="hljs-comment">// angleTo( v ) {</span>
+
+	<span class="hljs-comment">// 	const denominator = Math.sqrt( this.lengthSq() * v.lengthSq() );</span>
+
+	<span class="hljs-comment">// 	if ( denominator === 0 ) return Math.PI / 2;</span>
+
+	<span class="hljs-comment">// 	const theta = this.dot( v ) / denominator;</span>
+
+	<span class="hljs-comment">// 	// clamp, to handle numerical problems</span>
+
+	<span class="hljs-comment">// 	return Math.acos( clamp( theta, - 1, 1 ) );</span>
+
+	<span class="hljs-comment">// }</span>
+
+	<span class="hljs-comment">// distanceTo( v ) {</span>
+
+	<span class="hljs-comment">// 	return Math.sqrt( this.distanceToSquared( v ) );</span>
+
+	<span class="hljs-comment">// }</span>
+
+	<span class="hljs-comment">// distanceToSquared( v ) {</span>
+
+	<span class="hljs-comment">// 	const dx = this.x - v.x, dy = this.y - v.y;</span>
+	<span class="hljs-comment">// 	return dx * dx + dy * dy;</span>
+
+	<span class="hljs-comment">// }</span>
+
+	<span class="hljs-comment">// manhattanDistanceTo( v ) {</span>
+
+	<span class="hljs-comment">// 	return Math.abs( this.x - v.x ) + Math.abs( this.y - v.y );</span>
+
+	<span class="hljs-comment">// }</span>
+
+	<span class="hljs-comment">// setLength( length ) {</span>
+
+	<span class="hljs-comment">// 	return this.normalize().multiplyScalar( length );</span>
+
+	<span class="hljs-comment">// }</span>
+
+	<span class="hljs-comment">// lerp( v, alpha ) {</span>
+
+	<span class="hljs-comment">// 	this.x += ( v.x - this.x ) * alpha;</span>
+	<span class="hljs-comment">// 	this.y += ( v.y - this.y ) * alpha;</span>
+
+	<span class="hljs-comment">// 	return this;</span>
+
+	<span class="hljs-comment">// }</span>
+
+	<span class="hljs-comment">// lerpVectors( v1, v2, alpha ) {</span>
+
+	<span class="hljs-comment">// 	this.x = v1.x + ( v2.x - v1.x ) * alpha;</span>
+	<span class="hljs-comment">// 	this.y = v1.y + ( v2.y - v1.y ) * alpha;</span>
+
+	<span class="hljs-comment">// 	return this;</span>
+
+	<span class="hljs-comment">// }</span>
+
+	<span class="hljs-comment">// equals( v ) {</span>
+
+	<span class="hljs-comment">// 	return ( ( v.x === this.x ) &amp;&amp; ( v.y === this.y ) );</span>
+
+	<span class="hljs-comment">// }</span>
+
+	<span class="hljs-comment">// fromArray( array, offset = 0 ) {</span>
+
+	<span class="hljs-comment">// 	this.x = array[ offset ];</span>
+	<span class="hljs-comment">// 	this.y = array[ offset + 1 ];</span>
+
+	<span class="hljs-comment">// 	return this;</span>
+
+	<span class="hljs-comment">// }</span>
+
+	<span class="hljs-comment">// toArray( array = [], offset = 0 ) {</span>
+
+	<span class="hljs-comment">// 	array[ offset ] = this.x;</span>
+	<span class="hljs-comment">// 	array[ offset + 1 ] = this.y;</span>
+
+	<span class="hljs-comment">// 	return array;</span>
+
+	<span class="hljs-comment">// }</span>
+
+	<span class="hljs-comment">// fromBufferAttribute( attribute, index ) {</span>
+
+	<span class="hljs-comment">// 	this.x = attribute.getX( index );</span>
+	<span class="hljs-comment">// 	this.y = attribute.getY( index );</span>
+
+	<span class="hljs-comment">// 	return this;</span>
+
+	<span class="hljs-comment">// }</span>
+
+	<span class="hljs-comment">// rotateAround( center, angle ) {</span>
+
+	<span class="hljs-comment">// 	const c = Math.cos( angle ), s = Math.sin( angle );</span>
+
+	<span class="hljs-comment">// 	const x = this.x - center.x;</span>
+	<span class="hljs-comment">// 	const y = this.y - center.y;</span>
+
+	<span class="hljs-comment">// 	this.x = x * c - y * s + center.x;</span>
+	<span class="hljs-comment">// 	this.y = x * s + y * c + center.y;</span>
+
+	<span class="hljs-comment">// 	return this;</span>
+
+	<span class="hljs-comment">// }</span>
+
+	<span class="hljs-comment">// random() {</span>
+
+	<span class="hljs-comment">// 	this.x = Math.random();</span>
+	<span class="hljs-comment">// 	this.y = Math.random();</span>
+
+	<span class="hljs-comment">// 	return this;</span>
+
+	<span class="hljs-comment">// }</span>
+
+	*[ Symbol.iterator ]() {
+		yield <span class="hljs-keyword">this</span>.x;
+		yield <span class="hljs-keyword">this</span>.y;
+	}
+}
+
+export { Vector2 };</code></pre>
+    </div>
+  </div>
+</main>
+
+    <div class="footer">
+      <div class="center">
+        Powered by <a target="_blank" href="https://benignware.com">Benignware</a>
+      </div>
+    </div>
+  </body>
+</html>

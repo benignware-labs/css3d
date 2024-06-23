@@ -1,0 +1,933 @@
+<html>
+  <head>
+    <base href="../.."/>
+    <title>css3d - Quaternion.mjs</title>
+
+    <link rel="stylesheet" href="public/github-markdown.min-05fea8df8ec68cb6c27337f6db65733e.css">
+    <link rel="stylesheet" href="public/highlight-c281e701b2830b095c67417cd9a7b210.css">
+    <link rel="stylesheet" href="public/style-aea3468ccb7ee0c3c4c2b5d339fc989e.css">
+    <link rel="stylesheet" href="public/all-cc69a8b8824029ae06797ee01a3cc5c8.css">
+
+    <script src="public/plugins/core/example/ExampleViewer.js"></script>
+              
+              <script src="-/index.mjs" type="module"></script>
+            
+  </head>
+  <body class="markdown-body flex-column">
+    <div class="header flex">
+      <a class="header-brand" href="./index.html">css3d</a>
+      
+<ul class="menu flex align-center justify-center">
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="elements/Sphere.html"
+        
+        
+          role="button"
+          
+          aria-expanded="false"
+        
+      >
+        Elements
+      </a>
+      
+    </li>
+    
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="examples/textures.html"
+        
+        
+          role="button"
+          
+          aria-expanded="false"
+        
+      >
+        Examples
+      </a>
+      
+    </li>
+    
+  
+</ul>
+      <nav class="links">
+        
+          
+            
+          
+        
+      </nav>
+    </div>
+      
+      
+
+<main class="flex-grow flex h-100">
+  <div class="sidebar sidebar-left border-right mr-2 flex-noshrink">
+  
+<ul class="menu">
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="elements/Sphere.html"
+        
+        
+          role="button"
+          
+          aria-expanded="false"
+        
+      >
+        Elements
+      </a>
+      
+        
+<ul class="menu">
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="elements/Sphere.html"
+        
+        
+      >
+        Sphere
+      </a>
+      
+    </li>
+    
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="elements/Polyhedron.html"
+        
+        
+      >
+        Polyhedron
+      </a>
+      
+    </li>
+    
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="elements/Cylinder.html"
+        
+        
+      >
+        Cylinder
+      </a>
+      
+    </li>
+    
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="elements/Box.html"
+        
+        
+      >
+        Box
+      </a>
+      
+    </li>
+    
+  
+</ul>
+      
+    </li>
+    
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="examples/textures.html"
+        
+        
+          role="button"
+          
+          aria-expanded="false"
+        
+      >
+        Examples
+      </a>
+      
+        
+<ul class="menu">
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="examples/textures.html"
+        
+        
+      >
+        Textures
+      </a>
+      
+    </li>
+    
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="examples/planets.html"
+        
+        
+      >
+        Planets
+      </a>
+      
+    </li>
+    
+  
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="examples/crane.html"
+        
+        
+      >
+        Crane
+      </a>
+      
+    </li>
+    
+  
+</ul>
+      
+    </li>
+    
+  
+</ul>
+</div>
+  <div class="flex-grow">
+    <div class="container py-4">
+      <h1>Source: Quaternion.mjs</h1>
+      <p>
+        lib/math/Quaternion.mjs
+      </p>
+      
+      <pre><code class="hljs"><span class="hljs-keyword">import</span> { clamp } from <span class="hljs-string">&#x27;./utils.mjs&#x27;</span>;
+
+<span class="hljs-keyword">class</span> <span class="hljs-title class_">Quaternion</span> {
+
+	<span class="hljs-keyword">constructor</span>( x = <span class="hljs-number">0</span>, y = <span class="hljs-number">0</span>, z = <span class="hljs-number">0</span>, w = <span class="hljs-number">1</span> ) {
+
+		<span class="hljs-keyword">this</span>.isQuaternion = <span class="hljs-literal">true</span>;
+
+		<span class="hljs-keyword">this</span>._x = x;
+		<span class="hljs-keyword">this</span>._y = y;
+		<span class="hljs-keyword">this</span>._z = z;
+		<span class="hljs-keyword">this</span>._w = w;
+
+	}
+
+	static slerpFlat( dst, dstOffset, src0, srcOffset0, src1, srcOffset1, t ) {
+
+		<span class="hljs-comment">// fuzz-free, array-based Quaternion SLERP operation</span>
+
+		let x0 = src0[ srcOffset0 + <span class="hljs-number">0</span> ],
+			y0 = src0[ srcOffset0 + <span class="hljs-number">1</span> ],
+			z0 = src0[ srcOffset0 + <span class="hljs-number">2</span> ],
+			w0 = src0[ srcOffset0 + <span class="hljs-number">3</span> ];
+
+		<span class="hljs-keyword">const</span> x1 = src1[ srcOffset1 + <span class="hljs-number">0</span> ],
+			y1 = src1[ srcOffset1 + <span class="hljs-number">1</span> ],
+			z1 = src1[ srcOffset1 + <span class="hljs-number">2</span> ],
+			w1 = src1[ srcOffset1 + <span class="hljs-number">3</span> ];
+
+		<span class="hljs-keyword">if</span> ( t === <span class="hljs-number">0</span> ) {
+
+			dst[ dstOffset + <span class="hljs-number">0</span> ] = x0;
+			dst[ dstOffset + <span class="hljs-number">1</span> ] = y0;
+			dst[ dstOffset + <span class="hljs-number">2</span> ] = z0;
+			dst[ dstOffset + <span class="hljs-number">3</span> ] = w0;
+			<span class="hljs-keyword">return</span>;
+
+		}
+
+		<span class="hljs-keyword">if</span> ( t === <span class="hljs-number">1</span> ) {
+
+			dst[ dstOffset + <span class="hljs-number">0</span> ] = x1;
+			dst[ dstOffset + <span class="hljs-number">1</span> ] = y1;
+			dst[ dstOffset + <span class="hljs-number">2</span> ] = z1;
+			dst[ dstOffset + <span class="hljs-number">3</span> ] = w1;
+			<span class="hljs-keyword">return</span>;
+
+		}
+
+		<span class="hljs-keyword">if</span> ( w0 !== w1 || x0 !== x1 || y0 !== y1 || z0 !== z1 ) {
+
+			let s = <span class="hljs-number">1</span> - t;
+			<span class="hljs-keyword">const</span> cos = x0 * x1 + y0 * y1 + z0 * z1 + w0 * w1,
+				dir = ( cos &gt;= <span class="hljs-number">0</span> ? <span class="hljs-number">1</span> : - <span class="hljs-number">1</span> ),
+				sqrSin = <span class="hljs-number">1</span> - cos * cos;
+
+			<span class="hljs-comment">// Skip the Slerp for tiny steps to avoid numeric problems:</span>
+			<span class="hljs-keyword">if</span> ( sqrSin &gt; Number.EPSILON ) {
+
+				<span class="hljs-keyword">const</span> sin = Math.sqrt( sqrSin ),
+					len = Math.atan2( sin, cos * dir );
+
+				s = Math.sin( s * len ) / sin;
+				t = Math.sin( t * len ) / sin;
+
+			}
+
+			<span class="hljs-keyword">const</span> tDir = t * dir;
+
+			x0 = x0 * s + x1 * tDir;
+			y0 = y0 * s + y1 * tDir;
+			z0 = z0 * s + z1 * tDir;
+			w0 = w0 * s + w1 * tDir;
+
+			<span class="hljs-comment">// Normalize in case we just did a lerp:</span>
+			<span class="hljs-keyword">if</span> ( s === <span class="hljs-number">1</span> - t ) {
+
+				<span class="hljs-keyword">const</span> f = <span class="hljs-number">1</span> / Math.sqrt( x0 * x0 + y0 * y0 + z0 * z0 + w0 * w0 );
+
+				x0 *= f;
+				y0 *= f;
+				z0 *= f;
+				w0 *= f;
+
+			}
+
+		}
+
+		dst[ dstOffset ] = x0;
+		dst[ dstOffset + <span class="hljs-number">1</span> ] = y0;
+		dst[ dstOffset + <span class="hljs-number">2</span> ] = z0;
+		dst[ dstOffset + <span class="hljs-number">3</span> ] = w0;
+
+	}
+
+	static multiplyQuaternionsFlat( dst, dstOffset, src0, srcOffset0, src1, srcOffset1 ) {
+
+		<span class="hljs-keyword">const</span> x0 = src0[ srcOffset0 ];
+		<span class="hljs-keyword">const</span> y0 = src0[ srcOffset0 + <span class="hljs-number">1</span> ];
+		<span class="hljs-keyword">const</span> z0 = src0[ srcOffset0 + <span class="hljs-number">2</span> ];
+		<span class="hljs-keyword">const</span> w0 = src0[ srcOffset0 + <span class="hljs-number">3</span> ];
+
+		<span class="hljs-keyword">const</span> x1 = src1[ srcOffset1 ];
+		<span class="hljs-keyword">const</span> y1 = src1[ srcOffset1 + <span class="hljs-number">1</span> ];
+		<span class="hljs-keyword">const</span> z1 = src1[ srcOffset1 + <span class="hljs-number">2</span> ];
+		<span class="hljs-keyword">const</span> w1 = src1[ srcOffset1 + <span class="hljs-number">3</span> ];
+
+		dst[ dstOffset ] = x0 * w1 + w0 * x1 + y0 * z1 - z0 * y1;
+		dst[ dstOffset + <span class="hljs-number">1</span> ] = y0 * w1 + w0 * y1 + z0 * x1 - x0 * z1;
+		dst[ dstOffset + <span class="hljs-number">2</span> ] = z0 * w1 + w0 * z1 + x0 * y1 - y0 * x1;
+		dst[ dstOffset + <span class="hljs-number">3</span> ] = w0 * w1 - x0 * x1 - y0 * y1 - z0 * z1;
+
+		<span class="hljs-keyword">return</span> dst;
+
+	}
+
+	<span class="hljs-keyword">get</span> x() {
+
+		<span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>._x;
+
+	}
+
+	<span class="hljs-keyword">set</span> x( value ) {
+
+		<span class="hljs-keyword">this</span>._x = value;
+		<span class="hljs-keyword">this</span>._onChangeCallback();
+
+	}
+
+	<span class="hljs-keyword">get</span> y() {
+
+		<span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>._y;
+
+	}
+
+	<span class="hljs-keyword">set</span> y( value ) {
+
+		<span class="hljs-keyword">this</span>._y = value;
+		<span class="hljs-keyword">this</span>._onChangeCallback();
+
+	}
+
+	<span class="hljs-keyword">get</span> z() {
+
+		<span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>._z;
+
+	}
+
+	<span class="hljs-keyword">set</span> z( value ) {
+
+		<span class="hljs-keyword">this</span>._z = value;
+		<span class="hljs-keyword">this</span>._onChangeCallback();
+
+	}
+
+	<span class="hljs-keyword">get</span> w() {
+
+		<span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>._w;
+
+	}
+
+	<span class="hljs-keyword">set</span> w( value ) {
+
+		<span class="hljs-keyword">this</span>._w = value;
+		<span class="hljs-keyword">this</span>._onChangeCallback();
+
+	}
+
+	<span class="hljs-keyword">set</span>( x, y, z, w ) {
+
+		<span class="hljs-keyword">this</span>._x = x;
+		<span class="hljs-keyword">this</span>._y = y;
+		<span class="hljs-keyword">this</span>._z = z;
+		<span class="hljs-keyword">this</span>._w = w;
+
+		<span class="hljs-keyword">this</span>._onChangeCallback();
+
+		<span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+
+	}
+
+	clone() {
+
+		<span class="hljs-keyword">return</span> new <span class="hljs-keyword">this</span>.<span class="hljs-keyword">constructor</span>( <span class="hljs-keyword">this</span>._x, <span class="hljs-keyword">this</span>._y, <span class="hljs-keyword">this</span>._z, <span class="hljs-keyword">this</span>._w );
+
+	}
+
+	copy( quaternion ) {
+
+		<span class="hljs-keyword">this</span>._x = quaternion.x;
+		<span class="hljs-keyword">this</span>._y = quaternion.y;
+		<span class="hljs-keyword">this</span>._z = quaternion.z;
+		<span class="hljs-keyword">this</span>._w = quaternion.w;
+
+		<span class="hljs-keyword">this</span>._onChangeCallback();
+
+		<span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+
+	}
+
+	setFromEuler( euler, update = <span class="hljs-literal">true</span> ) {
+
+		<span class="hljs-keyword">const</span> x = euler._x, y = euler._y, z = euler._z, order = euler._order;
+
+		<span class="hljs-comment">// http://www.mathworks.com/matlabcentral/fileexchange/</span>
+		<span class="hljs-comment">// 	20696-function-to-convert-between-dcm-euler-angles-quaternions-and-euler-vectors/</span>
+		<span class="hljs-comment">//	content/SpinCalc.m</span>
+
+		<span class="hljs-keyword">const</span> cos = Math.cos;
+		<span class="hljs-keyword">const</span> sin = Math.sin;
+
+		<span class="hljs-keyword">const</span> c1 = cos( x / <span class="hljs-number">2</span> );
+		<span class="hljs-keyword">const</span> c2 = cos( y / <span class="hljs-number">2</span> );
+		<span class="hljs-keyword">const</span> c3 = cos( z / <span class="hljs-number">2</span> );
+
+		<span class="hljs-keyword">const</span> s1 = sin( x / <span class="hljs-number">2</span> );
+		<span class="hljs-keyword">const</span> s2 = sin( y / <span class="hljs-number">2</span> );
+		<span class="hljs-keyword">const</span> s3 = sin( z / <span class="hljs-number">2</span> );
+
+		switch ( order ) {
+
+			case <span class="hljs-string">&#x27;XYZ&#x27;</span>:
+				<span class="hljs-keyword">this</span>._x = s1 * c2 * c3 + c1 * s2 * s3;
+				<span class="hljs-keyword">this</span>._y = c1 * s2 * c3 - s1 * c2 * s3;
+				<span class="hljs-keyword">this</span>._z = c1 * c2 * s3 + s1 * s2 * c3;
+				<span class="hljs-keyword">this</span>._w = c1 * c2 * c3 - s1 * s2 * s3;
+				<span class="hljs-keyword">break</span>;
+
+			case <span class="hljs-string">&#x27;YXZ&#x27;</span>:
+				<span class="hljs-keyword">this</span>._x = s1 * c2 * c3 + c1 * s2 * s3;
+				<span class="hljs-keyword">this</span>._y = c1 * s2 * c3 - s1 * c2 * s3;
+				<span class="hljs-keyword">this</span>._z = c1 * c2 * s3 - s1 * s2 * c3;
+				<span class="hljs-keyword">this</span>._w = c1 * c2 * c3 + s1 * s2 * s3;
+				<span class="hljs-keyword">break</span>;
+
+			case <span class="hljs-string">&#x27;ZXY&#x27;</span>:
+				<span class="hljs-keyword">this</span>._x = s1 * c2 * c3 - c1 * s2 * s3;
+				<span class="hljs-keyword">this</span>._y = c1 * s2 * c3 + s1 * c2 * s3;
+				<span class="hljs-keyword">this</span>._z = c1 * c2 * s3 + s1 * s2 * c3;
+				<span class="hljs-keyword">this</span>._w = c1 * c2 * c3 - s1 * s2 * s3;
+				<span class="hljs-keyword">break</span>;
+
+			case <span class="hljs-string">&#x27;ZYX&#x27;</span>:
+				<span class="hljs-keyword">this</span>._x = s1 * c2 * c3 - c1 * s2 * s3;
+				<span class="hljs-keyword">this</span>._y = c1 * s2 * c3 + s1 * c2 * s3;
+				<span class="hljs-keyword">this</span>._z = c1 * c2 * s3 - s1 * s2 * c3;
+				<span class="hljs-keyword">this</span>._w = c1 * c2 * c3 + s1 * s2 * s3;
+				<span class="hljs-keyword">break</span>;
+
+			case <span class="hljs-string">&#x27;YZX&#x27;</span>:
+				<span class="hljs-keyword">this</span>._x = s1 * c2 * c3 + c1 * s2 * s3;
+				<span class="hljs-keyword">this</span>._y = c1 * s2 * c3 + s1 * c2 * s3;
+				<span class="hljs-keyword">this</span>._z = c1 * c2 * s3 - s1 * s2 * c3;
+				<span class="hljs-keyword">this</span>._w = c1 * c2 * c3 - s1 * s2 * s3;
+				<span class="hljs-keyword">break</span>;
+
+			case <span class="hljs-string">&#x27;XZY&#x27;</span>:
+				<span class="hljs-keyword">this</span>._x = s1 * c2 * c3 - c1 * s2 * s3;
+				<span class="hljs-keyword">this</span>._y = c1 * s2 * c3 - s1 * c2 * s3;
+				<span class="hljs-keyword">this</span>._z = c1 * c2 * s3 + s1 * s2 * c3;
+				<span class="hljs-keyword">this</span>._w = c1 * c2 * c3 + s1 * s2 * s3;
+				<span class="hljs-keyword">break</span>;
+
+			default:
+				console.warn( <span class="hljs-string">&#x27;THREE.Quaternion: .setFromEuler() encountered an unknown order: &#x27;</span> + order );
+
+		}
+
+		<span class="hljs-keyword">if</span> ( update === <span class="hljs-literal">true</span> ) <span class="hljs-keyword">this</span>._onChangeCallback();
+
+		<span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+
+	}
+
+	setFromAxisAngle( axis, angle ) {
+
+		<span class="hljs-comment">// http://www.euclideanspace.com/maths/geometry/rotations/conversions/angleToQuaternion/index.htm</span>
+
+		<span class="hljs-comment">// assumes axis is normalized</span>
+
+		<span class="hljs-keyword">const</span> halfAngle = angle / <span class="hljs-number">2</span>, s = Math.sin( halfAngle );
+
+		<span class="hljs-keyword">this</span>._x = axis.x * s;
+		<span class="hljs-keyword">this</span>._y = axis.y * s;
+		<span class="hljs-keyword">this</span>._z = axis.z * s;
+		<span class="hljs-keyword">this</span>._w = Math.cos( halfAngle );
+
+		<span class="hljs-keyword">this</span>._onChangeCallback();
+
+		<span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+
+	}
+
+	setFromRotationMatrix( m ) {
+
+		<span class="hljs-comment">// http://www.euclideanspace.com/maths/geometry/rotations/conversions/matrixToQuaternion/index.htm</span>
+
+		<span class="hljs-comment">// assumes the upper 3x3 of m is a pure rotation matrix (i.e, unscaled)</span>
+
+		<span class="hljs-keyword">const</span> te = m.elements,
+
+			m11 = te[ <span class="hljs-number">0</span> ], m12 = te[ <span class="hljs-number">4</span> ], m13 = te[ <span class="hljs-number">8</span> ],
+			m21 = te[ <span class="hljs-number">1</span> ], m22 = te[ <span class="hljs-number">5</span> ], m23 = te[ <span class="hljs-number">9</span> ],
+			m31 = te[ <span class="hljs-number">2</span> ], m32 = te[ <span class="hljs-number">6</span> ], m33 = te[ <span class="hljs-number">10</span> ],
+
+			trace = m11 + m22 + m33;
+
+		<span class="hljs-keyword">if</span> ( trace &gt; <span class="hljs-number">0</span> ) {
+
+			<span class="hljs-keyword">const</span> s = <span class="hljs-number">0.5</span> / Math.sqrt( trace + <span class="hljs-number">1.0</span> );
+
+			<span class="hljs-keyword">this</span>._w = <span class="hljs-number">0.25</span> / s;
+			<span class="hljs-keyword">this</span>._x = ( m32 - m23 ) * s;
+			<span class="hljs-keyword">this</span>._y = ( m13 - m31 ) * s;
+			<span class="hljs-keyword">this</span>._z = ( m21 - m12 ) * s;
+
+		} <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> ( m11 &gt; m22 &amp;&amp; m11 &gt; m33 ) {
+
+			<span class="hljs-keyword">const</span> s = <span class="hljs-number">2.0</span> * Math.sqrt( <span class="hljs-number">1.0</span> + m11 - m22 - m33 );
+
+			<span class="hljs-keyword">this</span>._w = ( m32 - m23 ) / s;
+			<span class="hljs-keyword">this</span>._x = <span class="hljs-number">0.25</span> * s;
+			<span class="hljs-keyword">this</span>._y = ( m12 + m21 ) / s;
+			<span class="hljs-keyword">this</span>._z = ( m13 + m31 ) / s;
+
+		} <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> ( m22 &gt; m33 ) {
+
+			<span class="hljs-keyword">const</span> s = <span class="hljs-number">2.0</span> * Math.sqrt( <span class="hljs-number">1.0</span> + m22 - m11 - m33 );
+
+			<span class="hljs-keyword">this</span>._w = ( m13 - m31 ) / s;
+			<span class="hljs-keyword">this</span>._x = ( m12 + m21 ) / s;
+			<span class="hljs-keyword">this</span>._y = <span class="hljs-number">0.25</span> * s;
+			<span class="hljs-keyword">this</span>._z = ( m23 + m32 ) / s;
+
+		} <span class="hljs-keyword">else</span> {
+
+			<span class="hljs-keyword">const</span> s = <span class="hljs-number">2.0</span> * Math.sqrt( <span class="hljs-number">1.0</span> + m33 - m11 - m22 );
+
+			<span class="hljs-keyword">this</span>._w = ( m21 - m12 ) / s;
+			<span class="hljs-keyword">this</span>._x = ( m13 + m31 ) / s;
+			<span class="hljs-keyword">this</span>._y = ( m23 + m32 ) / s;
+			<span class="hljs-keyword">this</span>._z = <span class="hljs-number">0.25</span> * s;
+
+		}
+
+		<span class="hljs-keyword">this</span>._onChangeCallback();
+
+		<span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+
+	}
+
+	setFromUnitVectors( vFrom, vTo ) {
+
+		<span class="hljs-comment">// assumes direction vectors vFrom and vTo are normalized</span>
+
+		let r = vFrom.dot( vTo ) + <span class="hljs-number">1</span>;
+
+		<span class="hljs-keyword">if</span> ( r &lt; Number.EPSILON ) {
+
+			<span class="hljs-comment">// vFrom and vTo point in opposite directions</span>
+
+			r = <span class="hljs-number">0</span>;
+
+			<span class="hljs-keyword">if</span> ( Math.abs( vFrom.x ) &gt; Math.abs( vFrom.z ) ) {
+
+				<span class="hljs-keyword">this</span>._x = - vFrom.y;
+				<span class="hljs-keyword">this</span>._y = vFrom.x;
+				<span class="hljs-keyword">this</span>._z = <span class="hljs-number">0</span>;
+				<span class="hljs-keyword">this</span>._w = r;
+
+			} <span class="hljs-keyword">else</span> {
+
+				<span class="hljs-keyword">this</span>._x = <span class="hljs-number">0</span>;
+				<span class="hljs-keyword">this</span>._y = - vFrom.z;
+				<span class="hljs-keyword">this</span>._z = vFrom.y;
+				<span class="hljs-keyword">this</span>._w = r;
+
+			}
+
+		} <span class="hljs-keyword">else</span> {
+
+			<span class="hljs-comment">// crossVectors( vFrom, vTo ); // inlined to avoid cyclic dependency on Vector3</span>
+
+			<span class="hljs-keyword">this</span>._x = vFrom.y * vTo.z - vFrom.z * vTo.y;
+			<span class="hljs-keyword">this</span>._y = vFrom.z * vTo.x - vFrom.x * vTo.z;
+			<span class="hljs-keyword">this</span>._z = vFrom.x * vTo.y - vFrom.y * vTo.x;
+			<span class="hljs-keyword">this</span>._w = r;
+
+		}
+
+		<span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.normalize();
+
+	}
+
+	angleTo( q ) {
+		<span class="hljs-keyword">return</span> <span class="hljs-number">2</span> * Math.acos( Math.abs( clamp( <span class="hljs-keyword">this</span>.dot( q ), - <span class="hljs-number">1</span>, <span class="hljs-number">1</span> ) ) );
+	}
+
+	rotateTowards( q, step ) {
+
+		<span class="hljs-keyword">const</span> angle = <span class="hljs-keyword">this</span>.angleTo( q );
+
+		<span class="hljs-keyword">if</span> ( angle === <span class="hljs-number">0</span> ) <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+
+		<span class="hljs-keyword">const</span> t = Math.min( <span class="hljs-number">1</span>, step / angle );
+
+		<span class="hljs-keyword">this</span>.slerp( q, t );
+
+		<span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+
+	}
+
+	identity() {
+
+		<span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.<span class="hljs-keyword">set</span>( <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span> );
+
+	}
+
+	invert() {
+
+		<span class="hljs-comment">// quaternion is assumed to have unit length</span>
+
+		<span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.conjugate();
+
+	}
+
+	conjugate() {
+
+		<span class="hljs-keyword">this</span>._x *= - <span class="hljs-number">1</span>;
+		<span class="hljs-keyword">this</span>._y *= - <span class="hljs-number">1</span>;
+		<span class="hljs-keyword">this</span>._z *= - <span class="hljs-number">1</span>;
+
+		<span class="hljs-keyword">this</span>._onChangeCallback();
+
+		<span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+
+	}
+
+	dot( v ) {
+
+		<span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>._x * v._x + <span class="hljs-keyword">this</span>._y * v._y + <span class="hljs-keyword">this</span>._z * v._z + <span class="hljs-keyword">this</span>._w * v._w;
+
+	}
+
+	lengthSq() {
+
+		<span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>._x * <span class="hljs-keyword">this</span>._x + <span class="hljs-keyword">this</span>._y * <span class="hljs-keyword">this</span>._y + <span class="hljs-keyword">this</span>._z * <span class="hljs-keyword">this</span>._z + <span class="hljs-keyword">this</span>._w * <span class="hljs-keyword">this</span>._w;
+
+	}
+
+	length() {
+
+		<span class="hljs-keyword">return</span> Math.sqrt( <span class="hljs-keyword">this</span>._x * <span class="hljs-keyword">this</span>._x + <span class="hljs-keyword">this</span>._y * <span class="hljs-keyword">this</span>._y + <span class="hljs-keyword">this</span>._z * <span class="hljs-keyword">this</span>._z + <span class="hljs-keyword">this</span>._w * <span class="hljs-keyword">this</span>._w );
+
+	}
+
+	normalize() {
+
+		let l = <span class="hljs-keyword">this</span>.length();
+
+		<span class="hljs-keyword">if</span> ( l === <span class="hljs-number">0</span> ) {
+
+			<span class="hljs-keyword">this</span>._x = <span class="hljs-number">0</span>;
+			<span class="hljs-keyword">this</span>._y = <span class="hljs-number">0</span>;
+			<span class="hljs-keyword">this</span>._z = <span class="hljs-number">0</span>;
+			<span class="hljs-keyword">this</span>._w = <span class="hljs-number">1</span>;
+
+		} <span class="hljs-keyword">else</span> {
+
+			l = <span class="hljs-number">1</span> / l;
+
+			<span class="hljs-keyword">this</span>._x = <span class="hljs-keyword">this</span>._x * l;
+			<span class="hljs-keyword">this</span>._y = <span class="hljs-keyword">this</span>._y * l;
+			<span class="hljs-keyword">this</span>._z = <span class="hljs-keyword">this</span>._z * l;
+			<span class="hljs-keyword">this</span>._w = <span class="hljs-keyword">this</span>._w * l;
+
+		}
+
+		<span class="hljs-keyword">this</span>._onChangeCallback();
+
+		<span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+
+	}
+
+	multiply( q ) {
+
+		<span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.multiplyQuaternions( <span class="hljs-keyword">this</span>, q );
+
+	}
+
+	premultiply( q ) {
+
+		<span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.multiplyQuaternions( q, <span class="hljs-keyword">this</span> );
+
+	}
+
+	multiplyQuaternions( a, b ) {
+
+		<span class="hljs-comment">// from http://www.euclideanspace.com/maths/algebra/realNormedAlgebra/quaternions/code/index.htm</span>
+
+		<span class="hljs-keyword">const</span> qax = a._x, qay = a._y, qaz = a._z, qaw = a._w;
+		<span class="hljs-keyword">const</span> qbx = b._x, qby = b._y, qbz = b._z, qbw = b._w;
+
+		<span class="hljs-keyword">this</span>._x = qax * qbw + qaw * qbx + qay * qbz - qaz * qby;
+		<span class="hljs-keyword">this</span>._y = qay * qbw + qaw * qby + qaz * qbx - qax * qbz;
+		<span class="hljs-keyword">this</span>._z = qaz * qbw + qaw * qbz + qax * qby - qay * qbx;
+		<span class="hljs-keyword">this</span>._w = qaw * qbw - qax * qbx - qay * qby - qaz * qbz;
+
+		<span class="hljs-keyword">this</span>._onChangeCallback();
+
+		<span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+
+	}
+
+	slerp( qb, t ) {
+
+		<span class="hljs-keyword">if</span> ( t === <span class="hljs-number">0</span> ) <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+		<span class="hljs-keyword">if</span> ( t === <span class="hljs-number">1</span> ) <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.copy( qb );
+
+		<span class="hljs-keyword">const</span> x = <span class="hljs-keyword">this</span>._x, y = <span class="hljs-keyword">this</span>._y, z = <span class="hljs-keyword">this</span>._z, w = <span class="hljs-keyword">this</span>._w;
+
+		<span class="hljs-comment">// http://www.euclideanspace.com/maths/algebra/realNormedAlgebra/quaternions/slerp/</span>
+
+		let cosHalfTheta = w * qb._w + x * qb._x + y * qb._y + z * qb._z;
+
+		<span class="hljs-keyword">if</span> ( cosHalfTheta &lt; <span class="hljs-number">0</span> ) {
+
+			<span class="hljs-keyword">this</span>._w = - qb._w;
+			<span class="hljs-keyword">this</span>._x = - qb._x;
+			<span class="hljs-keyword">this</span>._y = - qb._y;
+			<span class="hljs-keyword">this</span>._z = - qb._z;
+
+			cosHalfTheta = - cosHalfTheta;
+
+		} <span class="hljs-keyword">else</span> {
+
+			<span class="hljs-keyword">this</span>.copy( qb );
+
+		}
+
+		<span class="hljs-keyword">if</span> ( cosHalfTheta &gt;= <span class="hljs-number">1.0</span> ) {
+
+			<span class="hljs-keyword">this</span>._w = w;
+			<span class="hljs-keyword">this</span>._x = x;
+			<span class="hljs-keyword">this</span>._y = y;
+			<span class="hljs-keyword">this</span>._z = z;
+
+			<span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+
+		}
+
+		<span class="hljs-keyword">const</span> sqrSinHalfTheta = <span class="hljs-number">1.0</span> - cosHalfTheta * cosHalfTheta;
+
+		<span class="hljs-keyword">if</span> ( sqrSinHalfTheta &lt;= Number.EPSILON ) {
+
+			<span class="hljs-keyword">const</span> s = <span class="hljs-number">1</span> - t;
+			<span class="hljs-keyword">this</span>._w = s * w + t * <span class="hljs-keyword">this</span>._w;
+			<span class="hljs-keyword">this</span>._x = s * x + t * <span class="hljs-keyword">this</span>._x;
+			<span class="hljs-keyword">this</span>._y = s * y + t * <span class="hljs-keyword">this</span>._y;
+			<span class="hljs-keyword">this</span>._z = s * z + t * <span class="hljs-keyword">this</span>._z;
+
+			<span class="hljs-keyword">this</span>.normalize(); <span class="hljs-comment">// normalize calls _onChangeCallback()</span>
+
+			<span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+
+		}
+
+		<span class="hljs-keyword">const</span> sinHalfTheta = Math.sqrt( sqrSinHalfTheta );
+		<span class="hljs-keyword">const</span> halfTheta = Math.atan2( sinHalfTheta, cosHalfTheta );
+		<span class="hljs-keyword">const</span> ratioA = Math.sin( ( <span class="hljs-number">1</span> - t ) * halfTheta ) / sinHalfTheta,
+			ratioB = Math.sin( t * halfTheta ) / sinHalfTheta;
+
+		<span class="hljs-keyword">this</span>._w = ( w * ratioA + <span class="hljs-keyword">this</span>._w * ratioB );
+		<span class="hljs-keyword">this</span>._x = ( x * ratioA + <span class="hljs-keyword">this</span>._x * ratioB );
+		<span class="hljs-keyword">this</span>._y = ( y * ratioA + <span class="hljs-keyword">this</span>._y * ratioB );
+		<span class="hljs-keyword">this</span>._z = ( z * ratioA + <span class="hljs-keyword">this</span>._z * ratioB );
+
+		<span class="hljs-keyword">this</span>._onChangeCallback();
+
+		<span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+
+	}
+
+	slerpQuaternions( qa, qb, t ) {
+
+		<span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.copy( qa ).slerp( qb, t );
+
+	}
+
+	random() {
+
+		<span class="hljs-comment">// sets this quaternion to a uniform random unit quaternnion</span>
+
+		<span class="hljs-comment">// Ken Shoemake</span>
+		<span class="hljs-comment">// Uniform random rotations</span>
+		<span class="hljs-comment">// D. Kirk, editor, Graphics Gems III, pages 124-132. Academic Press, New York, 1992.</span>
+
+		<span class="hljs-keyword">const</span> theta1 = <span class="hljs-number">2</span> * Math.PI * Math.random();
+		<span class="hljs-keyword">const</span> theta2 = <span class="hljs-number">2</span> * Math.PI * Math.random();
+
+		<span class="hljs-keyword">const</span> x0 = Math.random();
+		<span class="hljs-keyword">const</span> r1 = Math.sqrt( <span class="hljs-number">1</span> - x0 );
+		<span class="hljs-keyword">const</span> r2 = Math.sqrt( x0 );
+
+		<span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.<span class="hljs-keyword">set</span>(
+			r1 * Math.sin( theta1 ),
+			r1 * Math.cos( theta1 ),
+			r2 * Math.sin( theta2 ),
+			r2 * Math.cos( theta2 ),
+		);
+
+	}
+
+	equals( quaternion ) {
+
+		<span class="hljs-keyword">return</span> ( quaternion._x === <span class="hljs-keyword">this</span>._x ) &amp;&amp; ( quaternion._y === <span class="hljs-keyword">this</span>._y ) &amp;&amp; ( quaternion._z === <span class="hljs-keyword">this</span>._z ) &amp;&amp; ( quaternion._w === <span class="hljs-keyword">this</span>._w );
+
+	}
+
+	fromArray( array, offset = <span class="hljs-number">0</span> ) {
+
+		<span class="hljs-keyword">this</span>._x = array[ offset ];
+		<span class="hljs-keyword">this</span>._y = array[ offset + <span class="hljs-number">1</span> ];
+		<span class="hljs-keyword">this</span>._z = array[ offset + <span class="hljs-number">2</span> ];
+		<span class="hljs-keyword">this</span>._w = array[ offset + <span class="hljs-number">3</span> ];
+
+		<span class="hljs-keyword">this</span>._onChangeCallback();
+
+		<span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+
+	}
+
+	toArray( array = [], offset = <span class="hljs-number">0</span> ) {
+
+		array[ offset ] = <span class="hljs-keyword">this</span>._x;
+		array[ offset + <span class="hljs-number">1</span> ] = <span class="hljs-keyword">this</span>._y;
+		array[ offset + <span class="hljs-number">2</span> ] = <span class="hljs-keyword">this</span>._z;
+		array[ offset + <span class="hljs-number">3</span> ] = <span class="hljs-keyword">this</span>._w;
+
+		<span class="hljs-keyword">return</span> array;
+
+	}
+
+	fromBufferAttribute( attribute, index ) {
+
+		<span class="hljs-keyword">this</span>._x = attribute.getX( index );
+		<span class="hljs-keyword">this</span>._y = attribute.getY( index );
+		<span class="hljs-keyword">this</span>._z = attribute.getZ( index );
+		<span class="hljs-keyword">this</span>._w = attribute.getW( index );
+
+		<span class="hljs-keyword">this</span>._onChangeCallback();
+
+		<span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+
+	}
+
+	toJSON() {
+
+		<span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.toArray();
+
+	}
+
+	_onChange( callback ) {
+
+		<span class="hljs-keyword">this</span>._onChangeCallback = callback;
+
+		<span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+
+	}
+
+	_onChangeCallback() {}
+
+	*[ Symbol.iterator ]() {
+
+		yield <span class="hljs-keyword">this</span>._x;
+		yield <span class="hljs-keyword">this</span>._y;
+		yield <span class="hljs-keyword">this</span>._z;
+		yield <span class="hljs-keyword">this</span>._w;
+
+	}
+
+}
+
+export { Quaternion };</code></pre>
+    </div>
+  </div>
+</main>
+
+    <div class="footer">
+      <div class="center">
+        Powered by <a target="_blank" href="https://benignware.com">Benignware</a>
+      </div>
+    </div>
+  </body>
+</html>
