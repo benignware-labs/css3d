@@ -150,73 +150,77 @@ Animated Construction Crane
 
 ```html
 <c3-scene>
-  <c3-group
-    animation="spin 10s linear infinite"
-  >
-  <c3-grid></c3-grid>
-  <c3-group>
+  <c3-group rotate="x 25deg" scale="2 2 2">
     <c3-group
-      animation="crane 2s linear infinite"
-    >
-      <c3-box
-        class="texture-crane"
-        rotate="x 90deg"
-        position="0 105px 30px"
-        width="20px"
-        height="80px"
-        depth="20px"
-    ></c3-box>
-    <c3-box
-        class="texture-crane"
-        position="0 45px 0"
-        width="20px"
-        height="100px"
-        depth="20px"
-        background="url('./img/brick.jpg') repeat 20% 20% / 400px 200px"
-      
-    ></c3-box>
-    <c3-group
-      position="0 15px 70px"
+      animation="spin 10s linear infinite"
       
     >
-      <c3-box
-        class="box"
-        animation="move 2s linear infinite" 
-        width="30px"
-        height="30px"
-        depth="30px"
-        background="url('./img/brick.jpg') repeat 50% 50% / 600px 400px"
+      
+      <c3-group>
+        <c3-grid></c3-grid>
+        <c3-group
+          animation="crane 2s linear infinite"
+        >
+          <c3-box
+            class="texture-crane"
+            rotate="x 90deg"
+            position="0 105px 30px"
+            width="20px"
+            height="80px"
+            depth="20px"
+        ></c3-box>
+        <c3-box
+            class="texture-crane"
+            position="0 45px 0"
+            width="20px"
+            height="100px"
+            depth="20px"
+            background="url('./img/brick.jpg') repeat 20% 20% / 400px 200px"
+          
+        ></c3-box>
+        <c3-group
+          position="0 15px 70px"
+          
+        >
+          <c3-box
+            class="box"
+            animation="move 2s linear infinite" 
+            width="30px"
+            height="30px"
+            depth="30px"
+            background="url('./img/brick.jpg') repeat 50% 50% / 600px 400px"
+            
+          ></c3-box>
+        </c3-group>
         
-      ></c3-box>
-    </c3-group>
-    
-    </c3-group>
-    <c3-group
-      position="0 0 0"
-    >
-      <c3-box
-        animation="block1 2s linear infinite"
-        class="box"
-        position="-70px 15px 0"
-        rotate="y -90deg"
-        width="30px"
-        height="30px"
-        depth="30px"
-        background="url('./img/brick.jpg') repeat 50% 50% / 600px 400px"
-      ></c3-box>
+        </c3-group>
+        <c3-group
+          position="0 0 0"
+        >
+          <c3-box
+            animation="block1 2s linear infinite"
+            class="box"
+            position="-70px 15px 0"
+            rotate="y -90deg"
+            width="30px"
+            height="30px"
+            depth="30px"
+            background="url('./img/brick.jpg') repeat 50% 50% / 600px 400px"
+          ></c3-box>
 
-      <c3-box
-        animation="block2 2s linear infinite"
-        class="box"
-        position="70px 15px 0"
-        rotate="y 90deg"
-        width="30px"
-        height="30px"
-        depth="30px"
-        background="url('./img/brick.jpg') repeat 50% 50% / 600px 400px"
-      ></c3-box>
+          <c3-box
+            animation="block2 2s linear infinite"
+            class="box"
+            position="70px 15px 0"
+            rotate="y 90deg"
+            width="30px"
+            height="30px"
+            depth="30px"
+            background="url('./img/brick.jpg') repeat 50% 50% / 600px 400px"
+          ></c3-box>
+        </c3-group>
+      </c3-group>
     </c3-group>
-  </c3-group>
   </c3-group>
 </c3-scene>
 ```
