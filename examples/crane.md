@@ -172,7 +172,7 @@ Animated Construction Crane
         width="20px"
         height="100px"
         depth="20px"
-        background="url('./img/Baltimore.jpg') repeat 20% 20% / 400px 200px"
+        background="url('./img/brick.jpg') repeat 20% 20% / 400px 200px"
       
     ></c3-box>
     <c3-group
@@ -185,7 +185,7 @@ Animated Construction Crane
         width="30px"
         height="30px"
         depth="30px"
-        background="url('./img/Baltimore.jpg') repeat 50% 50% / 600px 400px"
+        background="url('./img/brick.jpg') repeat 50% 50% / 600px 400px"
         
       ></c3-box>
     </c3-group>
@@ -202,7 +202,7 @@ Animated Construction Crane
         width="30px"
         height="30px"
         depth="30px"
-        background="url('./img/Baltimore.jpg') repeat 50% 50% / 600px 400px"
+        background="url('./img/brick.jpg') repeat 50% 50% / 600px 400px"
       ></c3-box>
 
       <c3-box
@@ -213,7 +213,7 @@ Animated Construction Crane
         width="30px"
         height="30px"
         depth="30px"
-        background="url('./img/Baltimore.jpg') repeat 50% 50% / 600px 400px"
+        background="url('./img/brick.jpg') repeat 50% 50% / 600px 400px"
       ></c3-box>
     </c3-group>
   </c3-group>
