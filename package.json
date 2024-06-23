@@ -1,0 +1,27 @@
+{
+  "name": "css3d",
+  "version": "1.0.0",
+  "description": "A set of web components for working with css 3d objects.",
+  "main": "./index.mjs",
+  "module": "dist/css3d.mjs",
+  "type": "module",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "rollup:help": "rollup --help",
+    "build": "rollup index.mjs --config rollup.config.mjs --file ./dist/css3d.mjs --format es --name \"css3d\""
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "quickhull3d": "^2.1.0",
+    "rollup-plugin-polyfill-node": "^0.13.0"
+  },
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "^26.0.1",
+    "@rollup/plugin-node-resolve": "^15.2.3",
+    "rollup": "^4.18.0"
+  }
+}
