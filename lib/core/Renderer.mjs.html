@@ -222,6 +222,21 @@
     </li>
     
   
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="examples/controls.html"
+        
+        
+      >
+        Controls
+      </a>
+      
+    </li>
+    
+  
 </ul>
       
     </li>
@@ -287,10 +302,11 @@ export <span class="hljs-keyword">class</span> <span class="hljs-title class_">C
 
     <span class="hljs-keyword">this</span>.cameraElement.style.width = width + <span class="hljs-string">&#x27;px&#x27;</span>;
     <span class="hljs-keyword">this</span>.cameraElement.style.height = height + <span class="hljs-string">&#x27;px&#x27;</span>;
+
+    <span class="hljs-keyword">this</span>.render();
   }
 
   render () {
-    console.log(<span class="hljs-string">&#x27;render&#x27;</span>);
     <span class="hljs-keyword">const</span> camera = <span class="hljs-keyword">this</span>.camera;
     <span class="hljs-keyword">const</span> cameraElement = <span class="hljs-keyword">this</span>.cameraElement;
     <span class="hljs-keyword">const</span> viewElement = <span class="hljs-keyword">this</span>.viewElement;

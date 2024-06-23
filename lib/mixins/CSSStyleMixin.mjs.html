@@ -222,6 +222,21 @@
     </li>
     
   
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="examples/controls.html"
+        
+        
+      >
+        Controls
+      </a>
+      
+    </li>
+    
+  
 </ul>
       
     </li>
@@ -261,17 +276,14 @@
     <span class="hljs-keyword">const</span> name = <span class="hljs-keyword">typeof</span> prop === <span class="hljs-string">&#x27;string&#x27;</span> ? prop : prop[<span class="hljs-number">1</span>];
     prop = <span class="hljs-keyword">typeof</span> prop === <span class="hljs-string">&#x27;string&#x27;</span> ? prop : prop[<span class="hljs-number">0</span>];
   
-    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;DEFINE: &#x27;</span>, clazz.<span class="hljs-property">name</span>, prop, name, isVar ? <span class="hljs-string">&#x27;VAR&#x27;</span> : <span class="hljs-string">&#x27;VALUE&#x27;</span>);
     <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">defineProperty</span>(clazz.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>, prop, {
       <span class="hljs-attr">configurable</span>: <span class="hljs-literal">true</span>,
       <span class="hljs-title function_">get</span>(<span class="hljs-params"></span>) {
-        <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;GET VALUE: &#x27;</span>, clazz.<span class="hljs-property">name</span>, prop);
         <span class="hljs-keyword">return</span> <span class="hljs-variable language_">window</span>.<span class="hljs-title function_">getComputedStyle</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">shadowRoot</span>.<span class="hljs-property">host</span>).<span class="hljs-title function_">getPropertyValue</span>(
           isVar ? <span class="hljs-string">`--<span class="hljs-subst">${name}</span>`</span> : name
         );
       },
       <span class="hljs-title function_">set</span>(<span class="hljs-params">value</span>) {
-        <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;SET VALUE: &#x27;</span>, clazz.<span class="hljs-property">name</span>, prop, value);
         <span class="hljs-keyword">const</span> sheet = <span class="hljs-title function_">getStylesheet</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">shadowRoot</span>);
         <span class="hljs-keyword">const</span> rule = [...sheet.<span class="hljs-property">cssRules</span>].<span class="hljs-title function_">filter</span>(<span class="hljs-function"><span class="hljs-params">rule</span> =&gt;</span> rule.<span class="hljs-property">selectorText</span> === <span class="hljs-string">&#x27;:host&#x27;</span>)[<span class="hljs-number">0</span>];
         <span class="hljs-keyword">const</span> hyphenated = <span class="hljs-title function_">decamelize</span>(name);

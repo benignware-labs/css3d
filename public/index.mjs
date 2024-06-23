@@ -3599,9 +3599,9 @@ var CSS3DRenderer = class {
     this.viewElement.style.height = height + "px";
     this.cameraElement.style.width = width + "px";
     this.cameraElement.style.height = height + "px";
+    this.render();
   }
   render() {
-    console.log("render");
     const camera = this.camera;
     const cameraElement = this.cameraElement;
     const viewElement = this.viewElement;
@@ -3738,6 +3738,7 @@ var OrbitControls = class extends EventDispatcher {
 // lib/core/Scene.mjs
 var C3Scene = class extends HTMLElement {
   #camera;
+  #controls;
   #renderer;
   constructor() {
     super();
@@ -3752,8 +3753,7 @@ var C3Scene = class extends HTMLElement {
           display: flex;
           overflow: hidden;
           position: relative;
-          perspective: 300px;
-          -webkit-perspective: 300px;
+          perspective: 1000px;
           perspective-origin: center center;
           transform-style: preserve-3d;
           aspect-ratio: 16/9;
@@ -3789,18 +3789,35 @@ var C3Scene = class extends HTMLElement {
       </div>
     `;
     const { width, height } = this.getBoundingClientRect();
-    this.#camera = new PerspectiveCamera(50, width / height, 0.1, 1e3);
+    this.#camera = new PerspectiveCamera(45, width / height, 1, 1e3);
     this.#camera.position.x = 0;
     this.#camera.position.y = 100;
-    this.#camera.position.z = 580;
+    this.#camera.position.z = 1e3;
     const viewElement = shadowRoot.querySelector(".view");
     const cameraElement = shadowRoot.querySelector(".camera");
     this.#renderer = new CSS3DRenderer(this.#camera, viewElement, cameraElement);
     this.#renderer.setSize(width, height);
-    const controls = new OrbitControls(this.#camera, viewElement);
-    controls.addEventListener("change", this.render);
     this.render();
     this.#camera.lookAt(0, 0, 0);
+    this.handleResize();
+  }
+  static get observedAttributes() {
+    return [
+      "controls"
+    ];
+  }
+  attributeChangedCallback(name, oldValue, newValue) {
+    if (oldValue === newValue) return;
+    if (name === "controls") {
+      if (newValue !== null) {
+        const viewElement = this.shadowRoot.querySelector(".view");
+        this.#controls = new OrbitControls(this.#camera, viewElement);
+        this.#controls.addEventListener("change", this.render);
+      } else if (this.#controls) {
+        this.#controls.dispose();
+        this.#controls = null;
+      }
+    }
   }
   get camera() {
     return this.#camera;
@@ -3839,17 +3856,14 @@ var CSSStyleMixin = (clazz, props, isVar = false, callback = (target, prop, newV
   props.forEach((prop) => {
     const name = typeof prop === "string" ? prop : prop[1];
     prop = typeof prop === "string" ? prop : prop[0];
-    console.log("DEFINE: ", clazz.name, prop, name, isVar ? "VAR" : "VALUE");
     Object.defineProperty(clazz.prototype, prop, {
       configurable: true,
       get() {
-        console.log("GET VALUE: ", clazz.name, prop);
         return window.getComputedStyle(this.shadowRoot.host).getPropertyValue(
           isVar ? `--${name}` : name
         );
       },
       set(value) {
-        console.log("SET VALUE: ", clazz.name, prop, value);
         const sheet = getStylesheet(this.shadowRoot);
         const rule = [...sheet.cssRules].filter((rule2) => rule2.selectorText === ":host")[0];
         const hyphenated = decamelize(name);

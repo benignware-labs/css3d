@@ -222,6 +222,21 @@
     </li>
     
   
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="examples/controls.html"
+        
+        
+      >
+        Controls
+      </a>
+      
+    </li>
+    
+  
 </ul>
       
     </li>
@@ -384,73 +399,77 @@
 
     <div class="example-body">
       <c3-scene>
-  <c3-group
-    animation="spin 10s linear infinite"
-  >
-  <c3-grid></c3-grid>
-  <c3-group>
+  <c3-group rotate="x 25deg" scale="2 2 2">
     <c3-group
-      animation="crane 2s linear infinite"
-    >
-      <c3-box
-        class="texture-crane"
-        rotate="x 90deg"
-        position="0 105px 30px"
-        width="20px"
-        height="80px"
-        depth="20px"
-    ></c3-box>
-    <c3-box
-        class="texture-crane"
-        position="0 45px 0"
-        width="20px"
-        height="100px"
-        depth="20px"
-        background="url('public/brick-aaed9a582f6d38d96d28b446bc11e774.jpg') repeat 20% 20% / 400px 200px"
-      
-    ></c3-box>
-    <c3-group
-      position="0 15px 70px"
+      animation="spin 10s linear infinite"
       
     >
-      <c3-box
-        class="box"
-        animation="move 2s linear infinite" 
-        width="30px"
-        height="30px"
-        depth="30px"
-        background="url('public/brick-aaed9a582f6d38d96d28b446bc11e774.jpg') repeat 50% 50% / 600px 400px"
+      
+      <c3-group>
+        <c3-grid></c3-grid>
+        <c3-group
+          animation="crane 2s linear infinite"
+        >
+          <c3-box
+            class="texture-crane"
+            rotate="x 90deg"
+            position="0 105px 30px"
+            width="20px"
+            height="80px"
+            depth="20px"
+        ></c3-box>
+        <c3-box
+            class="texture-crane"
+            position="0 45px 0"
+            width="20px"
+            height="100px"
+            depth="20px"
+            background="url('public/brick-aaed9a582f6d38d96d28b446bc11e774.jpg') repeat 20% 20% / 400px 200px"
+          
+        ></c3-box>
+        <c3-group
+          position="0 15px 70px"
+          
+        >
+          <c3-box
+            class="box"
+            animation="move 2s linear infinite" 
+            width="30px"
+            height="30px"
+            depth="30px"
+            background="url('public/brick-aaed9a582f6d38d96d28b446bc11e774.jpg') repeat 50% 50% / 600px 400px"
+            
+          ></c3-box>
+        </c3-group>
         
-      ></c3-box>
-    </c3-group>
-    
-    </c3-group>
-    <c3-group
-      position="0 0 0"
-    >
-      <c3-box
-        animation="block1 2s linear infinite"
-        class="box"
-        position="-70px 15px 0"
-        rotate="y -90deg"
-        width="30px"
-        height="30px"
-        depth="30px"
-        background="url('public/brick-aaed9a582f6d38d96d28b446bc11e774.jpg') repeat 50% 50% / 600px 400px"
-      ></c3-box>
+        </c3-group>
+        <c3-group
+          position="0 0 0"
+        >
+          <c3-box
+            animation="block1 2s linear infinite"
+            class="box"
+            position="-70px 15px 0"
+            rotate="y -90deg"
+            width="30px"
+            height="30px"
+            depth="30px"
+            background="url('public/brick-aaed9a582f6d38d96d28b446bc11e774.jpg') repeat 50% 50% / 600px 400px"
+          ></c3-box>
 
-      <c3-box
-        animation="block2 2s linear infinite"
-        class="box"
-        position="70px 15px 0"
-        rotate="y 90deg"
-        width="30px"
-        height="30px"
-        depth="30px"
-        background="url('public/brick-aaed9a582f6d38d96d28b446bc11e774.jpg') repeat 50% 50% / 600px 400px"
-      ></c3-box>
+          <c3-box
+            animation="block2 2s linear infinite"
+            class="box"
+            position="70px 15px 0"
+            rotate="y 90deg"
+            width="30px"
+            height="30px"
+            depth="30px"
+            background="url('public/brick-aaed9a582f6d38d96d28b446bc11e774.jpg') repeat 50% 50% / 600px 400px"
+          ></c3-box>
+        </c3-group>
+      </c3-group>
     </c3-group>
-  </c3-group>
   </c3-group>
 </c3-scene>
 
@@ -604,73 +623,77 @@
   }
 </code></pre>
 <pre><code class="hljs"><span class="hljs-tag">&lt;<span class="hljs-name">c3-scene</span>&gt;</span>
-  <span class="hljs-tag">&lt;<span class="hljs-name">c3-group</span>
-    <span class="hljs-attr">animation</span>=<span class="hljs-string">&quot;spin 10s linear infinite&quot;</span>
-  &gt;</span>
-  <span class="hljs-tag">&lt;<span class="hljs-name">c3-grid</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">c3-grid</span>&gt;</span>
-  <span class="hljs-tag">&lt;<span class="hljs-name">c3-group</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">c3-group</span> <span class="hljs-attr">rotate</span>=<span class="hljs-string">&quot;x 25deg&quot;</span> <span class="hljs-attr">scale</span>=<span class="hljs-string">&quot;2 2 2&quot;</span>&gt;</span>
     <span class="hljs-tag">&lt;<span class="hljs-name">c3-group</span>
-      <span class="hljs-attr">animation</span>=<span class="hljs-string">&quot;crane 2s linear infinite&quot;</span>
-    &gt;</span>
-      <span class="hljs-tag">&lt;<span class="hljs-name">c3-box</span>
-        <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;texture-crane&quot;</span>
-        <span class="hljs-attr">rotate</span>=<span class="hljs-string">&quot;x 90deg&quot;</span>
-        <span class="hljs-attr">position</span>=<span class="hljs-string">&quot;0 105px 30px&quot;</span>
-        <span class="hljs-attr">width</span>=<span class="hljs-string">&quot;20px&quot;</span>
-        <span class="hljs-attr">height</span>=<span class="hljs-string">&quot;80px&quot;</span>
-        <span class="hljs-attr">depth</span>=<span class="hljs-string">&quot;20px&quot;</span>
-    &gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">c3-box</span>&gt;</span>
-    <span class="hljs-tag">&lt;<span class="hljs-name">c3-box</span>
-        <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;texture-crane&quot;</span>
-        <span class="hljs-attr">position</span>=<span class="hljs-string">&quot;0 45px 0&quot;</span>
-        <span class="hljs-attr">width</span>=<span class="hljs-string">&quot;20px&quot;</span>
-        <span class="hljs-attr">height</span>=<span class="hljs-string">&quot;100px&quot;</span>
-        <span class="hljs-attr">depth</span>=<span class="hljs-string">&quot;20px&quot;</span>
-        <span class="hljs-attr">background</span>=<span class="hljs-string">&quot;url(&#x27;./img/brick.jpg&#x27;) repeat 20% 20% / 400px 200px&quot;</span>
-      
-    &gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">c3-box</span>&gt;</span>
-    <span class="hljs-tag">&lt;<span class="hljs-name">c3-group</span>
-      <span class="hljs-attr">position</span>=<span class="hljs-string">&quot;0 15px 70px&quot;</span>
+      <span class="hljs-attr">animation</span>=<span class="hljs-string">&quot;spin 10s linear infinite&quot;</span>
       
     &gt;</span>
-      <span class="hljs-tag">&lt;<span class="hljs-name">c3-box</span>
-        <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;box&quot;</span>
-        <span class="hljs-attr">animation</span>=<span class="hljs-string">&quot;move 2s linear infinite&quot;</span> 
-        <span class="hljs-attr">width</span>=<span class="hljs-string">&quot;30px&quot;</span>
-        <span class="hljs-attr">height</span>=<span class="hljs-string">&quot;30px&quot;</span>
-        <span class="hljs-attr">depth</span>=<span class="hljs-string">&quot;30px&quot;</span>
-        <span class="hljs-attr">background</span>=<span class="hljs-string">&quot;url(&#x27;./img/brick.jpg&#x27;) repeat 50% 50% / 600px 400px&quot;</span>
+      
+      <span class="hljs-tag">&lt;<span class="hljs-name">c3-group</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">c3-grid</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">c3-grid</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">c3-group</span>
+          <span class="hljs-attr">animation</span>=<span class="hljs-string">&quot;crane 2s linear infinite&quot;</span>
+        &gt;</span>
+          <span class="hljs-tag">&lt;<span class="hljs-name">c3-box</span>
+            <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;texture-crane&quot;</span>
+            <span class="hljs-attr">rotate</span>=<span class="hljs-string">&quot;x 90deg&quot;</span>
+            <span class="hljs-attr">position</span>=<span class="hljs-string">&quot;0 105px 30px&quot;</span>
+            <span class="hljs-attr">width</span>=<span class="hljs-string">&quot;20px&quot;</span>
+            <span class="hljs-attr">height</span>=<span class="hljs-string">&quot;80px&quot;</span>
+            <span class="hljs-attr">depth</span>=<span class="hljs-string">&quot;20px&quot;</span>
+        &gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">c3-box</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">c3-box</span>
+            <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;texture-crane&quot;</span>
+            <span class="hljs-attr">position</span>=<span class="hljs-string">&quot;0 45px 0&quot;</span>
+            <span class="hljs-attr">width</span>=<span class="hljs-string">&quot;20px&quot;</span>
+            <span class="hljs-attr">height</span>=<span class="hljs-string">&quot;100px&quot;</span>
+            <span class="hljs-attr">depth</span>=<span class="hljs-string">&quot;20px&quot;</span>
+            <span class="hljs-attr">background</span>=<span class="hljs-string">&quot;url(&#x27;./img/brick.jpg&#x27;) repeat 20% 20% / 400px 200px&quot;</span>
+          
+        &gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">c3-box</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">c3-group</span>
+          <span class="hljs-attr">position</span>=<span class="hljs-string">&quot;0 15px 70px&quot;</span>
+          
+        &gt;</span>
+          <span class="hljs-tag">&lt;<span class="hljs-name">c3-box</span>
+            <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;box&quot;</span>
+            <span class="hljs-attr">animation</span>=<span class="hljs-string">&quot;move 2s linear infinite&quot;</span> 
+            <span class="hljs-attr">width</span>=<span class="hljs-string">&quot;30px&quot;</span>
+            <span class="hljs-attr">height</span>=<span class="hljs-string">&quot;30px&quot;</span>
+            <span class="hljs-attr">depth</span>=<span class="hljs-string">&quot;30px&quot;</span>
+            <span class="hljs-attr">background</span>=<span class="hljs-string">&quot;url(&#x27;./img/brick.jpg&#x27;) repeat 50% 50% / 600px 400px&quot;</span>
+            
+          &gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">c3-box</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-name">c3-group</span>&gt;</span>
         
-      &gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">c3-box</span>&gt;</span>
-    <span class="hljs-tag">&lt;/<span class="hljs-name">c3-group</span>&gt;</span>
-    
-    <span class="hljs-tag">&lt;/<span class="hljs-name">c3-group</span>&gt;</span>
-    <span class="hljs-tag">&lt;<span class="hljs-name">c3-group</span>
-      <span class="hljs-attr">position</span>=<span class="hljs-string">&quot;0 0 0&quot;</span>
-    &gt;</span>
-      <span class="hljs-tag">&lt;<span class="hljs-name">c3-box</span>
-        <span class="hljs-attr">animation</span>=<span class="hljs-string">&quot;block1 2s linear infinite&quot;</span>
-        <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;box&quot;</span>
-        <span class="hljs-attr">position</span>=<span class="hljs-string">&quot;-70px 15px 0&quot;</span>
-        <span class="hljs-attr">rotate</span>=<span class="hljs-string">&quot;y -90deg&quot;</span>
-        <span class="hljs-attr">width</span>=<span class="hljs-string">&quot;30px&quot;</span>
-        <span class="hljs-attr">height</span>=<span class="hljs-string">&quot;30px&quot;</span>
-        <span class="hljs-attr">depth</span>=<span class="hljs-string">&quot;30px&quot;</span>
-        <span class="hljs-attr">background</span>=<span class="hljs-string">&quot;url(&#x27;./img/brick.jpg&#x27;) repeat 50% 50% / 600px 400px&quot;</span>
-      &gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">c3-box</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-name">c3-group</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">c3-group</span>
+          <span class="hljs-attr">position</span>=<span class="hljs-string">&quot;0 0 0&quot;</span>
+        &gt;</span>
+          <span class="hljs-tag">&lt;<span class="hljs-name">c3-box</span>
+            <span class="hljs-attr">animation</span>=<span class="hljs-string">&quot;block1 2s linear infinite&quot;</span>
+            <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;box&quot;</span>
+            <span class="hljs-attr">position</span>=<span class="hljs-string">&quot;-70px 15px 0&quot;</span>
+            <span class="hljs-attr">rotate</span>=<span class="hljs-string">&quot;y -90deg&quot;</span>
+            <span class="hljs-attr">width</span>=<span class="hljs-string">&quot;30px&quot;</span>
+            <span class="hljs-attr">height</span>=<span class="hljs-string">&quot;30px&quot;</span>
+            <span class="hljs-attr">depth</span>=<span class="hljs-string">&quot;30px&quot;</span>
+            <span class="hljs-attr">background</span>=<span class="hljs-string">&quot;url(&#x27;./img/brick.jpg&#x27;) repeat 50% 50% / 600px 400px&quot;</span>
+          &gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">c3-box</span>&gt;</span>
 
-      <span class="hljs-tag">&lt;<span class="hljs-name">c3-box</span>
-        <span class="hljs-attr">animation</span>=<span class="hljs-string">&quot;block2 2s linear infinite&quot;</span>
-        <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;box&quot;</span>
-        <span class="hljs-attr">position</span>=<span class="hljs-string">&quot;70px 15px 0&quot;</span>
-        <span class="hljs-attr">rotate</span>=<span class="hljs-string">&quot;y 90deg&quot;</span>
-        <span class="hljs-attr">width</span>=<span class="hljs-string">&quot;30px&quot;</span>
-        <span class="hljs-attr">height</span>=<span class="hljs-string">&quot;30px&quot;</span>
-        <span class="hljs-attr">depth</span>=<span class="hljs-string">&quot;30px&quot;</span>
-        <span class="hljs-attr">background</span>=<span class="hljs-string">&quot;url(&#x27;./img/brick.jpg&#x27;) repeat 50% 50% / 600px 400px&quot;</span>
-      &gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">c3-box</span>&gt;</span>
+          <span class="hljs-tag">&lt;<span class="hljs-name">c3-box</span>
+            <span class="hljs-attr">animation</span>=<span class="hljs-string">&quot;block2 2s linear infinite&quot;</span>
+            <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;box&quot;</span>
+            <span class="hljs-attr">position</span>=<span class="hljs-string">&quot;70px 15px 0&quot;</span>
+            <span class="hljs-attr">rotate</span>=<span class="hljs-string">&quot;y 90deg&quot;</span>
+            <span class="hljs-attr">width</span>=<span class="hljs-string">&quot;30px&quot;</span>
+            <span class="hljs-attr">height</span>=<span class="hljs-string">&quot;30px&quot;</span>
+            <span class="hljs-attr">depth</span>=<span class="hljs-string">&quot;30px&quot;</span>
+            <span class="hljs-attr">background</span>=<span class="hljs-string">&quot;url(&#x27;./img/brick.jpg&#x27;) repeat 50% 50% / 600px 400px&quot;</span>
+          &gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">c3-box</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-name">c3-group</span>&gt;</span>
+      <span class="hljs-tag">&lt;/<span class="hljs-name">c3-group</span>&gt;</span>
     <span class="hljs-tag">&lt;/<span class="hljs-name">c3-group</span>&gt;</span>
-  <span class="hljs-tag">&lt;/<span class="hljs-name">c3-group</span>&gt;</span>
   <span class="hljs-tag">&lt;/<span class="hljs-name">c3-group</span>&gt;</span>
 <span class="hljs-tag">&lt;/<span class="hljs-name">c3-scene</span>&gt;</span>
 </code></pre>

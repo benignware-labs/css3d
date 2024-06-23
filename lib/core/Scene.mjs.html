@@ -222,6 +222,21 @@
     </li>
     
   
+    
+    <li class="menu-item">
+      <a 
+        class="menu-link"
+        
+          href="examples/controls.html"
+        
+        
+      >
+        Controls
+      </a>
+      
+    </li>
+    
+  
 </ul>
       
     </li>
@@ -242,6 +257,7 @@
 
 <span class="hljs-keyword">class</span> <span class="hljs-title class_">C3Scene</span> <span class="hljs-title">extends</span> <span class="hljs-title">HTMLElement</span> {
   #camera;
+  #controls;
   #renderer;
 
   <span class="hljs-keyword">constructor</span>() {
@@ -260,8 +276,7 @@
           display: flex;
           overflow: hidden;
           position: relative;
-          perspective: 300px;
-          -webkit-perspective: 300px;
+          perspective: 1000px;
           perspective-origin: center center;
           transform-style: preserve-<span class="hljs-number">3d</span>;
           aspect-ratio: <span class="hljs-number">16</span>/<span class="hljs-number">9</span>;
@@ -299,10 +314,10 @@
 
     <span class="hljs-keyword">const</span> { width, height } = <span class="hljs-keyword">this</span>.getBoundingClientRect();
 
-    <span class="hljs-keyword">this</span>.#camera = new PerspectiveCamera(<span class="hljs-number">50</span>, width / height, <span class="hljs-number">0.1</span>, <span class="hljs-number">1000</span>);
+    <span class="hljs-keyword">this</span>.#camera = new PerspectiveCamera(<span class="hljs-number">45</span>, width / height, <span class="hljs-number">1</span>, <span class="hljs-number">1000</span>);
     <span class="hljs-keyword">this</span>.#camera.position.x = <span class="hljs-number">0</span>;
     <span class="hljs-keyword">this</span>.#camera.position.y = <span class="hljs-number">100</span>;
-    <span class="hljs-keyword">this</span>.#camera.position.z = <span class="hljs-number">580</span>;
+    <span class="hljs-keyword">this</span>.#camera.position.z = <span class="hljs-number">1000</span>;
     
     <span class="hljs-keyword">const</span> viewElement = shadowRoot.querySelector(<span class="hljs-string">&#x27;.view&#x27;</span>);
     <span class="hljs-keyword">const</span> cameraElement = shadowRoot.querySelector(<span class="hljs-string">&#x27;.camera&#x27;</span>);
@@ -310,12 +325,33 @@
     <span class="hljs-keyword">this</span>.#renderer = new CSS3DRenderer(<span class="hljs-keyword">this</span>.#camera, viewElement, cameraElement);
     <span class="hljs-keyword">this</span>.#renderer.setSize(width, height);
 
-    <span class="hljs-keyword">const</span> controls = new OrbitControls(<span class="hljs-keyword">this</span>.#camera, viewElement);
-    controls.addEventListener(<span class="hljs-string">&#x27;change&#x27;</span>, <span class="hljs-keyword">this</span>.render);
-
     <span class="hljs-keyword">this</span>.render();
 
     <span class="hljs-keyword">this</span>.#camera.lookAt(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
+
+    <span class="hljs-keyword">this</span>.handleResize();
+  }
+
+  static <span class="hljs-keyword">get</span> observedAttributes() {
+    <span class="hljs-keyword">return</span> [
+      <span class="hljs-string">&#x27;controls&#x27;</span>,
+    ];
+  }
+
+  attributeChangedCallback(name, oldValue, newValue) {
+    <span class="hljs-keyword">if</span> (oldValue === newValue) <span class="hljs-keyword">return</span>;
+    
+    <span class="hljs-keyword">if</span> (name === <span class="hljs-string">&#x27;controls&#x27;</span>) {
+      <span class="hljs-keyword">if</span> (newValue !== <span class="hljs-literal">null</span>) {
+        <span class="hljs-keyword">const</span> viewElement = <span class="hljs-keyword">this</span>.shadowRoot.querySelector(<span class="hljs-string">&#x27;.view&#x27;</span>);
+        <span class="hljs-keyword">this</span>.#controls = new OrbitControls(<span class="hljs-keyword">this</span>.#camera, viewElement);
+        <span class="hljs-keyword">this</span>.#controls.addEventListener(<span class="hljs-string">&#x27;change&#x27;</span>, <span class="hljs-keyword">this</span>.render);
+      } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.#controls) {
+        <span class="hljs-keyword">this</span>.#controls.dispose();
+        <span class="hljs-keyword">this</span>.#controls = <span class="hljs-literal">null</span>;
+      }
+      
+    }
   }
 
   <span class="hljs-keyword">get</span> camera() {
